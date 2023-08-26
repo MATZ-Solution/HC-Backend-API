@@ -492,7 +492,6 @@ const getPatApplyService = async (req, res, next) => {
 const isAdminApprovePatientService = async (req, res, next) => {
   try {
     const { patMongoId } = req.params;
-    console.log(patMongoId)
     const updatedData = await patService.findByIdAndUpdate(
       patMongoId,
       { isAdminApproveStatus: true },
@@ -501,8 +500,19 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
     if (updatedData) {
       const existEmail = await Corporate.find({ email: updatedData.servicePhoneNumber });
-      if (existEmail.length === 0) {
-        // Create a new user with encrypted password
+
+
+      if (existEmail.length !== 0) {
+        await Corporate.findOneAndUpdate(
+          { email: updatedData.servicePhoneNumber },
+          { $inc: { conatactedCustomer: 1 } },
+          { new: true }
+        );
+        res.status(200).json({ message: "Updated", data: updatedData });
+
+      }
+      else {
+        console.log("else");
         const createUser = await Corporate.create({
           email: updatedData.servicePhoneNumber,
           password: CryptoJS.AES.encrypt(
@@ -512,13 +522,15 @@ const isAdminApprovePatientService = async (req, res, next) => {
           role: "corporate",
           firstName: updatedData.serviceName,
           city: updatedData.serviceCity,
-          organizationMainOfficeAddress: updatedData.serviceFullAddress
+          organizationMainOfficeAddress: updatedData.serviceFullAddress,
+          conatactedCustomer: 1,
         });
+
+        await createUser.save();
 
         res.status(200).json({ message: "Updated", data: updatedData });
       }
 
-      res.status(200).json({ message: "Updated", data: updatedData });
     } else {
       res.status(200).json({ message: "No Data Found" });
     }

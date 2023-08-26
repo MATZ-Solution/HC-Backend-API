@@ -96,7 +96,7 @@ const corporateSchema = new mongoose.Schema(
     },
     isCreatedByProperRegisteration: {
       type: Boolean,
-      default:false
+      default: false
     },
     //otp verfied then true otherwise false
     isOtpVerified: {
@@ -122,6 +122,12 @@ const corporateSchema = new mongoose.Schema(
     isApprovedbyAdmin: {
       type: Boolean,
       default: false,
+    },
+
+    //how many customerContacted this corporate
+    conatactedCustomer: {
+      type: Number,
+      default: 0
     },
   },
   { timestamps: true }

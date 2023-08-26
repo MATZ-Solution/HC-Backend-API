@@ -80,6 +80,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 // Start the server and listen for incoming requests
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Backend server is running!", process.env.PORT);
+app.listen(3000, () => {
+  console.log("Backend server is running!");
 });
