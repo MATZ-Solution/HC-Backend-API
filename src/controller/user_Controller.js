@@ -404,8 +404,6 @@ const allUsers = async (req, res, next) => {
       "-isVerified -profileId -profile -isSocialMediaAuth -isAdminApprove -isProfileCompleted -createdAt -password -updatedAt -__v"
     );
 
-    // const allUsers = await User.find({role:"corporate"},{role:"care givers"});
-
     res.status(200).json({ UserList: allUsers });
   } catch (error) {
     next(error);
@@ -425,6 +423,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       patIpLocationAddress,
       patCityIpAddress,
       patEmail,
+      mainCategory,
       seviceId,
       serviceCategory,
       serviceCity,
@@ -449,6 +448,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       patIpLocationAddress,
       patCityIpAddress,
       patEmail,
+      mainCategory,
       category,
       serviceName,
       scrapeMongoDbID: seviceId,
@@ -501,7 +501,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
     if (updatedData) {
       const existEmail = await Corporate.find({ email: updatedData.servicePhoneNumber });
 
-
       if (existEmail.length !== 0) {
         await Corporate.findOneAndUpdate(
           { email: updatedData.servicePhoneNumber },
@@ -510,9 +509,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         );
         res.status(200).json({ message: "Updated", data: updatedData });
 
-      }
-      else {
-        console.log("else");
+      } else {
         const createUser = await Corporate.create({
           email: updatedData.servicePhoneNumber,
           password: CryptoJS.AES.encrypt(
@@ -538,9 +535,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
     next(err);
   }
 };
-
-
-
 
 
 //sending email

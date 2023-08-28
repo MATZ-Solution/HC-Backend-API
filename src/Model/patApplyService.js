@@ -20,6 +20,9 @@ const patApplyService = mongoose.Schema(
         patCityIpAddress: {
             type: String
         },
+        mainCategory: {
+            type:String
+        },
         patEmail: {
             type: String
         },
