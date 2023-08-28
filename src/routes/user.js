@@ -13,7 +13,8 @@ const {
   patApplyforcoroporate,
   getPatApplyService,
   specificCorporateData,
-  isAdminApprovePatientService
+  isAdminApprovePatientService,
+  getAllCorporates
 } = require("../controller/user_Controller");
 const router = require("express").Router();
 
@@ -39,6 +40,9 @@ router.put("/approvePatientServiceByAdmin/:patMongoId", verifyTokenAndAdmin, isA
 //super Admin
 router.get("/getAllUsers", verifyTokenAndAdmin, allUsers)
 router.get("/getAllPatServices", verifyTokenAndAdmin, getPatApplyService)
+router.get("/getAllCorporates", verifyTokenAndAdmin, getAllCorporates)
+
+
 
 
 

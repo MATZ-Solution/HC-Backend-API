@@ -537,6 +537,27 @@ const isAdminApprovePatientService = async (req, res, next) => {
 };
 
 
+//Super Admin getting all the corporates data which are coming from scrapping
+
+const getAllCorporates = async (req, res, next) => {
+
+  try {
+
+    const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
+
+    if (getAllCorporatesData.length > 0) {
+      res.status(200).json(getAllCorporatesData)
+    } else {
+      res.status(200).json("No Data Found")
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+
+
+
 //sending email
 
 var google = require("googleapis").google;
@@ -629,5 +650,6 @@ module.exports = {
   patApplyforcoroporate,
   getPatApplyService,
   specificCorporateData,
-  isAdminApprovePatientService
+  isAdminApprovePatientService,
+  getAllCorporates
 };
