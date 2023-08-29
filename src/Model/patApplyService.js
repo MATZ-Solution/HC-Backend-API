@@ -68,6 +68,10 @@ const patApplyService = mongoose.Schema(
         isAdminApproveStatus: {
             type: Boolean,
             default:false
+        },
+        corporateContacted: {
+            type: Number,
+            default:0
         }
     }, { timestamps: true });
 
