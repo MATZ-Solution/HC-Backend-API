@@ -25,6 +25,7 @@ const appointmentRoute = require('./routes/appointmentRoutes');
 const vital = require('./routes/vitalRoutes')
 const branchRequestRoute = require('./routes/branchRequestRoute')
 const advisorRoute = require('./routes/advisorRoutes')
+const sendEmail = require('./utils/email')
 
 
 dotenv.config();
@@ -75,6 +76,20 @@ app.use("/api/branchRequest", branchRequestRoute);
 app.use("/api/advisor", advisorRoute);
 
 app.use(errorMiddleware);
+
+
+app.post("/sendEmail", (req, res) => {
+
+  const { to, subject, body } = req.body
+  const emailOptions = {
+    to,
+    subject,
+    text: body,
+  };
+
+  sendEmail({ ...emailOptions, res }); // Send the email and pass the "res" object
+  
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World");
