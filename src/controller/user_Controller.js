@@ -542,7 +542,7 @@ const getAllCorporates = async (req, res, next) => {
   try {
     const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
 
-    const apiUrl = 'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+    const apiUrl = 'http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCorporatesUsingMongoId';
 
     const corporatesWithComplaints = await Promise.all(
       getAllCorporatesData.map(async corporate => {

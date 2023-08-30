@@ -55,26 +55,7 @@ const updateCorporate = async (req, res, next) => {
     }
 }
 
-// const addComplainId = async (req, res, next) => {
-//     try {
-//         const { phoneNumber, mongoDbID, category } = req.body;
-
-//         const updatedCorporate = await Corporate.findOneAndUpdate(
-//             { email: phoneNumber },
-//             { $push: { complaintIds: { mongoDbID, category } } },
-//             { new: true }
-//         );
-
-//         if (updatedCorporate) {
-//             res.status(200).json(updatedCorporate);
-//         } else {
-//             res.status(404).json({ message: "Not Found" });
-//         }
-
-//     } catch (err) {
-//         next(err);
-//     }
-// }
+//for complain add by scraped complain by user
 
 const addComplainId = async (req, res, next) => {
     try {
