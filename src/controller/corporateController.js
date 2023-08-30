@@ -55,26 +55,53 @@ const updateCorporate = async (req, res, next) => {
     }
 }
 
+// const addComplainId = async (req, res, next) => {
+//     try {
+//         const { phoneNumber, mongoDbID, category } = req.body;
+
+//         const updatedCorporate = await Corporate.findOneAndUpdate(
+//             { email: phoneNumber },
+//             { $push: { complaintIds: { mongoDbID, category } } },
+//             { new: true }
+//         );
+
+//         if (updatedCorporate) {
+//             res.status(200).json(updatedCorporate);
+//         } else {
+//             res.status(404).json({ message: "Not Found" });
+//         }
+
+//     } catch (err) {
+//         next(err);
+//     }
+// }
+
 const addComplainId = async (req, res, next) => {
     try {
         const { phoneNumber, mongoDbID, category } = req.body;
 
-        const updatedCorporate = await Corporate.findOneAndUpdate(
-            { email: phoneNumber },
-            { $push: { complaintIds: { mongoDbID, category } } },
-            { new: true }
-        );
+        const corporate = await Corporate.findOne({ email: phoneNumber });
 
-        if (updatedCorporate) {
-            res.status(200).json(updatedCorporate);
-        } else {
-            res.status(404).json({ message: "Not Found" });
+        if (!corporate) {
+            return res.status(404).json({ message: "Corporate not found" });
         }
 
+        // Check if the same MongoDB ID already exists in the complaintIds array
+        const existingComplaint = corporate.complaintIds.find(complaint => complaint.mongoDbID === mongoDbID);
+        if (existingComplaint) {
+            return res.status(200).json({ message: "Complaint ID already exists in the array" });
+        }
+
+        // If the complaint doesn't exist, add it to the complaintIds array
+        corporate.complaintIds.push({ mongoDbID, category });
+        await corporate.save();
+
+        res.status(200).json({ success: true, message: "Complaint ID added successfully" });
     } catch (err) {
         next(err);
     }
 }
+
 
 
 

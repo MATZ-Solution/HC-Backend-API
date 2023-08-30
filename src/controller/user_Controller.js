@@ -8,6 +8,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const otherCareModel = require("../Model/otherCareModel");
 const Vital = require("../Model/vitalModel");
 const patService = require("../Model/patApplyService")
+const axios = require('axios')
 
 // Controller for changing password
 
@@ -537,21 +538,124 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
 //Super Admin getting all the corporates data which are coming from scrapping
 
+
 const getAllCorporates = async (req, res, next) => {
-
   try {
-
     const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
 
-    if (getAllCorporatesData.length > 0) {
-      res.status(200).json(getAllCorporatesData)
+    const apiUrl = 'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+
+    const corporatesWithComplaints = await Promise.all(
+      getAllCorporatesData.map(async corporate => {
+        try {
+          const complaintsWithResponses = await Promise.all(
+            corporate.complaintIds.map(async complaint => {
+              const response = await axios.post(apiUrl, {
+                mongoDbID: complaint.mongoDbID,
+                category: complaint.category // Replace with the actual category field in your Corporate model
+              });
+
+              if (response.status === 200) {
+                return response.data; // Assuming response.data.complaints is an array
+              } else {
+                return []; // Return an empty array for complaints on error
+              }
+            })
+          );
+
+          const { _doc: corporateData } = corporate;
+          return { ...corporateData, complaints: complaintsWithResponses.flat() };
+        } catch (error) {
+          const { _doc: corporateData } = corporate;
+          return { ...corporateData, complaints: [] }; // Return an empty array for complaints on error
+        }
+      })
+    );
+
+    if (corporatesWithComplaints.length > 0) {
+      res.status(200).json(corporatesWithComplaints);
     } else {
-      res.status(200).json("No Data Found")
+      res.status(200).json("No Data Found");
     }
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
+
+
+// const getAllCorporates = async (req, res, next) => {
+//   try {
+//     const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
+
+//     const apiUrl = 'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+
+//     const corporatesWithComplaints = await Promise.all(
+//       getAllCorporatesData.map(async corporate => {
+//         try {
+//           corporate.complaintIds.map(async complaints => {
+//             console.log(complaints.mongoDbID)
+//             console.log(complaints.category)
+
+//             const response = await axios.post(apiUrl, {
+//               mongoDbID: complaints.mongoDbID,
+//               category: complaints.category // Replace with the actual category field in your Corporate model
+//             });
+
+
+//             console.log("response", response.status)
+
+//             if (response.status === 200) {
+//               const { _doc: corporateData } = corporate;
+//               const { complaints } = response.data;
+//               return { ...corporateData, complaints: complaints };
+//             } else {
+//               const { _doc: corporateData } = corporate;
+//               return { ...corporateData, complaints: [] }; // Return an empty array for complaints on error
+//             }
+
+
+//           })
+
+
+//         } catch (error) {
+//           const { _doc: corporateData } = corporate;
+//           return { ...corporateData, complaints: [] }; // Return an empty array for complaints on error
+//         }
+//       })
+//     );
+
+//     if (corporatesWithComplaints.length > 0) {
+//       res.status(200).json(corporatesWithComplaints);
+//     } else {
+//       res.status(200).json("No Data Found");
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// const getAllCorporates = async (req, res, next) => {
+
+//   try {
+
+//     const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
+
+//     let apiUrl = 'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+
+//     const response = await axios.post(apiUrl, {
+//       mongoDbID,
+//       category
+//     });
+
+//     if (getAllCorporatesData.length > 0) {
+//       res.status(200).json(getAllCorporatesData)
+//     } else {
+//       res.status(200).json("No Data Found")
+//     }
+//   } catch (err) {
+//     next(err)
+//   }
+// }
 
 
 
