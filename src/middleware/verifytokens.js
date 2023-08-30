@@ -27,6 +27,16 @@ const verifyTokenAndCorporate = (req, res, next) => {
     });
 };
 
+const verifyTokenAndCorporateAndSuperAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.isAdmin === "corporate" || req.user.isAdmin === "super-admin") {
+            next();
+        } else {
+            res.status(403).json("You are not alowed to do that!");
+        }
+    });
+};
+
 const verifyTokenAndCareGivers = (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user.isAdmin === "care-givers") {
@@ -52,5 +62,6 @@ module.exports = {
     verifyToken,
     verifyTokenAndAdmin,
     verifyTokenAndCorporate,
-    verifyTokenAndCareGivers
+    verifyTokenAndCareGivers,
+    verifyTokenAndCorporateAndSuperAdmin
 };

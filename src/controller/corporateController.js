@@ -1,6 +1,7 @@
 const sendEmail = require('../utils/email');
 const ErrorHandler = require("../utils/ErrorHandler");
 const patientApplyService = require("../Model/patApplyService");
+const Corporate = require("../Model/corporateModel");
 
 const emailController = async (req, res, next) => {
     try {
@@ -18,9 +19,6 @@ const emailController = async (req, res, next) => {
             { new: true }
         );
 
-        console.log(updateCounter)
-
-
         // Send the email
         await sendEmail({ ...emailOptions, res });
 
@@ -36,6 +34,29 @@ const emailController = async (req, res, next) => {
     }
 };
 
+const updateCorporate = async (req, res, next) => {
+    try {
+        const { mongoDbId } = req.body;
+
+        const updatedCorporate = await Corporate.findByIdAndUpdate(
+            { _id: mongoDbId },
+            { ...req.body },
+            { new: true }
+        );
+
+        if (updatedCorporate) {
+            res.status(200).json(updatedCorporate);
+        } else {
+            res.status(404).json({ message: "Not Found" });
+        }
+
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 module.exports = {
     emailController,
+    updateCorporate
 };

@@ -7,6 +7,15 @@ const corporateSchema = new mongoose.Schema(
   {
     email: {
       type: String,
+      default: ""
+    },
+    personalEmail: {
+      type: String,
+      default: ""
+    },
+    phoneNumber: {
+      type: Number,
+      default: ""
     },
     password: {
       type: String,
@@ -17,18 +26,22 @@ const corporateSchema = new mongoose.Schema(
     },
     firstName: {
       type: String,
+      default: ""
     },
     middleName: {
       type: String,
+      default: ""
     },
     lastName: {
       type: String,
+      defautl: ""
     },
     adminPhoneNo: {
       type: Number,
     },
     profilePic: {
       type: String,
+      default: ""
     },
     dateOfBirth: {
       type: Date,

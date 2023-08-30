@@ -344,6 +344,9 @@ const sendEmail = async (req, res, next) => {
         throw new ErrorHandler("Your email id doesnot exist in db", 400);
       }
     }
+    else {
+      
+    }
   } catch (error) {
     next(error);
   }
