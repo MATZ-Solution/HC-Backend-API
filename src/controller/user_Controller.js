@@ -149,7 +149,6 @@ const updatedUser = async (req, res, next) => {
         { ...req.body, isProfileCompleted: true }, // Update the user's information
         { new: true } // Return the updated user object
       );
-
       if (user) {
         // User found and updated
         res.status(200).json("User Updated");
