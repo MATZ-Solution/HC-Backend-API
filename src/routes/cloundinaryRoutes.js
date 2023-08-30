@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const upload = require("../controller/cloundinary");
+const upload = require("../controller/cloundinaryController");
 
 const MultiUpload = upload.fields([
   { name: "image", maxCount: 10, required: false },
