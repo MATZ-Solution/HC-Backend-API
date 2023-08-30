@@ -53,6 +53,10 @@ const corporateSchema = new mongoose.Schema(
     position: {
       type: String
     },
+    complaintIds: [{
+      mongoDbID: String,
+      category: String
+    }],
     adminAddress: {
       type: String,
     },

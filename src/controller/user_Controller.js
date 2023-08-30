@@ -97,15 +97,10 @@ const userInfoController = async (req, res, next) => {
     } else if (isAdmin === "care-givers") {
       // Handle care-givers specific logic if needed
       // For now, we don't have any implementation here
-      res
-        .status(200)
-        .json({ message: "Care-givers data can be handled here." });
+      res.status(200).json({ message: "Care-givers data can be handled here." });
     } else if (isAdmin === "corporate") {
-
-
-      res
-        .status(200)
-        .json({ message: "Care-givers data can be handled here." });
+      let data = await Corporate.find({ _id }).lean()
+      res.status(200).json(data);
     }
     else {
       throw new ErrorHandler("Invalid Role", 400);
@@ -345,7 +340,7 @@ const sendEmail = async (req, res, next) => {
       }
     }
     else {
-      
+
     }
   } catch (error) {
     next(error);
