@@ -105,7 +105,7 @@ const userInfoController = async (req, res, next) => {
       let data = await Corporate.find({ _id }).lean()
       res.status(200).json(data);
     } else if (isAdmin === "super-admin") {
-      let data = await superAdmin.find({ _id }).lean()
+      let data = await superAdmin.findOne({ _id }).lean()
       res.status(200).json(data);
     }
     else {
