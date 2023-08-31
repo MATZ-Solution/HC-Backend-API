@@ -9,13 +9,8 @@ const corporateSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
-    personalEmail: {
-      type: String,
-      default: ""
-    },
     phoneNumber: {
-      type: Number,
-      default: ""
+      type: Number
     },
     password: {
       type: String,
@@ -25,12 +20,10 @@ const corporateSchema = new mongoose.Schema(
       enum: rolesEnum,
     },
     firstName: {
-      type: String,
-      default: ""
+      type: String
     },
     middleName: {
-      type: String,
-      default: ""
+      type: String
     },
     lastName: {
       type: String,
@@ -72,6 +65,18 @@ const corporateSchema = new mongoose.Schema(
     zipCode: {
       type: String,
     },
+    latitude: {
+      type: String
+    },
+    longitude: {
+      type: String
+    },
+    mongoDbID: {
+      type: String
+    },
+    category: {
+      type: String
+    },
     organizationName: {
       type: String,
     },
@@ -91,7 +96,7 @@ const corporateSchema = new mongoose.Schema(
       type: String,
     },
     organizationContactNo: {
-      type: Number,
+      type: String,
     },
     organizationEmail: {
       type: String,

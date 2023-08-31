@@ -497,7 +497,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
     );
 
     if (updatedData) {
-      const existEmail = await Corporate.find({ email: updatedData.servicePhoneNumber });
+      const existEmail = await Corporate.find({ organizationContactNo: updatedData.servicePhoneNumber });
 
       if (existEmail.length !== 0) {
         await Corporate.findOneAndUpdate(
@@ -515,9 +515,16 @@ const isAdminApprovePatientService = async (req, res, next) => {
             process.env.PASS_SEC
           ).toString(),
           role: "corporate",
-          firstName: updatedData.serviceName,
-          city: updatedData.serviceCity,
+          organizationName: updatedData.serviceName,
+          organizationCity: updatedData.serviceCity,
           organizationMainOfficeAddress: updatedData.serviceFullAddress,
+          organizationZipCode:updatedData.serviceZipCode,
+          organizationState: updatedData.serviceState,
+          organizationContactNo: updatedData.servicePhoneNumber,
+          latitude: updatedData.serviceLatitude,
+          longitude: updatedData.serviceLongitude,
+          mongoDbID: updatedData.scrapeMongoDbID,
+          category:updatedData.category,
           conatactedCustomer: 1,
         });
 
