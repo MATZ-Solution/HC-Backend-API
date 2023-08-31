@@ -61,7 +61,7 @@ const addComplainId = async (req, res, next) => {
     try {
         const { phoneNumber, mongoDbID, category } = req.body;
 
-        const corporate = await Corporate.findOne({ email: phoneNumber });
+        const corporate = await Corporate.findOne({ organizationContactNo: phoneNumber });
 
         if (!corporate) {
             return res.status(404).json({ message: "Corporate not found" });
