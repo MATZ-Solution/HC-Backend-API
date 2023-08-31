@@ -9,6 +9,7 @@ const otherCareModel = require("../Model/otherCareModel");
 const Vital = require("../Model/vitalModel");
 const patService = require("../Model/patApplyService")
 const axios = require('axios')
+const invoice = require("../Model/invoiceModel")
 
 // Controller for changing password
 
@@ -500,11 +501,25 @@ const isAdminApprovePatientService = async (req, res, next) => {
       const existEmail = await Corporate.find({ organizationContactNo: updatedData.servicePhoneNumber });
 
       if (existEmail.length !== 0) {
-        await Corporate.findOneAndUpdate(
+        let corporate = await Corporate.findOneAndUpdate(
           { email: updatedData.servicePhoneNumber },
           { $inc: { conatactedCustomer: 1 } },
           { new: true }
         );
+
+        console.log(corporate._id)
+
+        let createInvoie = await invoice.create({
+          category: corporate.category,
+          leadsId: corporate.mongoDbID,
+          patientId: updatedData._id,
+          corporateId: corporate._id,
+          amount: req.body.amount,
+          discount: req.body.discount
+        })
+
+        await createInvoie.save();
+
         res.status(200).json({ message: "Updated", data: updatedData });
 
       } else {
@@ -528,7 +543,20 @@ const isAdminApprovePatientService = async (req, res, next) => {
           conatactedCustomer: 1,
         });
 
-        await createUser.save();
+        let corporate = await createUser.save();
+
+        console.log(corporate._id)
+
+        let createInvoie = await invoice.create({
+          category: corporate.category,
+          leadsId: corporate.mongoDbID,
+          patientId: updatedData._id,
+          corporateId: corporate._id,
+          amount: req.body.amount,
+          discount: req.body.discount
+        })
+
+        await createInvoie.save();
 
         res.status(200).json({ message: "Updated", data: updatedData });
       }
@@ -564,7 +592,7 @@ const getAllCorporates = async (req, res, next) => {
               if (response.status === 200) {
                 return response.data;
               } else {
-                return []; 
+                return [];
               }
             })
           );
