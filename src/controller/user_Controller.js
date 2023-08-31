@@ -518,13 +518,13 @@ const isAdminApprovePatientService = async (req, res, next) => {
           organizationName: updatedData.serviceName,
           organizationCity: updatedData.serviceCity,
           organizationMainOfficeAddress: updatedData.serviceFullAddress,
-          organizationZipCode:updatedData.serviceZipCode,
+          organizationZipCode: updatedData.serviceZipCode,
           organizationState: updatedData.serviceState,
           organizationContactNo: updatedData.servicePhoneNumber,
           latitude: updatedData.serviceLatitude,
           longitude: updatedData.serviceLongitude,
           mongoDbID: updatedData.scrapeMongoDbID,
-          category:updatedData.category,
+          category: updatedData.category,
           conatactedCustomer: 1,
         });
 
@@ -558,13 +558,13 @@ const getAllCorporates = async (req, res, next) => {
             corporate.complaintIds.map(async complaint => {
               const response = await axios.post(apiUrl, {
                 mongoDbID: complaint.mongoDbID,
-                category: complaint.category // Replace with the actual category field in your Corporate model
+                category: complaint.category
               });
 
               if (response.status === 200) {
-                return response.data; // Assuming response.data.complaints is an array
+                return response.data;
               } else {
-                return []; // Return an empty array for complaints on error
+                return []; 
               }
             })
           );
