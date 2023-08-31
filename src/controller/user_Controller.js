@@ -7,9 +7,10 @@ const CryptoJS = require("crypto-js");
 const ErrorHandler = require("../utils/ErrorHandler");
 const otherCareModel = require("../Model/otherCareModel");
 const Vital = require("../Model/vitalModel");
-const patService = require("../Model/patApplyService")
-const axios = require('axios')
-const invoice = require("../Model/invoiceModel")
+const patService = require("../Model/patApplyService");
+const axios = require('axios');
+const invoice = require("../Model/invoiceModel");
+const superAdmin = require("../Model/superAdminModel")
 
 // Controller for changing password
 
@@ -102,6 +103,9 @@ const userInfoController = async (req, res, next) => {
       res.status(200).json({ message: "Care-givers data can be handled here." });
     } else if (isAdmin === "corporate") {
       let data = await Corporate.find({ _id }).lean()
+      res.status(200).json(data);
+    } else if (isAdmin === "super-admin") {
+      let data = await superAdmin.find({ _id }).lean()
       res.status(200).json(data);
     }
     else {

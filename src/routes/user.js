@@ -26,7 +26,7 @@ router.post("/forgotPassword", forgotPasswordController);
 router.post("/verifyEmail", verifyEmail);
 router.post("/verifyOtp", verifyOtp);
 router.post("/verifyforgetPasswordOtp", verifyforgetPasswordOtp);
-router.put("/UpdateUser", updatedUser)
+router.put("/UpdateUser",updatedUser)
 router.post("/PatientApplyForService", patApplyforcoroporate)
 
 //corporate specific data
