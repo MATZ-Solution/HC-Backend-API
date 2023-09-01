@@ -27,6 +27,7 @@ const branchRequestRoute = require('./routes/branchRequestRoute');
 const advisorRoute = require('./routes/advisorRoutes');
 const corporateRoutes = require('./routes/corporateRoutes');
 const superAdminRoutes = require('./routes/superAdminRoutes')
+const favoriteRoutes = require('./routes/favourateRoutes')
 
 
 
@@ -78,6 +79,9 @@ app.use("/api/branchRequest", branchRequestRoute);
 app.use("/api/advisor", advisorRoute);
 app.use("/api/corporate", corporateRoutes);
 app.use("/api/superAdmin", superAdminRoutes)
+app.use("/api/favoriteRoutes", favoriteRoutes)
+
+
 
 app.use(errorMiddleware);
 

@@ -1,21 +1,21 @@
 const mongoose = require("mongoose");
 
-const corporateSchema = new mongoose.Schema(
+const favourateSchema = new mongoose.Schema(
     {
         category: {
             type: String
         },
-        objectId: {
+        scrapeObjectId: {
             type: Number
         },
         patId: {
             type: String,
-            ref: "Corporate",
+            ref: "User",
         },
     },
     { timestamps: true }
 );
 
-const Corporate = mongoose.model("Corporate", corporateSchema);
+const Favourate = mongoose.model("favourate", favourateSchema);
 
-module.exports = Corporate;
+module.exports = Favourate;

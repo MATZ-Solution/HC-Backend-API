@@ -628,7 +628,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         let corporate = await createUser.save();
 
-        console.log(corporate._id)
 
         let createInvoie = await invoice.create({
           category: corporate.category,
