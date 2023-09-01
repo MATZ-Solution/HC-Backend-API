@@ -6,7 +6,7 @@ const favourateSchema = new mongoose.Schema(
             type: String
         },
         scrapeObjectId: {
-            type: Number
+            type: String
         },
         patId: {
             type: String,
