@@ -128,7 +128,7 @@ const specificCorporateData = async (req, res, next) => {
     const foundCorporate = await Corporate.findOne({ _id });
 
     if (foundCorporate) {
-      
+
       const data = await patService.find({
         servicePhoneNumber: foundCorporate.organizationContactNo,
         isAdminApproveStatus: true
@@ -659,6 +659,8 @@ const getAllCorporates = async (req, res, next) => {
     const corporatesWithComplaints = await Promise.all(
       getAllCorporatesData.map(async corporate => {
         try {
+          const corporateInvoice = await invoice.find({ corporateId: corporate._id });
+          
           const complaintsWithResponses = await Promise.all(
             corporate.complaintIds.map(async complaint => {
               const response = await axios.post(apiUrl, {
@@ -675,10 +677,10 @@ const getAllCorporates = async (req, res, next) => {
           );
 
           const { _doc: corporateData } = corporate;
-          return { ...corporateData, complaints: complaintsWithResponses.flat() };
+          return { ...corporateData, complaints: complaintsWithResponses.flat(), corporateInvoice: corporateInvoice };
         } catch (error) {
           const { _doc: corporateData } = corporate;
-          return { ...corporateData, complaints: [] }; // Return an empty array for complaints on error
+          return { ...corporateData, complaints: [], corporateInvoice: [] }; // Return an empty array for complaints on error
         }
       })
     );

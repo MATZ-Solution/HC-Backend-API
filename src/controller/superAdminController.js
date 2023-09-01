@@ -5,7 +5,7 @@ const invoice = require("../Model/invoiceModel");
 const superAdminClt = {
     getInvoices: async (req, res, next) => {
         try {
-            const getAllInvoices = await invoice.find().populate("patApplyService").populate("corporate");
+            const getAllInvoices = await invoice.find().populate("patientId").populate("corporateId");
             if (getAllInvoices) {
                 res.status(200).json(getAllInvoices)
             }
