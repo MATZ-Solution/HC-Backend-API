@@ -1,11 +1,9 @@
 const express = require("express");
-const serviceClt = require("../controller/superAdminController");
-const { verifyTokenAndCareGivers,verifyToken} = require("../middleware/verifytokens");
+const superAdminClt = require("../controller/superAdminController");
+const { verifyTokenAndAdmin } = require("../middleware/verifytokens");
 const router = express.Router();
 
-router.route("/").post(verifyTokenAndCareGivers, serviceClt.createService);
-router.route("/").get(verifyToken, serviceClt.getServices);
-router.route("/getAppointmentSlots/:otherCareId/:startDate/:endDate").get(verifyToken, serviceClt.getAppointmentSlots);
+router.route("/getAllInvoices").get(verifyTokenAndAdmin, superAdminClt.getInvoices);
 
 
 module.exports = router;

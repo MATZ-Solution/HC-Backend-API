@@ -256,7 +256,7 @@ const updatedProfile = async (req, res, next) => {
 
       if (updatedData) {
         // User found and updated
-        res.status(200).json("corporate Updated");
+        res.status(200).json("SuperAdmin Updated");
       } else {
         // User not found
         throw new ErrorHandler("User Not Found", 400);

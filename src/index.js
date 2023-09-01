@@ -16,16 +16,18 @@ const regionRoute = require("./routes/region");
 const healthCareRoute = require("./routes/healthCareRoute");
 const geoLocationRoute = require("./routes/geoPlacesRoute");
 const branchRoute = require("./routes/branchRoutes");
-const branchManagerRoute = require("./routes/branchManagerRoutes")
+const branchManagerRoute = require("./routes/branchManagerRoutes");
 const errorMiddleware = require("./middleware/error");
 const s3Rotue = require('./routes/s3Routes');
 const services = require('./routes/service_routes');
 const cloudinary = require('./routes/cloundinaryRoutes');
 const appointmentRoute = require('./routes/appointmentRoutes');
-const vital = require('./routes/vitalRoutes')
-const branchRequestRoute = require('./routes/branchRequestRoute')
-const advisorRoute = require('./routes/advisorRoutes')
-const corporateRoutes = require ('./routes/corporateRoutes')
+const vital = require('./routes/vitalRoutes');
+const branchRequestRoute = require('./routes/branchRequestRoute');
+const advisorRoute = require('./routes/advisorRoutes');
+const corporateRoutes = require('./routes/corporateRoutes');
+const invoice = require ('./routes/sup')
+
 
 
 dotenv.config();
@@ -74,7 +76,7 @@ app.use("/api/appointment", appointmentRoute);
 app.use("/api/vital", vital);
 app.use("/api/branchRequest", branchRequestRoute);
 app.use("/api/advisor", advisorRoute);
-app.use("/api/corporate",corporateRoutes)
+app.use("/api/corporate", corporateRoutes)
 
 app.use(errorMiddleware);
 
