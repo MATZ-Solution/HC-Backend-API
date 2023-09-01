@@ -195,6 +195,71 @@ const updatedUser = async (req, res, next) => {
   }
 };
 
+//updateProfileUsingToken
+
+const updatedProfile = async (req, res, next) => {
+  try {
+    const { _id, isAdmin } = req.user;
+
+    if (isAdmin === "patient") {
+      const user = await User.findOneAndUpdate(
+        { _id },
+        { ...req.body },
+        { new: true });
+      if (user) {
+        res.status(200).json("User Updated");
+      } else {
+        throw new ErrorHandler("User Not Found", 400);
+      }
+    } else if (role === "care-givers") {
+      const otherCare = await otherCareModel.findOneAndUpdate(
+        { _id },
+        { ...req.body },
+        { new: true }
+      );
+
+      if (otherCare) {
+        // User found and updated
+        res.status(200).json("otherCare Updated");
+      } else {
+        // User not found
+        throw new ErrorHandler("User Not Found", 400);
+      }
+    } else if (role === "corporate") {
+      const corporate = await Corporate.findOneAndUpdate(
+        { _id }, // Find the user based on the email
+        { ...req.body}, // Update the user's information
+        { new: true } // Return the updated user object
+      );
+
+      if (corporate) {
+        // User found and updated
+        res.status(200).json("corporate Updated");
+      } else {
+        // User not found
+        throw new ErrorHandler("User Not Found", 400);
+      }
+    }else if (role === "super-admin") {
+      const updatedData = await superAdmin.findOneAndUpdate(
+        { _id }, // Find the user based on the email
+        { ...req.body}, // Update the user's information
+        { new: true } // Return the updated user object
+      );
+
+      if (updatedData) {
+        // User found and updated
+        res.status(200).json("corporate Updated");
+      } else {
+        // User not found
+        throw new ErrorHandler("User Not Found", 400);
+      }
+    }
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 //verify email sending otp to the email
 
 const verifyEmail = async (req, res, next) => {
@@ -715,5 +780,6 @@ module.exports = {
   getPatApplyService,
   specificCorporateData,
   isAdminApprovePatientService,
-  getAllCorporates
+  getAllCorporates,
+  updatedProfile
 };

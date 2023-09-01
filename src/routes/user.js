@@ -14,7 +14,8 @@ const {
   getPatApplyService,
   specificCorporateData,
   isAdminApprovePatientService,
-  getAllCorporates
+  getAllCorporates,
+  updatedProfile
 } = require("../controller/user_Controller");
 const router = require("express").Router();
 
@@ -26,8 +27,13 @@ router.post("/forgotPassword", forgotPasswordController);
 router.post("/verifyEmail", verifyEmail);
 router.post("/verifyOtp", verifyOtp);
 router.post("/verifyforgetPasswordOtp", verifyforgetPasswordOtp);
-router.put("/UpdateUser",updatedUser)
-router.post("/PatientApplyForService", patApplyforcoroporate)
+router.put("/UpdateUser", updatedUser);
+router.post("/PatientApplyForService", patApplyforcoroporate);
+
+//updateUserProfileUsingToken
+
+router.put("/UpdateUser", verifyToken, updatedProfile);
+
 
 //corporate specific data
 router.get("/specificCorporateData/:servicePhoneNumber", verifyTokenAndCorporate, specificCorporateData)
