@@ -12,6 +12,14 @@ const favourateSchema = new mongoose.Schema(
             type: String,
             ref: "User",
         },
+        corporateId: {
+            type: String,
+            ref: "Corporate",
+        },
+        superAdminId: {
+            type: String,
+            ref: "superAdmin",
+        },
     },
     { timestamps: true }
 );

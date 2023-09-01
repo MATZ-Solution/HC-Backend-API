@@ -22,7 +22,7 @@ const favoriteClt = {
                 const newFavorite = new Favourate({
                     category,
                     scrapeObjectId,
-                    patId: _id
+                    superAdminId: _id
                 });
 
                 await newFavorite.save();
@@ -33,13 +33,12 @@ const favoriteClt = {
                 const newFavorite = new Favourate({
                     category,
                     scrapeObjectId,
-                    patId: _id
+                    corporateId: _id
                 });
 
                 await newFavorite.save();
 
                 res.status(201).json({ message: "Favorite created successfully" });
-
             }
 
         } catch (err) {
@@ -74,7 +73,7 @@ const favoriteClt = {
 
             // const getFavourateWithResponse = await Promise.all(
 
-            // )
+
 
             // getFavourates.map(favourate => {
             //     console.log(favourate);

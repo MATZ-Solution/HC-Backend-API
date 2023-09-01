@@ -90,12 +90,44 @@ const addComplainId = async (req, res, next) => {
 const getIndividualInvoice = async (req, res, next) => {
     try {
         const { _id } = req.user;
-        console.log(_id)
-        const getAllInvoices = await invoice.find({ corporateId: _id }).populate("patientId").populate("corporateId");
-        if (getAllInvoices) {
-            res.status(200).json(getAllInvoices)
+        const getAllInvoices = await invoice.find({ corporateId: _id }).populate("patientId");
+
+        if (getAllInvoices && getAllInvoices.length > 0) {
+            const formattedInvoices = getAllInvoices.map((invoice) => ({
+                _id: invoice._id,
+                leadAmount: invoice.leadAmount,
+                discount: invoice.discount,
+                subTotal: invoice.subTotal,
+                grandTotal: invoice.grandTotal,
+                dueDate: invoice.dueDate,
+                additionalMessage: invoice.additionalMessage,
+                category: invoice.category,
+                leadsId: invoice.leadsId,
+                patFullName: invoice.patientId.patFullName,
+                patAddress: invoice.patientId.patAddress,
+                patPhoneNumber: invoice.patientId.patPhoneNumber,
+                patDescription: invoice.patientId.patDescription,
+                category: invoice.patientId.category,
+                scrapeMongoDbID: invoice.patientId.scrapeMongoDbID,
+                serviceCategory: invoice.patientId.serviceCategory,
+                serviceCity: invoice.patientId.serviceCity,
+                servicePhoneNumber: invoice.patientId.servicePhoneNumber,
+                serviceFullAddress: invoice.patientId.serviceFullAddress,
+                serviceZipCode: invoice.patientId.serviceZipCode,
+                serviceState: invoice.patientId.serviceState,
+                serviceLatitude: invoice.patientId.serviceLatitude,
+                serviceLongitude: invoice.patientId.serviceLongitude,
+                serviceOverAllRating: invoice.patientId.serviceOverAllRating,
+                servicePatientSurveyRating: invoice.patientId.servicePatientSurveyRating,
+                servicePatientSurveyRating: invoice.patientId.servicePatientSurveyRating
+            }));
+
+            res.status(200).json(formattedInvoices);
+        } else {
+            res.status(404).json("Not Found");
         }
-        res.status(200).json("Not Found")
+
+
     } catch (err) {
         next(err)
     }
