@@ -122,19 +122,27 @@ const userInfoController = async (req, res, next) => {
 //corporate data
 const specificCorporateData = async (req, res, next) => {
   try {
-    const { servicePhoneNumber } = req.params;
+    // const { servicePhoneNumber } = req.params;
+    const { _id } = req.user;
 
-    const data = await patService.find({
-      servicePhoneNumber,
-      isAdminApproveStatus: true
-    }).lean();
+    const foundCorporate = await Corporate.findOne({ _id });
+
+    if (foundCorporate) {
+      
+      const data = await patService.find({
+        servicePhoneNumber: foundCorporate.organizationContactNo,
+        isAdminApproveStatus: true
+      }).lean();
 
 
-    if (data.length > 0) {
-      res.status(200).json(data);
-    } else {
-      res.status(404).json({ message: "No Data Found" });
+      if (data.length > 0) {
+        res.status(200).json(data);
+      } else {
+        res.status(404).json({ message: "No Data Found" });
+      }
     }
+
+
   } catch (err) {
     next(err);
   }
@@ -228,7 +236,7 @@ const updatedProfile = async (req, res, next) => {
     } else if (role === "corporate") {
       const corporate = await Corporate.findOneAndUpdate(
         { _id }, // Find the user based on the email
-        { ...req.body}, // Update the user's information
+        { ...req.body }, // Update the user's information
         { new: true } // Return the updated user object
       );
 
@@ -239,10 +247,10 @@ const updatedProfile = async (req, res, next) => {
         // User not found
         throw new ErrorHandler("User Not Found", 400);
       }
-    }else if (role === "super-admin") {
+    } else if (role === "super-admin") {
       const updatedData = await superAdmin.findOneAndUpdate(
         { _id }, // Find the user based on the email
-        { ...req.body}, // Update the user's information
+        { ...req.body }, // Update the user's information
         { new: true } // Return the updated user object
       );
 

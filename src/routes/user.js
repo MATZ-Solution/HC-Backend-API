@@ -35,8 +35,8 @@ router.post("/PatientApplyForService", patApplyforcoroporate);
 router.put("/UpdateProfile", verifyToken, updatedProfile);
 
 
-//corporate specific data
-router.get("/specificCorporateData/:servicePhoneNumber", verifyTokenAndCorporate, specificCorporateData)
+//corporate viewing his own patient data
+router.get("/specificCorporateData", verifyTokenAndCorporate, specificCorporateData)
 
 //approve admin statusisAdminApprovePatientService
 
