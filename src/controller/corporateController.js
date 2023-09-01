@@ -2,7 +2,7 @@ const sendEmail = require('../utils/email');
 const ErrorHandler = require("../utils/ErrorHandler");
 const patientApplyService = require("../Model/patApplyService");
 const Corporate = require("../Model/corporateModel");
-const invoice = require ("../Model/invoiceModel")
+const invoice = require("../Model/invoiceModel")
 
 const emailController = async (req, res, next) => {
     try {
@@ -89,7 +89,9 @@ const addComplainId = async (req, res, next) => {
 
 const getIndividualInvoice = async (req, res, next) => {
     try {
-        const getAllInvoices = await invoice.find().populate("patientId").populate("corporateId");
+        const { _id } = req.user;
+        console.log(_id)
+        const getAllInvoices = await invoice.find({ corporateId: _id }).populate("patientId").populate("corporateId");
         if (getAllInvoices) {
             res.status(200).json(getAllInvoices)
         }

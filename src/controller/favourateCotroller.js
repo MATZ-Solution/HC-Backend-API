@@ -4,20 +4,43 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const favoriteClt = {
     createFavourate: async (req, res, next) => {
         try {
-            const { _id } = req.user;
+            const { _id, isAdmin } = req.user;
             const { category, scrapeObjectId } = req.body;
 
-            // Create a new favorite
-            const newFavorite = new Favourate({
-                category,
-                scrapeObjectId,
-                patId: _id
-            });
+            if (isAdmin === "patient") {
 
-            // Save the new favorite to the database
-            await newFavorite.save();
+                const newFavorite = new Favourate({
+                    category,
+                    scrapeObjectId,
+                    patId: _id
+                });
 
-            res.status(201).json({ message: "Favorite created successfully" });
+                await newFavorite.save();
+
+                res.status(201).json({ message: "Favorite created successfully" });
+            } else if (isAdmin === "super-admin") {
+                const newFavorite = new Favourate({
+                    category,
+                    scrapeObjectId,
+                    patId: _id
+                });
+
+                await newFavorite.save();
+
+                res.status(201).json({ message: "Favorite created successfully" });
+
+            } else if (isAdmin === "corporate") {
+                const newFavorite = new Favourate({
+                    category,
+                    scrapeObjectId,
+                    patId: _id
+                });
+
+                await newFavorite.save();
+
+                res.status(201).json({ message: "Favorite created successfully" });
+
+            }
 
         } catch (err) {
             next(err);
@@ -28,12 +51,46 @@ const favoriteClt = {
     getFavourate: async (req, res, next) => {
         try {
             const { _id } = req.user;
-            let getFavourates = await Favourate.find({ patId:_id });
-            if (!getFavourates) {
-                res.status(404).json("Record Not Found");
-            }
 
-            res.status(200).json(getFavourates)
+            const apiUrl = 'http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCorporatesUsingMongoId';
+
+            let getFavourates = await Favourate.find({ patId: _id });
+
+
+            // const complaintsWithResponses = await Promise.all(
+            //     corporate.complaintIds.map(async complaint => {
+            //       const response = await axios.post(apiUrl, {
+            //         mongoDbID: complaint.mongoDbID,
+            //         category: complaint.category
+            //       });
+
+            //       if (response.status === 200) {
+            //         return response.data;
+            //       } else {
+            //         return [];
+            //       }
+            //     })
+            // );
+
+            // const getFavourateWithResponse = await Promise.all(
+
+            // )
+
+            // getFavourates.map(favourate => {
+            //     console.log(favourate);
+            //     const response = await axios.post(apiUrl, {
+            //         mongoDbID: complaint.mongoDbID,
+            //         category: complaint.category
+            //     });
+
+
+            // });
+
+            // if (!getFavourates) {
+            //     res.status(404).json("Record Not Found");
+            // }
+
+            // res.status(200).json(getFavourates)
         } catch (err) {
             next(err);
         }
