@@ -26,7 +26,7 @@ const vital = require('./routes/vitalRoutes');
 const branchRequestRoute = require('./routes/branchRequestRoute');
 const advisorRoute = require('./routes/advisorRoutes');
 const corporateRoutes = require('./routes/corporateRoutes');
-const invoice = require ('./routes/sup')
+const superAdminRoutes = require('./routes/superAdminRoutes')
 
 
 
@@ -76,7 +76,8 @@ app.use("/api/appointment", appointmentRoute);
 app.use("/api/vital", vital);
 app.use("/api/branchRequest", branchRequestRoute);
 app.use("/api/advisor", advisorRoute);
-app.use("/api/corporate", corporateRoutes)
+app.use("/api/corporate", corporateRoutes);
+app.use("/api/superAdmin", superAdminRoutes)
 
 app.use(errorMiddleware);
 
