@@ -219,7 +219,7 @@ const updatedProfile = async (req, res, next) => {
       } else {
         throw new ErrorHandler("User Not Found", 400);
       }
-    } else if (role === "care-givers") {
+    } else if (isAdmin === "care-givers") {
       const otherCare = await otherCareModel.findOneAndUpdate(
         { _id },
         { ...req.body },
@@ -233,7 +233,7 @@ const updatedProfile = async (req, res, next) => {
         // User not found
         throw new ErrorHandler("User Not Found", 400);
       }
-    } else if (role === "corporate") {
+    } else if (isAdmin === "corporate") {
       const corporate = await Corporate.findOneAndUpdate(
         { _id }, // Find the user based on the email
         { ...req.body }, // Update the user's information
@@ -247,7 +247,7 @@ const updatedProfile = async (req, res, next) => {
         // User not found
         throw new ErrorHandler("User Not Found", 400);
       }
-    } else if (role === "super-admin") {
+    } else if (isAdmin === "super-admin") {
       const updatedData = await superAdmin.findOneAndUpdate(
         { _id }, // Find the user based on the email
         { ...req.body }, // Update the user's information
