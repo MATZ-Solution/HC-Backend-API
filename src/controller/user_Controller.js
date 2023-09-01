@@ -591,10 +591,15 @@ const isAdminApprovePatientService = async (req, res, next) => {
           leadsId: corporate.mongoDbID,
           patientId: updatedData._id,
           corporateId: corporate._id,
-          amount: req.body.amount,
+          leadAmount: req.body.leadAmount,
+          subTotal: req.body.subTotal,
+          grandTotal: req.body.grandTotal,
           discount: req.body.discount,
-          additionalMessage:req.body.additionalMessage
+          dueDate: req.body.dueDate,
+          additionalMessage: req.body.additionalMessage
         })
+
+
 
         await createInvoie.save();
 
@@ -630,9 +635,12 @@ const isAdminApprovePatientService = async (req, res, next) => {
           leadsId: corporate.mongoDbID,
           patientId: updatedData._id,
           corporateId: corporate._id,
-          amount: req.body.amount,
+          leadAmount: req.body.leadAmount,
+          subTotal: req.body.subTotal,
+          grandTotal: req.body.grandTotal,
           discount: req.body.discount,
-          additionalMessage:req.body.additionalMessage
+          dueDate: req.body.dueDate,
+          additionalMessage: req.body.additionalMessage
         })
 
         await createInvoie.save();
@@ -662,7 +670,7 @@ const getAllCorporates = async (req, res, next) => {
       getAllCorporatesData.map(async corporate => {
         try {
           const corporateInvoice = await invoice.find({ corporateId: corporate._id });
-          
+
           const complaintsWithResponses = await Promise.all(
             corporate.complaintIds.map(async complaint => {
               const response = await axios.post(apiUrl, {

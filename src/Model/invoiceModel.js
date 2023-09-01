@@ -2,11 +2,20 @@ const mongoose = require("mongoose");
 
 const invoiceSchema = mongoose.Schema(
   {
-    amount: {
+    leadAmount: {
+      type: Number
+    },
+    subTotal: {
+      type: Number
+    },
+    grandTotal: {
       type: Number
     },
     discount: {
       type: Number
+    },
+    dueDate: {
+      type: String
     },
     category: {
       type: String
