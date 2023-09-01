@@ -32,7 +32,7 @@ router.post("/PatientApplyForService", patApplyforcoroporate);
 
 //updateUserProfileUsingToken
 
-router.put("/UpdateUser", verifyToken, updatedProfile);
+router.put("/UpdateProfile", verifyToken, updatedProfile);
 
 
 //corporate specific data
