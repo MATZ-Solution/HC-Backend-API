@@ -3,16 +3,19 @@ const mongoose = require("mongoose");
 const invoiceSchema = mongoose.Schema(
   {
     amount: {
-      type:Number
+      type: Number
     },
     discount: {
-      type:Number
+      type: Number
     },
     category: {
-      type:String
+      type: String
+    },
+    additionalMessage: {
+      type: String
     },
     leadsId: {
-      type:String
+      type: String
     },
     patientId: {
       type: mongoose.Schema.Types.ObjectId,

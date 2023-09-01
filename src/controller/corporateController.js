@@ -2,6 +2,7 @@ const sendEmail = require('../utils/email');
 const ErrorHandler = require("../utils/ErrorHandler");
 const patientApplyService = require("../Model/patApplyService");
 const Corporate = require("../Model/corporateModel");
+const invoice = require ("../Model/invoiceModel")
 
 const emailController = async (req, res, next) => {
     try {
@@ -84,10 +85,26 @@ const addComplainId = async (req, res, next) => {
 }
 
 
+//corporate getting his invidual invoices
+
+const getIndividualInvoice = async (req, res, next) => {
+    try {
+        const getAllInvoices = await invoice.find().populate("patientId").populate("corporateId");
+        if (getAllInvoices) {
+            res.status(200).json(getAllInvoices)
+        }
+        res.status(200).json("Not Found")
+    } catch (err) {
+        next(err)
+    }
+}
+
+
 
 
 module.exports = {
     emailController,
     updateCorporate,
-    addComplainId
+    addComplainId,
+    getIndividualInvoice
 };

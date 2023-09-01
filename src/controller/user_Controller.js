@@ -592,7 +592,8 @@ const isAdminApprovePatientService = async (req, res, next) => {
           patientId: updatedData._id,
           corporateId: corporate._id,
           amount: req.body.amount,
-          discount: req.body.discount
+          discount: req.body.discount,
+          additionalMessage:req.body.additionalMessage
         })
 
         await createInvoie.save();
@@ -630,7 +631,8 @@ const isAdminApprovePatientService = async (req, res, next) => {
           patientId: updatedData._id,
           corporateId: corporate._id,
           amount: req.body.amount,
-          discount: req.body.discount
+          discount: req.body.discount,
+          additionalMessage:req.body.additionalMessage
         })
 
         await createInvoie.save();
