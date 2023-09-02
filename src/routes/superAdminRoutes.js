@@ -4,6 +4,8 @@ const { verifyTokenAndAdmin } = require("../middleware/verifytokens");
 const router = express.Router();
 
 router.route("/getAllInvoices").get(verifyTokenAndAdmin, superAdminClt.getInvoices);
+router.route("/addReviews").get(superAdminClt.addReview);
+router.route("/getReviews").get(superAdminClt.getReviews);
 
 
 module.exports = router;

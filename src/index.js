@@ -88,7 +88,7 @@ app.use(errorMiddleware);
 
 
 
-app.get("/", (req, res) => {
+app.get("/normal", (req, res) => {
   res.send("Hello World");
 });
 // Start the server and listen for incoming requests
