@@ -1,5 +1,6 @@
 const Favourate = require("../Model/favourateModel");
 const ErrorHandler = require("../utils/ErrorHandler");
+const axios = require('axios')
 
 const favoriteClt = {
     createFavourate: async (req, res, next) => {
@@ -51,45 +52,28 @@ const favoriteClt = {
         try {
             const { _id } = req.user;
 
-            const apiUrl = 'http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCorporatesUsingMongoId';
+            const apiUrl = 'http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId';
 
-            let getFavourates = await Favourate.find({ patId: _id });
+            let getFavourates = await Favourate.find({ patId: _id }).populate("patId");
 
+            const getFavourateWithResponse = await Promise.all(
+                getFavourates.map(async (favourate) => {
+                    console.log("favourate.scrapeObjectId", favourate.scrapeObjectId)
+                    console.log("favourate.category", favourate.category)
+                    const response = await axios.post(apiUrl, {
+                        mongoDbID: favourate.scrapeObjectId, // Use favourate.mongoDbID here
+                        category: favourate.category,   // Use favourate.category here
+                    });
+                    // return response.data; // You can return the response data if needed
+                    return {
+                        // databaseResponse: favourate.patId,
+                        apiResponse: response.data,
+                    };
+                })
+            );
 
-            // const complaintsWithResponses = await Promise.all(
-            //     corporate.complaintIds.map(async complaint => {
-            //       const response = await axios.post(apiUrl, {
-            //         mongoDbID: complaint.mongoDbID,
-            //         category: complaint.category
-            //       });
+            res.status(200).json(getFavourateWithResponse);
 
-            //       if (response.status === 200) {
-            //         return response.data;
-            //       } else {
-            //         return [];
-            //       }
-            //     })
-            // );
-
-            // const getFavourateWithResponse = await Promise.all(
-
-
-
-            // getFavourates.map(favourate => {
-            //     console.log(favourate);
-            //     const response = await axios.post(apiUrl, {
-            //         mongoDbID: complaint.mongoDbID,
-            //         category: complaint.category
-            //     });
-
-
-            // });
-
-            // if (!getFavourates) {
-            //     res.status(404).json("Record Not Found");
-            // }
-
-            // res.status(200).json(getFavourates)
         } catch (err) {
             next(err);
         }
