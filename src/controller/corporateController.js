@@ -100,6 +100,7 @@ const getIndividualInvoice = async (req, res, next) => {
                 subTotal: invoice.subTotal,
                 grandTotal: invoice.grandTotal,
                 dueDate: invoice.dueDate,
+                isPayNow:invoice.isPayNow,
                 additionalMessage: invoice.additionalMessage,
                 category: invoice.category,
                 leadsId: invoice.leadsId,
