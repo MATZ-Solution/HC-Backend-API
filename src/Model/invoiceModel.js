@@ -34,6 +34,10 @@ const invoiceSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Corporate",
     },
+    isPayNow: {
+      type: Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );
