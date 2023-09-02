@@ -64,11 +64,11 @@ const favoriteClt = {
                         mongoDbID: favourate.scrapeObjectId, // Use favourate.mongoDbID here
                         category: favourate.category,   // Use favourate.category here
                     });
-                    // return response.data; // You can return the response data if needed
-                    return {
-                        // databaseResponse: favourate.patId,
-                        apiResponse: response.data,
-                    };
+                    return response.data; // You can return the response data if needed
+                    // return {
+                    //     // databaseResponse: favourate.patId,
+                    //     apiResponse: response.data,
+                    // };
                 })
             );
 
