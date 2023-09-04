@@ -106,6 +106,7 @@ const getIndividualInvoice = async (req, res, next) => {
                 leadsId: invoice.leadsId,
                 patFullName: invoice.patientId.patFullName,
                 patAddress: invoice.patientId.patAddress,
+                patEmail: invoice.patientId.patEmail,
                 patPhoneNumber: invoice.patientId.patPhoneNumber,
                 patDescription: invoice.patientId.patDescription,
                 category: invoice.patientId.category,
