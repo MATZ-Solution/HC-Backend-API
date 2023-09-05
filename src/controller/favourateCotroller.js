@@ -122,7 +122,9 @@ const favoriteClt = {
   deleteFavourate: async (req, res, next) => {
     try {
       console.log(req.params.id);
-      const deleteFavourate = await Favourate.findByIdAndDelete(req.params.id);
+      const deleteFavourate = await Favourate.findOneAndDelete({
+        scrapeObjectId: req.params.id,
+      });
       if (!deleteFavourate) {
         res.status(404).json({ error: "not found." });
       }

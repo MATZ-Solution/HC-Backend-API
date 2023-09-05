@@ -577,7 +577,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
     if (updatedData) {
       const existEmail = await Corporate.find({ organizationContactNo: updatedData.servicePhoneNumber });
 
-      if (existEmail.length !== 0) {
+      if (existEmail.length !== 0) { 
         let corporate = await Corporate.findOneAndUpdate(
           { email: updatedData.servicePhoneNumber },
           { $inc: { conatactedCustomer: 1 } },
