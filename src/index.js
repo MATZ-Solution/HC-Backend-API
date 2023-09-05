@@ -18,18 +18,16 @@ const geoLocationRoute = require("./routes/geoPlacesRoute");
 const branchRoute = require("./routes/branchRoutes");
 const branchManagerRoute = require("./routes/branchManagerRoutes");
 const errorMiddleware = require("./middleware/error");
-const s3Rotue = require('./routes/s3Routes');
-const services = require('./routes/service_routes');
-const cloudinary = require('./routes/cloundinaryRoutes');
-const appointmentRoute = require('./routes/appointmentRoutes');
-const vital = require('./routes/vitalRoutes');
-const branchRequestRoute = require('./routes/branchRequestRoute');
-const advisorRoute = require('./routes/advisorRoutes');
-const corporateRoutes = require('./routes/corporateRoutes');
-const superAdminRoutes = require('./routes/superAdminRoutes')
-const favoriteRoutes = require('./routes/favourateRoutes')
-
-
+const s3Rotue = require("./routes/s3Routes");
+const services = require("./routes/service_routes");
+const cloudinary = require("./routes/cloundinaryRoutes");
+const appointmentRoute = require("./routes/appointmentRoutes");
+const vital = require("./routes/vitalRoutes");
+const branchRequestRoute = require("./routes/branchRequestRoute");
+const advisorRoute = require("./routes/advisorRoutes");
+const corporateRoutes = require("./routes/corporateRoutes");
+const superAdminRoutes = require("./routes/superAdminRoutes");
+const favoriteRoutes = require("./routes/favourateRoutes");
 
 dotenv.config();
 
@@ -78,20 +76,15 @@ app.use("/api/vital", vital);
 app.use("/api/branchRequest", branchRequestRoute);
 app.use("/api/advisor", advisorRoute);
 app.use("/api/corporate", corporateRoutes);
-app.use("/api/superAdmin", superAdminRoutes)
-app.use("/api/favoriteRoutes", favoriteRoutes)
-
-
+app.use("/api/superAdmin", superAdminRoutes);
+app.use("/api/favoriteRoutes", favoriteRoutes);
 
 app.use(errorMiddleware);
-
-
-
 
 app.get("/normal", (req, res) => {
   res.send("Hello World");
 });
 // Start the server and listen for incoming requests
 app.listen(5000, () => {
-  console.log("Backend server is running!");
+  console.log("Backend server is running on 5000!");
 });
