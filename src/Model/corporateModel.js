@@ -155,6 +155,6 @@ const corporateSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Corporate = mongoose.model("Corporate", corporateSchema);
+const Corporate = mongoose.model("facilityOwnerAndProfessional", corporateSchema);
 
 module.exports = Corporate;

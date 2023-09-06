@@ -14,7 +14,7 @@ const favourateSchema = new mongoose.Schema(
         },
         corporateId: {
             type: String,
-            ref: "Corporate",
+            ref: "facilityOwnerAndProfessional",
         },
         superAdminId: {
             type: String,

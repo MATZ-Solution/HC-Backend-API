@@ -1,4 +1,8 @@
-const { verifyToken, verifyTokenAndAdmin, verifyTokenAndCorporate } = require("../middleware/verifytokens");
+const {
+  verifyToken,
+  verifyTokenAndAdmin,
+  verifyTokenAndCorporate,
+} = require('../middleware/verifytokens');
 const {
   changePasswordController,
   deleteUserController,
@@ -15,41 +19,47 @@ const {
   specificCorporateData,
   isAdminApprovePatientService,
   getAllCorporates,
-  updatedProfile
-} = require("../controller/user_Controller");
-const router = require("express").Router();
+  updatedProfile,
+  toConnectCorporate,
+} = require('../controller/user_Controller');
+const router = require('express').Router();
 
-router.put("/changePassword", verifyToken, changePasswordController);
-router.delete("/deleteAccount", verifyToken, deleteUserController);
-router.get("/userInfo", verifyToken, userInfoController);
-router.post("/sendEmail", sendEmail);
-router.post("/forgotPassword", forgotPasswordController);
-router.post("/verifyEmail", verifyEmail);
-router.post("/verifyOtp", verifyOtp);
-router.post("/verifyforgetPasswordOtp", verifyforgetPasswordOtp);
-router.put("/UpdateUser", updatedUser);
-router.post("/PatientApplyForService", patApplyforcoroporate);
+router.put('/changePassword', verifyToken, changePasswordController);
+router.delete('/deleteAccount', verifyToken, deleteUserController);
+router.get('/userInfo', verifyToken, userInfoController);
+router.post('/sendEmail', sendEmail);
+router.post('/forgotPassword', forgotPasswordController);
+router.post('/verifyEmail', verifyEmail);
+router.post('/verifyOtp', verifyOtp);
+router.post('/verifyforgetPasswordOtp', verifyforgetPasswordOtp);
+router.put('/UpdateUser', updatedUser);
+router.post('/PatientApplyForService', patApplyforcoroporate);
 
 //updateUserProfileUsingToken
 
-router.put("/UpdateProfile", verifyToken, updatedProfile);
-
+router.put('/UpdateProfile', verifyToken, updatedProfile);
 
 //corporate viewing his own patient data
-router.get("/specificCorporateData", verifyTokenAndCorporate, specificCorporateData)
+router.get(
+  '/specificCorporateData',
+  verifyTokenAndCorporate,
+  specificCorporateData
+);
 
 //approve admin statusisAdminApprovePatientService
 
-router.put("/approvePatientServiceByAdmin/:patMongoId", verifyTokenAndAdmin, isAdminApprovePatientService)
-
+router.put(
+  '/approvePatientServiceByAdmin/:patMongoId',
+  verifyTokenAndAdmin,
+  isAdminApprovePatientService
+);
 
 //super Admin
-router.get("/getAllUsers", verifyTokenAndAdmin, allUsers)
-router.get("/getAllPatServices", verifyTokenAndAdmin, getPatApplyService)
-router.get("/getAllCorporates", verifyTokenAndAdmin, getAllCorporates)
+router.get('/getAllUsers', verifyTokenAndAdmin, allUsers);
+router.get('/getAllPatServices', verifyTokenAndAdmin, getPatApplyService);
+router.get('/getAllCorporates', verifyTokenAndAdmin, getAllCorporates);
 
-
-
-
+//patient connecting corporate
+router.post('/toConnectCorporate', verifyToken, toConnectCorporate);
 
 module.exports = router;

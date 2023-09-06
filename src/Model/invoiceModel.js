@@ -32,7 +32,7 @@ const invoiceSchema = mongoose.Schema(
     },
     corporateId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Corporate",
+      ref: "facilityOwnerAndProfessional",
     },
     isPayNow: {
       type: Boolean,

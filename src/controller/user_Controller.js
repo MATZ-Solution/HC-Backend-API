@@ -1,16 +1,18 @@
-const User = require("../Model/User");
-const Corporate = require("../Model/corporateModel");
-const Otp = require("../Model/Otp");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
-const CryptoJS = require("crypto-js");
-const ErrorHandler = require("../utils/ErrorHandler");
-const otherCareModel = require("../Model/otherCareModel");
-const Vital = require("../Model/vitalModel");
-const patService = require("../Model/patApplyService");
+const User = require('../Model/User');
+const Corporate = require('../Model/corporateModel');
+const Otp = require('../Model/Otp');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const CryptoJS = require('crypto-js');
+const ErrorHandler = require('../utils/ErrorHandler');
+const otherCareModel = require('../Model/otherCareModel');
+const Vital = require('../Model/vitalModel');
+const patService = require('../Model/patApplyService');
 const axios = require('axios');
-const invoice = require("../Model/invoiceModel");
-const superAdmin = require("../Model/superAdminModel")
+const invoice = require('../Model/invoiceModel');
+const superAdmin = require('../Model/superAdminModel');
+const facilityOtp = require('../Model/facilityOtp');
+const medicalPractice = require('../Model/medicalPracticeModel');
 
 // Controller for changing password
 
@@ -28,12 +30,12 @@ const changePasswordController = async (req, res, next) => {
     ).toString(CryptoJS.enc.Utf8);
 
     if (decryptedPassword !== oldPassword) {
-      throw new ErrorHandler("Old Password not matched", 400);
+      throw new ErrorHandler('Old Password not matched', 400);
     }
 
     if (newPassword === decryptedPassword) {
       throw new ErrorHandler(
-        "New Password should not match with the old password",
+        'New Password should not match with the old password',
         400
       );
     }
@@ -63,11 +65,11 @@ const userInfoController = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
 
-    if (isAdmin === "patient") {
+    if (isAdmin === 'patient') {
       // Fetch user data
       const user = await User.findById(_id);
       if (!user) {
-        throw new ErrorHandler("User Not Found", 404);
+        throw new ErrorHandler('User Not Found', 404);
       }
 
       // Fetch vital data
@@ -97,29 +99,28 @@ const userInfoController = async (req, res, next) => {
       };
 
       res.status(200).json(userInfo);
-    } else if (isAdmin === "care-givers") {
+    } else if (isAdmin === 'care-givers') {
       // Handle care-givers specific logic if needed
       // For now, we don't have any implementation here
-      res.status(200).json({ message: "Care-givers data can be handled here." });
-    } else if (isAdmin === "corporate") {
-      let data = await Corporate.find({ _id }).lean()
+      res
+        .status(200)
+        .json({ message: 'Care-givers data can be handled here.' });
+    } else if (isAdmin === 'corporate') {
+      let data = await Corporate.find({ _id }).lean();
       res.status(200).json(data);
-    } else if (isAdmin === "super-admin") {
-      let data = await superAdmin.findOne({ _id }).lean()
+    } else if (isAdmin === 'super-admin') {
+      let data = await superAdmin.findOne({ _id }).lean();
       res.status(200).json(data);
+    } else {
+      throw new ErrorHandler('Invalid Role', 400);
     }
-    else {
-      throw new ErrorHandler("Invalid Role", 400);
-    }
-
   } catch (err) {
     next(err);
   }
 };
 
-
-
 //corporate data
+
 const specificCorporateData = async (req, res, next) => {
   try {
     // const { servicePhoneNumber } = req.params;
@@ -128,27 +129,23 @@ const specificCorporateData = async (req, res, next) => {
     const foundCorporate = await Corporate.findOne({ _id });
 
     if (foundCorporate) {
-
-      const data = await patService.find({
-        servicePhoneNumber: foundCorporate.organizationContactNo,
-        isAdminApproveStatus: true
-      }).lean();
-
+      const data = await patService
+        .find({
+          servicePhoneNumber: foundCorporate.organizationContactNo,
+          isAdminApproveStatus: true,
+        })
+        .lean();
 
       if (data.length > 0) {
         res.status(200).json(data);
       } else {
-        res.status(404).json({ message: "No Data Found" });
+        res.status(404).json({ message: 'No Data Found' });
       }
     }
-
-
   } catch (err) {
     next(err);
   }
 };
-
-
 
 //update User
 
@@ -156,7 +153,7 @@ const updatedUser = async (req, res, next) => {
   try {
     const { role } = req.body;
 
-    if (role === "patient") {
+    if (role === 'patient') {
       const user = await User.findOneAndUpdate(
         { email: req.body.email }, // Find the user based on the email
         { ...req.body, isProfileCompleted: true }, // Update the user's information
@@ -164,12 +161,12 @@ const updatedUser = async (req, res, next) => {
       );
       if (user) {
         // User found and updated
-        res.status(200).json("User Updated");
+        res.status(200).json('User Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
-    } else if (role === "care-givers") {
+    } else if (role === 'care-givers') {
       const otherCare = await otherCareModel.findOneAndUpdate(
         { email: req.body.email }, // Find the user based on the email
         { ...req.body, isProfileCompleted: true }, // Update the user's information
@@ -178,12 +175,12 @@ const updatedUser = async (req, res, next) => {
 
       if (otherCare) {
         // User found and updated
-        res.status(200).json("otherCare Updated");
+        res.status(200).json('otherCare Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
-    } else if (role === "corporate") {
+    } else if (role === 'corporate') {
       const corporate = await Corporate.findOneAndUpdate(
         { email: req.body.email }, // Find the user based on the email
         { ...req.body, isProfileCompleted: true }, // Update the user's information
@@ -192,10 +189,10 @@ const updatedUser = async (req, res, next) => {
 
       if (corporate) {
         // User found and updated
-        res.status(200).json("corporate Updated");
+        res.status(200).json('corporate Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
     }
   } catch (error) {
@@ -209,17 +206,18 @@ const updatedProfile = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
 
-    if (isAdmin === "patient") {
+    if (isAdmin === 'patient') {
       const user = await User.findOneAndUpdate(
         { _id },
         { ...req.body },
-        { new: true });
+        { new: true }
+      );
       if (user) {
-        res.status(200).json("User Updated");
+        res.status(200).json('User Updated');
       } else {
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
-    } else if (isAdmin === "care-givers") {
+    } else if (isAdmin === 'care-givers') {
       const otherCare = await otherCareModel.findOneAndUpdate(
         { _id },
         { ...req.body },
@@ -228,12 +226,12 @@ const updatedProfile = async (req, res, next) => {
 
       if (otherCare) {
         // User found and updated
-        res.status(200).json("otherCare Updated");
+        res.status(200).json('otherCare Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
-    } else if (isAdmin === "corporate") {
+    } else if (isAdmin === 'corporate') {
       const corporate = await Corporate.findOneAndUpdate(
         { _id }, // Find the user based on the email
         { ...req.body }, // Update the user's information
@@ -242,12 +240,12 @@ const updatedProfile = async (req, res, next) => {
 
       if (corporate) {
         // User found and updated
-        res.status(200).json("corporate Updated");
+        res.status(200).json('corporate Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
-    } else if (isAdmin === "super-admin") {
+    } else if (isAdmin === 'super-admin') {
       const updatedData = await superAdmin.findOneAndUpdate(
         { _id }, // Find the user based on the email
         { ...req.body }, // Update the user's information
@@ -256,13 +254,12 @@ const updatedProfile = async (req, res, next) => {
 
       if (updatedData) {
         // User found and updated
-        res.status(200).json("SuperAdmin Updated");
+        res.status(200).json('SuperAdmin Updated');
       } else {
         // User not found
-        throw new ErrorHandler("User Not Found", 400);
+        throw new ErrorHandler('User Not Found', 400);
       }
     }
-
   } catch (error) {
     next(error);
   }
@@ -275,10 +272,10 @@ const verifyEmail = async (req, res, next) => {
     let data = await User.findOne({ email: req.body.email });
 
     if (data) {
-      const otpCode = "0123456789";
+      const otpCode = '0123456789';
       let result;
       async function generateRandomString(length) {
-        result = "";
+        result = '';
         let charactersLength = otpCode.length;
         for (let i = 0; i < length; i++) {
           result += otpCode.charAt(crypto.randomBytes(1)[0] % charactersLength);
@@ -292,10 +289,10 @@ const verifyEmail = async (req, res, next) => {
         expiresIn: new Date(Date.now() + 60000),
       });
       let otpResponse = await otpData.save();
-      res.status(200).json({ msg: "Please Check Your Email" });
+      res.status(200).json({ msg: 'Please Check Your Email' });
       mailer(req.body.email, otpResponse.code);
     } else {
-      throw new ErrorHandler("Your email id doesnot exist", 400);
+      throw new ErrorHandler('Your email id doesnot exist', 400);
     }
   } catch (error) {
     next(error);
@@ -305,15 +302,15 @@ const verifyEmail = async (req, res, next) => {
 const verifyOtp = async (req, res, next) => {
   const { email, code, role } = req.body;
   try {
-    if (role === "patient") {
+    if (role === 'patient') {
       let data = await Otp.findOne({ email: email, code: code });
       if (data) {
         await User.findOneAndUpdate({ email }, { isOtpVerified: true });
-        res.status(200).json({ msg: "Email Verified" });
+        res.status(200).json({ msg: 'Email Verified' });
       } else {
-        throw new ErrorHandler("Invalid OTP", 400);
+        throw new ErrorHandler('Invalid OTP', 400);
       }
-    } else if (role === "care-givers") {
+    } else if (role === 'care-givers') {
       //doctor verification logic here...
       let data = await Otp.findOne({ email: email, code: code });
       if (data) {
@@ -321,21 +318,18 @@ const verifyOtp = async (req, res, next) => {
           { email },
           { isOtpVerified: true }
         );
-        res.status(200).json({ msg: "Email Verified" });
+        res.status(200).json({ msg: 'Email Verified' });
       } else {
-        throw new ErrorHandler("Invalid OTP", 400);
+        throw new ErrorHandler('Invalid OTP', 400);
       }
-    } else if (role === "corporate") {
+    } else if (role === 'corporate') {
       //doctor verification logic here...
       let data = await Otp.findOne({ email: email, code: code });
       if (data) {
-        await Corporate.findOneAndUpdate(
-          { email },
-          { isOtpVerified: true }
-        );
-        res.status(200).json({ msg: "Email Verified" });
+        await Corporate.findOneAndUpdate({ email }, { isOtpVerified: true });
+        res.status(200).json({ msg: 'Email Verified' });
       } else {
-        throw new ErrorHandler("Invalid OTP", 400);
+        throw new ErrorHandler('Invalid OTP', 400);
       }
     }
   } catch (error) {
@@ -348,9 +342,9 @@ const deleteUserController = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.user._id);
     if (!user) {
-      throw new ErrorHandler("USER NOT FOUND", 400);
+      throw new ErrorHandler('USER NOT FOUND', 400);
     }
-    res.status(200).json("User has been deleted...");
+    res.status(200).json('User has been deleted...');
   } catch (err) {
     next(err);
   }
@@ -358,14 +352,14 @@ const deleteUserController = async (req, res, next) => {
 
 const sendEmail = async (req, res, next) => {
   try {
-    if (role === "patient") {
+    if (role === 'patient') {
       let data = await User.findOne({ email: req.body.email });
 
       if (data) {
-        const otpCode = "0123456789";
+        const otpCode = '0123456789';
         let result;
         async function generateRandomString(length) {
-          result = "";
+          result = '';
           let charactersLength = otpCode.length;
           for (let i = 0; i < length; i++) {
             result += otpCode.charAt(
@@ -382,19 +376,19 @@ const sendEmail = async (req, res, next) => {
           // expiresIn: new Date().getTime() + 0.002 * 1000
         });
         let otpResponse = await otpData.save();
-        res.status(200).json({ msg: "Please Check Your Email" });
+        res.status(200).json({ msg: 'Please Check Your Email' });
         mailer(req.body.email, otpResponse.code);
       } else {
-        throw new ErrorHandler("Your email id doesnot exist in db", 400);
+        throw new ErrorHandler('Your email id doesnot exist in db', 400);
       }
     } else if (role === 'care-givers') {
       let data = await User.findOne({ email: req.body.email });
 
       if (data) {
-        const otpCode = "0123456789";
+        const otpCode = '0123456789';
         let result;
         async function generateRandomString(length) {
-          result = "";
+          result = '';
           let charactersLength = otpCode.length;
           for (let i = 0; i < length; i++) {
             result += otpCode.charAt(
@@ -411,14 +405,12 @@ const sendEmail = async (req, res, next) => {
           // expiresIn: new Date().getTime() + 0.002 * 1000
         });
         let otpResponse = await otpData.save();
-        res.status(200).json({ msg: "Please Check Your Email" });
+        res.status(200).json({ msg: 'Please Check Your Email' });
         mailer(req.body.email, otpResponse.code);
       } else {
-        throw new ErrorHandler("Your email id doesnot exist in db", 400);
+        throw new ErrorHandler('Your email id doesnot exist in db', 400);
       }
-    }
-    else {
-
+    } else {
     }
   } catch (error) {
     next(error);
@@ -430,9 +422,9 @@ const verifyforgetPasswordOtp = async (req, res, next) => {
   try {
     let data = await Otp.findOne({ email: email, code: code });
     if (data) {
-      res.status(200).json({ msg: "Email Verified" });
+      res.status(200).json({ msg: 'Email Verified' });
     } else {
-      throw new ErrorHandler("Invalid OTP", 400);
+      throw new ErrorHandler('Invalid OTP', 400);
     }
   } catch (error) {
     next(error);
@@ -458,26 +450,23 @@ const forgotPasswordController = async (req, res, next) => {
         }
       );
       await user.save();
-      res.status(200).json({ msg: "Password Change Sucessfully" });
+      res.status(200).json({ msg: 'Password Change Sucessfully' });
     } else {
-      throw new ErrorHandler("Password And confirm Password not matched", 400);
+      throw new ErrorHandler('Password And confirm Password not matched', 400);
     }
   } catch (error) {
     next(error);
   }
 };
 
-
-
-
 // super Admin
 
 const allUsers = async (req, res, next) => {
   try {
     const allUsers = await User.find({
-      role: { $in: ["corporate", "care givers"] },
+      role: { $in: ['corporate', 'care givers'] },
     }).select(
-      "-isVerified -profileId -profile -isSocialMediaAuth -isAdminApprove -isProfileCompleted -createdAt -password -updatedAt -__v"
+      '-isVerified -profileId -profile -isSocialMediaAuth -isAdminApprove -isProfileCompleted -createdAt -password -updatedAt -__v'
     );
 
     res.status(200).json({ UserList: allUsers });
@@ -487,7 +476,6 @@ const allUsers = async (req, res, next) => {
 };
 
 //patient apply for service
-
 
 const patApplyforcoroporate = async (req, res, next) => {
   try {
@@ -512,7 +500,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       serviceOverAllRating,
       servicePatientSurveyRating,
       category,
-      serviceName
+      serviceName,
     } = req.body;
 
     // Create a new instance of the Mongoose model using the provided data
@@ -537,31 +525,32 @@ const patApplyforcoroporate = async (req, res, next) => {
       serviceLatitude: serviceLatitude,
       serviceLongitude: serviceLongitude,
       serviceOverAllRating: serviceOverAllRating,
-      servicePatientSurveyRating: servicePatientSurveyRating
+      servicePatientSurveyRating: servicePatientSurveyRating,
     });
 
     // Save the new application to the database
     const savedApplication = await newApplication.save();
 
     // Return a success response
-    res.status(201).json({ message: 'Application submitted successfully.', application: savedApplication })
-  } catch (err) { next(err) }
-}
+    res.status(201).json({
+      message: 'Application submitted successfully.',
+      application: savedApplication,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 //superAdminViewing the data patApplyService
 
 const getPatApplyService = async (req, res, next) => {
-
   try {
     const patServices = await patService.find().lean();
-    res.status(200).json(patServices)
+    res.status(200).json(patServices);
   } catch (err) {
-    next(err)
+    next(err);
   }
-
-
-
-}
+};
 
 //is admin approve patienapply service
 
@@ -575,16 +564,16 @@ const isAdminApprovePatientService = async (req, res, next) => {
     );
 
     if (updatedData) {
-      const existEmail = await Corporate.find({ organizationContactNo: updatedData.servicePhoneNumber });
+      const existEmail = await Corporate.find({
+        organizationContactNo: updatedData.servicePhoneNumber,
+      });
 
-      if (existEmail.length !== 0) { 
+      if (existEmail.length !== 0) {
         let corporate = await Corporate.findOneAndUpdate(
           { email: updatedData.servicePhoneNumber },
           { $inc: { conatactedCustomer: 1 } },
           { new: true }
         );
-
-        console.log(corporate._id)
 
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -596,23 +585,21 @@ const isAdminApprovePatientService = async (req, res, next) => {
           grandTotal: req.body.grandTotal,
           discount: req.body.discount,
           dueDate: req.body.dueDate,
-          additionalMessage: req.body.additionalMessage
-        })
-
-
+          additionalMessage: req.body.additionalMessage,
+        });
 
         await createInvoie.save();
 
-        res.status(200).json({ message: "Updated", data: updatedData });
-
+        res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
+        console.log(updatedData);
         const createUser = await Corporate.create({
           email: updatedData.servicePhoneNumber,
           password: CryptoJS.AES.encrypt(
-            "12345678",
+            '12345678',
             process.env.PASS_SEC
           ).toString(),
-          role: "corporate",
+          role: 'corporate',
           organizationName: updatedData.serviceName,
           organizationCity: updatedData.serviceCity,
           organizationMainOfficeAddress: updatedData.serviceFullAddress,
@@ -622,12 +609,11 @@ const isAdminApprovePatientService = async (req, res, next) => {
           latitude: updatedData.serviceLatitude,
           longitude: updatedData.serviceLongitude,
           mongoDbID: updatedData.scrapeMongoDbID,
-          category: updatedData.category,
+          category: updatedData.mainCategory,
           conatactedCustomer: 1,
         });
 
         let corporate = await createUser.save();
-
 
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -639,54 +625,85 @@ const isAdminApprovePatientService = async (req, res, next) => {
           grandTotal: req.body.grandTotal,
           discount: req.body.discount,
           dueDate: req.body.dueDate,
-          additionalMessage: req.body.additionalMessage
-        })
+          additionalMessage: req.body.additionalMessage,
+        });
 
         await createInvoie.save();
 
-        res.status(200).json({ message: "Updated", data: updatedData });
-      }
+        async function generateUniqueOTP() {
+          let otp;
+          let isUnique = false;
 
+          while (!isUnique) {
+            otp = await generateOTP();
+            const existingOtp = await facilityOtp.findOne({
+              clinicanCode: otp,
+            });
+
+            if (!existingOtp) {
+              isUnique = true;
+            }
+          }
+          return otp;
+        }
+
+        const otp = await generateUniqueOTP();
+
+        const createFacilityOtp = await facilityOtp.create({
+          corporateId: corporate._id,
+          clinicanCode: otp,
+        });
+
+        await createFacilityOtp.save();
+
+        res.status(200).json({ message: 'Updated', data: updatedData });
+      }
     } else {
-      res.status(200).json({ message: "No Data Found" });
+      res.status(200).json({ message: 'No Data Found' });
     }
   } catch (err) {
     next(err);
   }
 };
 
-
 //Super Admin getting all the corporates data which are coming from scrapping
-
 
 const getAllCorporates = async (req, res, next) => {
   try {
-    const getAllCorporatesData = await Corporate.find({ isCreatedByProperRegisteration: false });
+    const getAllCorporatesData = await Corporate.find({
+      isCreatedByProperRegisteration: false,
+    });
 
-    const apiUrl = 'http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCorporatesUsingMongoId';
+    const apiUrl =
+      'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
 
     const corporatesWithComplaints = await Promise.all(
-      getAllCorporatesData.map(async corporate => {
+      getAllCorporatesData.map(async (corporate) => {
         try {
-          const corporateInvoice = await invoice.find({ corporateId: corporate._id });
+          const corporateInvoice = await invoice.find({
+            corporateId: corporate._id,
+          });
 
-          const complaintsWithResponses = await Promise.all(
-            corporate.complaintIds.map(async complaint => {
-              const response = await axios.post(apiUrl, {
-                mongoDbID: complaint.mongoDbID,
-                category: complaint.category
-              });
 
-              if (response.status === 200) {
-                return response.data;
-              } else {
-                return [];
-              }
-            })
-          );
+          const scrapedResponse = await axios.post(apiUrl, {
+            mongoDbID: corporate.id, // Use the relevant field here
+            category: corporate.category,
+          });
+          
+          if (scrapedResponse.status === 200) {
+            return scrapedResponse.data;
+          } else {
+            return [];
+          }
+          
 
           const { _doc: corporateData } = corporate;
-          return { ...corporateData, complaints: complaintsWithResponses.flat(), corporateInvoice: corporateInvoice };
+          return {
+            ...corporateData,
+            Scraped: scrapedResponse,
+            corporateInvoice: corporateInvoice,
+          };
+        
         } catch (error) {
           const { _doc: corporateData } = corporate;
           return { ...corporateData, complaints: [], corporateInvoice: [] }; // Return an empty array for complaints on error
@@ -697,30 +714,67 @@ const getAllCorporates = async (req, res, next) => {
     if (corporatesWithComplaints.length > 0) {
       res.status(200).json(corporatesWithComplaints);
     } else {
-      res.status(200).json("No Data Found");
+      res.status(200).json('No Data Found');
     }
   } catch (err) {
     next(err);
   }
 };
 
+//patient add clinican code to connect corporate
 
+const toConnectCorporate = async (req, res, next) => {
+  try {
+    let { connect } = req.body;
+    let { _id } = req.user;
+
+    let isClinicanCode = await facilityOtp.findOne({ clinicanCode: connect });
+
+    if (isClinicanCode) {
+      let createMedicalService = await medicalPractice.create({
+        patients: _id,
+        facilityOwners: isClinicanCode.corporateId,
+      });
+
+      await createMedicalService.save();
+
+      res.status(200).json('Connected');
+    } else {
+      res.status(400).json('Code Not Found');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+//generate random 4 digits Otp
+const generateOTP = async () => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let otp = '';
+
+  for (let i = 0; i < 4; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    otp += characters.charAt(randomIndex);
+  }
+
+  return otp;
+};
 
 //sending email
 
-var google = require("googleapis").google;
+var google = require('googleapis').google;
 var OAuth2 = google.auth.OAuth2;
 // const OAuth2 = require('google-auth-library').OAuth2;
 // const nodemailer = require('nodemailer');
 
 const oauth2Client = new OAuth2(
-  "276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com",
-  "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",
-  "https://developers.google.com/oauthplayground"
+  '276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com',
+  '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',
+  'https://developers.google.com/oauthplayground'
 );
 oauth2Client.setCredentials({
   refresh_token:
-    "1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI",
+    '1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI',
 });
 
 const createTransporter = async () => {
@@ -728,7 +782,7 @@ const createTransporter = async () => {
     const accessToken = await new Promise((resolve, reject) => {
       oauth2Client.getAccessToken((err, token) => {
         if (err) {
-          reject("Failed to create access token: " + err);
+          reject('Failed to create access token: ' + err);
         } else {
           resolve(token);
         }
@@ -736,16 +790,16 @@ const createTransporter = async () => {
     });
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: 'gmail',
       auth: {
-        type: "OAuth2",
-        user: "ns265331@gmail.com",
+        type: 'OAuth2',
+        user: 'ns265331@gmail.com',
         accessToken,
         clientId:
-          "276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com",
-        clientSecret: "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",
+          '276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com',
+        clientSecret: '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',
         refreshToken:
-          "1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI",
+          '1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI',
       },
       tls: {
         rejectUnauthorized: false, // Add this line to disable certificate verification
@@ -755,8 +809,8 @@ const createTransporter = async () => {
     return transporter;
   } catch (error) {
     // Handle the error here
-    console.error("Error creating transporter:", error);
-    throw new Error("Failed to create transporter");
+    console.error('Error creating transporter:', error);
+    throw new Error('Failed to create transporter');
   }
 };
 
@@ -764,10 +818,10 @@ const mailer = async (to, otp) => {
   const transporter = await createTransporter();
 
   const mailOptions = {
-    from: "healthcare@aineurocare.com",
+    from: 'healthcare@aineurocare.com',
     to,
-    subject: "OTP for Login - NeuroCare AI",
-    html: `<p>Dear ${to.split("@")[0]},</p>
+    subject: 'OTP for Login - NeuroCare AI',
+    html: `<p>Dear ${to.split('@')[0]},</p>
 
     <p>Your OTP for login to NeuroCare AI is: <strong>${otp}</strong></p>
 
@@ -779,7 +833,7 @@ const mailer = async (to, otp) => {
     if (error) {
       console.log(error);
     } else {
-      console.log("Email sent: " + info.response);
+      console.log('Email sent: ' + info.response);
     }
   });
 };
@@ -800,5 +854,6 @@ module.exports = {
   specificCorporateData,
   isAdminApprovePatientService,
   getAllCorporates,
-  updatedProfile
+  updatedProfile,
+  toConnectCorporate,
 };
