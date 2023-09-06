@@ -121,7 +121,6 @@ const favoriteClt = {
   // Delete a branch manager by ID
   deleteFavourate: async (req, res, next) => {
     try {
-      console.log(req.params.id);
       const deleteFavourate = await Favourate.findOneAndDelete({
         scrapeObjectId: req.params.id,
       });
