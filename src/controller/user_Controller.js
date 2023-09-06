@@ -13,6 +13,7 @@ const invoice = require('../Model/invoiceModel');
 const superAdmin = require('../Model/superAdminModel');
 const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
+const { Console } = require('console');
 
 // Controller for changing password
 
@@ -668,6 +669,69 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
 //Super Admin getting all the corporates data which are coming from scrapping
 
+// const getAllCorporates = async (req, res, next) => {
+//   try {
+//     const getAllCorporatesData = await Corporate.find({
+//       isCreatedByProperRegistration: false, // Corrected typo in the field name
+//     });
+
+//     const apiUrl =
+//       'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+
+//     const corporatesWithComplaints = await Promise.all(
+//       getAllCorporatesData.map(async (corporate) => {
+//         try {
+//           const corporateInvoice = await invoice.find({
+//             corporateId: corporate._id,
+//           });
+
+//           console.log(corporate)
+
+//           console.log(corporate.mongoDbID)
+//           console.log(corporate.categorycategory)
+
+// const scrapedResponse = await axios.post(apiUrl, {
+//   mongoDbID: corporate.mongoDbID, // Use the relevant field here
+//   category: corporate.category,
+// });
+
+// console.log(scrapedResponse);
+
+// if (scrapedResponse.status === 200) {
+//   const { _doc: corporateData } = corporate;
+//   return {
+//     ...corporateData,
+//     Scraped: scrapedResponse.data,
+//     corporateInvoice: corporateInvoice,
+//   };
+// } else {
+//   return {
+//     ...corporateData,
+//     Scraped: [],
+//     corporateInvoice: corporateInvoice,
+//   };
+// }
+//         } catch (error) {
+//           const { _doc: corporateData } = corporate;
+//           return {
+//             ...corporateData,
+//             complaints: [],
+//             corporateInvoice: [],
+//           }; // Return an empty array for complaints on error
+//         }
+//       })
+//     );
+
+//     if (corporatesWithComplaints.length > 0) {
+//       res.status(200).json(corporatesWithComplaints);
+//     } else {
+//       res.status(200).json('No Data Found');
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 const getAllCorporates = async (req, res, next) => {
   try {
     const getAllCorporatesData = await Corporate.find({
@@ -675,7 +739,7 @@ const getAllCorporates = async (req, res, next) => {
     });
 
     const apiUrl =
-      'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+      'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
 
     const corporatesWithComplaints = await Promise.all(
       getAllCorporatesData.map(async (corporate) => {
@@ -684,26 +748,34 @@ const getAllCorporates = async (req, res, next) => {
             corporateId: corporate._id,
           });
 
+          const getDoctorCode = await facilityOtp
+            .findOne({
+              corporateId: corporate._id,
+            })
+            .select('clinicanCode');
 
           const scrapedResponse = await axios.post(apiUrl, {
-            mongoDbID: corporate.id, // Use the relevant field here
+            mongoDbID: corporate.mongoDbID, // Use the relevant field here
             category: corporate.category,
           });
-          
-          if (scrapedResponse.status === 200) {
-            return scrapedResponse.data;
-          } else {
-            return [];
-          }
-          
 
-          const { _doc: corporateData } = corporate;
-          return {
-            ...corporateData,
-            Scraped: scrapedResponse,
-            corporateInvoice: corporateInvoice,
-          };
-        
+          if (scrapedResponse.status === 200) {
+            const { _doc: corporateData } = corporate;
+            return {
+              ...corporateData,
+              Scraped: scrapedResponse.data,
+              getDoctorCode: getDoctorCode,
+              corporateInvoice: corporateInvoice,
+            };
+          } else {
+            const { _doc: corporateData } = corporate;
+            return {
+              ...corporateData,
+              Scraped: [],
+              getDoctorCode: getDoctorCode,
+              corporateInvoice: corporateInvoice,
+            };
+          }
         } catch (error) {
           const { _doc: corporateData } = corporate;
           return { ...corporateData, complaints: [], corporateInvoice: [] }; // Return an empty array for complaints on error
