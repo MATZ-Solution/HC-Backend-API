@@ -747,7 +747,7 @@ const toConnectCorporate = async (req, res, next) => {
 
       res.status(200).json('Connected');
     } else {
-      res.status(400).json('Code Not Found');
+      throw new ErrorHandler('Clinican Code Not Found', 400);
     }
   } catch (error) {
     next(error);
