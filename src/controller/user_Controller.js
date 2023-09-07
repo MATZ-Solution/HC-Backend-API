@@ -811,13 +811,11 @@ const noOfCallsMadeMethod = async (req, res, next) => {
 const getMedicalPracticeForIndividualUser = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
-    console.log(_id);
-    console.log(isAdmin);
 
     if (isAdmin === 'patient') {
       const foundMedialPractice = await medicalPractice
         .find({ patients: _id })
-        .populate('patients');
+        .populate('patients').populate('facilityOwners');
       res.status(200).json(foundMedialPractice);
     }
   } catch (err) {
