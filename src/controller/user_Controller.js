@@ -462,13 +462,10 @@ const forgotPasswordController = async (req, res, next) => {
 
 const allUsers = async (req, res, next) => {
   try {
-    const allUsers = await User.find({
-      role: { $in: ['corporate', 'care givers'] },
-    }).select(
+    const allUsers = await User.find().select(
       '-isVerified -profileId -profile -isSocialMediaAuth -isAdminApprove -isProfileCompleted -createdAt -password -updatedAt -__v'
     );
-
-    res.status(200).json({ UserList: allUsers });
+    res.status(200).json(allUsers);
   } catch (error) {
     next(error);
   }

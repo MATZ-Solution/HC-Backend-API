@@ -22,7 +22,7 @@ const {
   updatedProfile,
   toConnectCorporate,
   noOfCallsMadeMethod,
-  getMedicalPracticeForIndividualUser
+  getMedicalPracticeForIndividualUser,
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -64,15 +64,15 @@ router.get('/getAllCorporates', verifyTokenAndAdmin, getAllCorporates);
 //patient connecting corporate
 router.post('/toConnectCorporate', verifyToken, toConnectCorporate);
 
-
 //noOfCallsMadeByPatient
 router.post('/noOfCallsMade', verifyToken, noOfCallsMadeMethod);
 
 //getMedicalPracticeForIndividualUser
 
-router.get('/getMedicalPracticeForIndividualUser', verifyToken, getMedicalPracticeForIndividualUser);
-
-
-
+router.get(
+  '/getMedicalPracticeForIndividualUser',
+  verifyToken,
+  getMedicalPracticeForIndividualUser
+);
 
 module.exports = router;
