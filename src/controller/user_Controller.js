@@ -812,7 +812,7 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
     const apiUrl =
-      'http://192.168.10.18:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+      'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
 
     if (isAdmin === 'patient') {
       const foundMedicalPractice = await medicalPractice
