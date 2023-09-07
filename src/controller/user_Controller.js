@@ -808,6 +808,7 @@ const noOfCallsMadeMethod = async (req, res, next) => {
 const getMedicalPracticeForIndividualUser = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
+    const { category } = req.body;
     const scrapedResponsesByCategory = {};
 
     const apiUrl =
@@ -815,43 +816,88 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
       'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
 
     if (isAdmin === 'patient') {
-      const foundMedicalPractice = await medicalPractice
-        .find({ patients: _id })
-        .populate('facilityOwners');
+      if (category === 'professional') {
+        const foundMedicalPractice = await medicalPractice
+          .find({ patients: _id })
+          .populate('facilityOwners');
 
-      // const scrapedResponses = await Promise.all(
-      //   foundMedicalPractice.map(async (item) => {
-      //     const scrapedResponse = await axios.post(apiUrl, {
-      //       mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
-      //       category: item.facilityOwners.category,
-      //     });
-      //     return scrapedResponse.data;
-      //   })
-      // );
+        // const scrapedResponses = await Promise.all(
+        //   foundMedicalPractice.map(async (item) => {
+        //     const scrapedResponse = await axios.post(apiUrl, {
+        //       mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+        //       category: item.facilityOwners.category,
+        //     });
+        //     return scrapedResponse.data;
+        //   })
+        // );
 
-      const scrapedResponses = await Promise.all(
-        foundMedicalPractice.map(async (item) => {
-          const scrapedResponse = await axios.post(apiUrl, {
-            mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
-            category: item.facilityOwners.category,
-          });
+        const scrapedResponses = await Promise.all(
+          foundMedicalPractice.map(async (item) => {
+            const scrapedResponse = await axios.post(apiUrl, {
+              mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+              category: item.facilityOwners.category,
+            });
 
-          const category = item.facilityOwners.category;
+            const category = item.facilityOwners.category;
 
-          // Check if the category exists in the object, and create it if not
-          if (!scrapedResponsesByCategory[category]) {
-            scrapedResponsesByCategory[category] = [];
-          }
+            // Check if the category exists in the object, and create it if not
+            if (!scrapedResponsesByCategory[category]) {
+              scrapedResponsesByCategory[category] = [];
+            }
 
-          // Add the scraped data to the appropriate category
-          scrapedResponsesByCategory[category].push(scrapedResponse.data);
+            // Add the scraped data to the appropriate category
+            scrapedResponsesByCategory[category].push(scrapedResponse.data);
 
-          return scrapedResponse.data;
-        })
-      );
+            return scrapedResponse.data;
+          })
+        );
 
-      // res.status(200).json(scrapedResponses);
-      res.status(200).json(scrapedResponsesByCategory);
+        // res.status(200).json(scrapedResponses);
+        res.status(200).json(scrapedResponsesByCategory.professional);
+        // }
+      } else if (category === 'all') {
+        const foundMedicalPractice = await medicalPractice
+          .find({ patients: _id })
+          .populate('facilityOwners');
+
+        // const scrapedResponses = await Promise.all(
+        //   foundMedicalPractice.map(async (item) => {
+        //     const scrapedResponse = await axios.post(apiUrl, {
+        //       mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+        //       category: item.facilityOwners.category,
+        //     });
+        //     return scrapedResponse.data;
+        //   })
+        // );
+
+        const scrapedResponses = await Promise.all(
+          foundMedicalPractice.map(async (item) => {
+            const scrapedResponse = await axios.post(apiUrl, {
+              mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+              category: item.facilityOwners.category,
+            });
+
+            const category = item.facilityOwners.category;
+
+            // Check if the category exists in the object, and create it if not
+            if (!scrapedResponsesByCategory[category]) {
+              scrapedResponsesByCategory[category] = [];
+            }
+
+            // Add the scraped data to the appropriate category
+            scrapedResponsesByCategory[category].push(scrapedResponse.data);
+
+            return scrapedResponse.data;
+          })
+        );
+
+        // const { professional, ...scrapedResponsesByCategory } =
+        //   scrapedResponsesByCategory;
+        // res.status(200).json(scrapedResponses);
+        delete scrapedResponsesByCategory.professional;
+
+        res.status(200).json(scrapedResponsesByCategory);
+      }
     }
   } catch (err) {
     next(err);
