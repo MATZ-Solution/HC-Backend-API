@@ -811,21 +811,55 @@ const noOfCallsMadeMethod = async (req, res, next) => {
 const getMedicalPracticeForIndividualUser = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
+    const apiUrl =
+      'http://192.168.10.18:3000/api/healthCareRoute/getCorporatesUsingMongoId';
 
     if (isAdmin === 'patient') {
-      const foundMedialPractice = await medicalPractice
+      const foundMedicalPractice = await medicalPractice
         .find({ patients: _id })
         .populate('facilityOwners');
-      const facilityOwners = foundMedialPractice.map(
-        (item) => item.facilityOwners
+
+      const scrapedResponses = await Promise.all(
+        foundMedicalPractice.map(async (item) => {
+          const scrapedResponse = await axios.post(apiUrl, {
+            mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+            category: item.facilityOwners.category,
+          });
+          return scrapedResponse.data;
+        })
       );
 
-      res.status(200).json(facilityOwners);
+      res.status(200).json(scrapedResponses);
     }
   } catch (err) {
     next(err);
   }
 };
+
+// const getMedicalPracticeForIndividualUser = async (req, res, next) => {
+//   try {
+//     const { _id, isAdmin } = req.user;
+//     const apiUrl =
+//       'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
+
+//     if (isAdmin === 'patient') {
+//       const foundMedialPractice = await medicalPractice
+//         .find({ patients: _id })
+//         .populate('facilityOwners');
+//       const facilityOwners = foundMedialPractice.map(async (item) => {
+//         const scrapedResponse = await axios.post(apiUrl, {
+//           mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
+//           category: item.facilityOwners.category,
+//         });
+//         return scrapedResponse.data;
+//       });
+
+//       res.status(200).json(scrapedResponse);
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 //sending email
 
