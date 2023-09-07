@@ -13,10 +13,10 @@ const invoice = require('../Model/invoiceModel');
 const superAdmin = require('../Model/superAdminModel');
 const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
-const { Console } = require('console');
+const noOfCallsMade = require('../Model/noOfCallsMade');
+// const { Console } = require('console');
 
 // Controller for changing password
-
 const changePasswordController = async (req, res, next) => {
   const { oldPassword, newPassword } = req.body;
 
@@ -61,7 +61,6 @@ const changePasswordController = async (req, res, next) => {
 };
 
 //user info
-
 const userInfoController = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
@@ -121,10 +120,8 @@ const userInfoController = async (req, res, next) => {
 };
 
 //corporate data
-
 const specificCorporateData = async (req, res, next) => {
   try {
-    // const { servicePhoneNumber } = req.params;
     const { _id } = req.user;
 
     const foundCorporate = await Corporate.findOne({ _id });
@@ -149,7 +146,6 @@ const specificCorporateData = async (req, res, next) => {
 };
 
 //update User
-
 const updatedUser = async (req, res, next) => {
   try {
     const { role } = req.body;
@@ -202,7 +198,6 @@ const updatedUser = async (req, res, next) => {
 };
 
 //updateProfileUsingToken
-
 const updatedProfile = async (req, res, next) => {
   try {
     const { _id, isAdmin } = req.user;
@@ -267,7 +262,6 @@ const updatedProfile = async (req, res, next) => {
 };
 
 //verify email sending otp to the email
-
 const verifyEmail = async (req, res, next) => {
   try {
     let data = await User.findOne({ email: req.body.email });
@@ -300,6 +294,7 @@ const verifyEmail = async (req, res, next) => {
   }
 };
 
+//verifyOtp
 const verifyOtp = async (req, res, next) => {
   const { email, code, role } = req.body;
   try {
@@ -350,6 +345,8 @@ const deleteUserController = async (req, res, next) => {
     next(err);
   }
 };
+
+//sendEmail
 
 const sendEmail = async (req, res, next) => {
   try {
@@ -418,6 +415,7 @@ const sendEmail = async (req, res, next) => {
   }
 };
 
+//verifyForgetPasswordOtp
 const verifyforgetPasswordOtp = async (req, res, next) => {
   const { email, code } = req.body;
   try {
@@ -669,69 +667,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
 //Super Admin getting all the corporates data which are coming from scrapping
 
-// const getAllCorporates = async (req, res, next) => {
-//   try {
-//     const getAllCorporatesData = await Corporate.find({
-//       isCreatedByProperRegistration: false, // Corrected typo in the field name
-//     });
-
-//     const apiUrl =
-//       'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
-
-//     const corporatesWithComplaints = await Promise.all(
-//       getAllCorporatesData.map(async (corporate) => {
-//         try {
-//           const corporateInvoice = await invoice.find({
-//             corporateId: corporate._id,
-//           });
-
-//           console.log(corporate)
-
-//           console.log(corporate.mongoDbID)
-//           console.log(corporate.categorycategory)
-
-// const scrapedResponse = await axios.post(apiUrl, {
-//   mongoDbID: corporate.mongoDbID, // Use the relevant field here
-//   category: corporate.category,
-// });
-
-// console.log(scrapedResponse);
-
-// if (scrapedResponse.status === 200) {
-//   const { _doc: corporateData } = corporate;
-//   return {
-//     ...corporateData,
-//     Scraped: scrapedResponse.data,
-//     corporateInvoice: corporateInvoice,
-//   };
-// } else {
-//   return {
-//     ...corporateData,
-//     Scraped: [],
-//     corporateInvoice: corporateInvoice,
-//   };
-// }
-//         } catch (error) {
-//           const { _doc: corporateData } = corporate;
-//           return {
-//             ...corporateData,
-//             complaints: [],
-//             corporateInvoice: [],
-//           }; // Return an empty array for complaints on error
-//         }
-//       })
-//     );
-
-//     if (corporatesWithComplaints.length > 0) {
-//       res.status(200).json(corporatesWithComplaints);
-//     } else {
-//       res.status(200).json('No Data Found');
-//     }
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 const getAllCorporates = async (req, res, next) => {
   try {
     const getAllCorporatesData = await Corporate.find({
@@ -832,6 +767,47 @@ const generateOTP = async () => {
   return otp;
 };
 
+const noOfCallsMadeMethod = async (req, res, next) => {
+  try {
+    let { _id } = req.user;
+    const { corporateId, from } = req.body;
+
+    const isExist = await noOfCallsMade.findOne({
+      patientId: _id,
+      corporateId,
+      from,
+    });
+
+    if (isExist) {
+      await noOfCallsMade.findOneAndUpdate(
+        {
+          patientId: _id,
+          corporateId,
+          from,
+        },
+        {
+          $inc: { noOfCounts: 1 },
+        }
+      );
+
+      res.status(200).json('Record Updated');
+    } else {
+      const createNoOfCallsMade = await noOfCallsMade.create({
+        patientId: _id,
+        corporateId,
+        from,
+        noOfCounts: 1,
+      });
+
+      await createNoOfCallsMade.save();
+
+      res.status(200).json('Record Created');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 //sending email
 
 var google = require('googleapis').google;
@@ -928,4 +904,5 @@ module.exports = {
   getAllCorporates,
   updatedProfile,
   toConnectCorporate,
+  noOfCallsMadeMethod,
 };

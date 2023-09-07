@@ -21,6 +21,7 @@ const {
   getAllCorporates,
   updatedProfile,
   toConnectCorporate,
+  noOfCallsMadeMethod
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -61,5 +62,13 @@ router.get('/getAllCorporates', verifyTokenAndAdmin, getAllCorporates);
 
 //patient connecting corporate
 router.post('/toConnectCorporate', verifyToken, toConnectCorporate);
+
+
+//noOfCallsMadeByPatient
+router.post('/noOfCallsMade', verifyToken, noOfCallsMadeMethod);
+
+
+
+
 
 module.exports = router;
