@@ -815,8 +815,12 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
     if (isAdmin === 'patient') {
       const foundMedialPractice = await medicalPractice
         .find({ patients: _id })
-        .populate('patients').populate('facilityOwners');
-      res.status(200).json(foundMedialPractice);
+        .populate('facilityOwners');
+      const facilityOwners = foundMedialPractice.map(
+        (item) => item.facilityOwners
+      );
+
+      res.status(200).json(facilityOwners);
     }
   } catch (err) {
     next(err);
