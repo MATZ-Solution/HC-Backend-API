@@ -21,7 +21,8 @@ const {
   getAllCorporates,
   updatedProfile,
   toConnectCorporate,
-  noOfCallsMadeMethod
+  noOfCallsMadeMethod,
+  getMedicalPracticeForIndividualUser
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -67,6 +68,9 @@ router.post('/toConnectCorporate', verifyToken, toConnectCorporate);
 //noOfCallsMadeByPatient
 router.post('/noOfCallsMade', verifyToken, noOfCallsMadeMethod);
 
+//getMedicalPracticeForIndividualUser
+
+router.get('/getMedicalPracticeForIndividualUser', verifyToken, getMedicalPracticeForIndividualUser);
 
 
 

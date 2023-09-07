@@ -591,7 +591,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
-        console.log(updatedData);
         const createUser = await Corporate.create({
           email: updatedData.servicePhoneNumber,
           password: CryptoJS.AES.encrypt(
@@ -808,6 +807,24 @@ const noOfCallsMadeMethod = async (req, res, next) => {
   }
 };
 
+//medicalPracticeForEachIndividualPatient
+const getMedicalPracticeForIndividualUser = async (req, res, next) => {
+  try {
+    const { _id, isAdmin } = req.user;
+    console.log(_id);
+    console.log(isAdmin);
+
+    if (isAdmin === 'patient') {
+      const foundMedialPractice = await medicalPractice
+        .find({ patients: _id })
+        .populate('patients');
+      res.status(200).json(foundMedialPractice);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 //sending email
 
 var google = require('googleapis').google;
@@ -905,4 +922,5 @@ module.exports = {
   updatedProfile,
   toConnectCorporate,
   noOfCallsMadeMethod,
+  getMedicalPracticeForIndividualUser,
 };
