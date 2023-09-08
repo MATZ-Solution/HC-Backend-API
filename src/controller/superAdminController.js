@@ -1,7 +1,7 @@
 const patApplyService = require('../Model/patApplyService');
 const corporate = require('../Model/corporateModel');
 const invoice = require('../Model/invoiceModel');
-const reviews = require('../Model/reviewModel');
+const reviewModel = require('../Model/reviewModel');
 
 const superAdminClt = {
   getInvoices: async (req, res, next) => {
@@ -23,7 +23,7 @@ const superAdminClt = {
       const { mongoDbID, category, name, email, reviews, startRating } =
         req.body;
 
-      const newRecord = new reviews({
+      const createReview = new reviewModel({
         mongoDbID,
         category,
         name,
@@ -32,7 +32,7 @@ const superAdminClt = {
         startRating,
       });
 
-      const savedRecord = await newRecord.save();
+      const savedRecord = await createReview.save();
       res.status(201).json(savedRecord);
     } catch (error) {
       next(error);
