@@ -40,7 +40,7 @@ const superAdminClt = {
   },
   getReviews: async (req, res, next) => {
     try {
-      const getReviews = reviews.find();
+      const getReviews = await reviewModel.find();
 
       res.status(200).json(getReviews);
     } catch (error) {

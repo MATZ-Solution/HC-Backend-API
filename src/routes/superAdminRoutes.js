@@ -1,14 +1,12 @@
 const express = require('express');
 const superAdminClt = require('../controller/superAdminController');
-const {
-  verifyTokenAndAdmin,
-} = require('../middleware/verifytokens');
+const { verifyTokenAndAdmin } = require('../middleware/verifytokens');
 const router = express.Router();
 
 router
   .route('/getAllInvoices')
   .get(verifyTokenAndAdmin, superAdminClt.getInvoices);
 router.route('/addReviews').post(superAdminClt.addReview);
-router.route('/getReviews').get(superAdminClt.getReviews);
+router.route('/getReviews').get(verifyTokenAndAdmin, superAdminClt.getReviews);
 
 module.exports = router;
