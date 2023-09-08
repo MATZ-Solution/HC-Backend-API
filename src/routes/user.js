@@ -65,7 +65,7 @@ router.get('/getAllCorporates', verifyTokenAndAdmin, getAllCorporates);
 router.post('/toConnectCorporate', verifyToken, toConnectCorporate);
 
 //noOfCallsMadeByPatient
-router.post('/noOfCallsMade', verifyToken, noOfCallsMadeMethod);
+router.post('/noOfCallsMade', verifyTokenAndCorporate, noOfCallsMadeMethod);
 
 //getMedicalPracticeForIndividualUser
 

@@ -766,19 +766,19 @@ const generateOTP = async () => {
 const noOfCallsMadeMethod = async (req, res, next) => {
   try {
     let { _id } = req.user;
-    const { corporateId, from } = req.body;
+    const { patientId, from } = req.body;
 
     const isExist = await noOfCallsMade.findOne({
-      patientId: _id,
-      corporateId,
+      patientId,
+      corporateId: _id,
       from,
     });
 
     if (isExist) {
       await noOfCallsMade.findOneAndUpdate(
         {
-          patientId: _id,
-          corporateId,
+          patientId,
+          corporateId: _id,
           from,
         },
         {
@@ -789,8 +789,8 @@ const noOfCallsMadeMethod = async (req, res, next) => {
       res.status(200).json('Record Updated');
     } else {
       const createNoOfCallsMade = await noOfCallsMade.create({
-        patientId: _id,
-        corporateId,
+        patientId,
+        corporateId: _id,
         from,
         noOfCounts: 1,
       });
@@ -820,16 +820,6 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
         const foundMedicalPractice = await medicalPractice
           .find({ patients: _id })
           .populate('facilityOwners');
-
-        // const scrapedResponses = await Promise.all(
-        //   foundMedicalPractice.map(async (item) => {
-        //     const scrapedResponse = await axios.post(apiUrl, {
-        //       mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
-        //       category: item.facilityOwners.category,
-        //     });
-        //     return scrapedResponse.data;
-        //   })
-        // );
 
         const scrapedResponses = await Promise.all(
           foundMedicalPractice.map(async (item) => {
@@ -864,16 +854,6 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
         const foundMedicalPractice = await medicalPractice
           .find({ patients: _id })
           .populate('facilityOwners');
-
-        // const scrapedResponses = await Promise.all(
-        //   foundMedicalPractice.map(async (item) => {
-        //     const scrapedResponse = await axios.post(apiUrl, {
-        //       mongoDbID: item.facilityOwners.mongoDbID, // Use the relevant field here
-        //       category: item.facilityOwners.category,
-        //     });
-        //     return scrapedResponse.data;
-        //   })
-        // );
 
         const scrapedResponses = await Promise.all(
           foundMedicalPractice.map(async (item) => {
