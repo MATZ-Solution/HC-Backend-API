@@ -810,6 +810,7 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
     const { _id, isAdmin } = req.user;
     const { category } = req.body;
     const scrapedResponsesByCategory = {};
+    const scrapedResponsesByAll = [];
 
     const apiUrl =
       // 'http://localhost:3000/api/healthCareRoute/getCorporatesUsingMongoId';
@@ -870,8 +871,9 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
             }
 
             // Add the scraped data to the appropriate category
-            scrapedResponsesByCategory[category].push(scrapedResponse.data);
-
+            if (category !== 'professional') {
+              scrapedResponsesByAll.push(scrapedResponse.data);
+            }
             return scrapedResponse.data;
           })
         );
@@ -879,9 +881,9 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
         // const { professional, ...scrapedResponsesByCategory } =
         //   scrapedResponsesByCategory;
         // res.status(200).json(scrapedResponses);
-        delete scrapedResponsesByCategory.professional;
+        // delete scrapedResponsesByCategory.professional;
 
-        res.status(200).json(scrapedResponsesByCategory);
+        res.status(200).json(scrapedResponsesByAll);
       }
     }
   } catch (err) {
