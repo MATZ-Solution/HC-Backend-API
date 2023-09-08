@@ -500,6 +500,7 @@ const patApplyforcoroporate = async (req, res, next) => {
     } = req.body;
 
     // Create a new instance of the Mongoose model using the provided data
+
     const newApplication = new patService({
       patFullName: patName,
       patAddress: patAddress,
