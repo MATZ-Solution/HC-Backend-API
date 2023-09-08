@@ -69,7 +69,7 @@ router.post('/noOfCallsMade', verifyToken, noOfCallsMadeMethod);
 
 //getMedicalPracticeForIndividualUser
 
-router.get(
+router.post(
   '/getMedicalPracticeForIndividualUser',
   verifyToken,
   getMedicalPracticeForIndividualUser

@@ -852,8 +852,13 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
           })
         );
 
+        if (scrapedResponsesByCategory.professional) {
+          res.status(200).json(scrapedResponsesByCategory.professional);
+        } else {
+          res.status(200).json([]);
+        }
+
         // res.status(200).json(scrapedResponses);
-        res.status(200).json(scrapedResponsesByCategory.professional);
         // }
       } else if (category === 'all') {
         const foundMedicalPractice = await medicalPractice
