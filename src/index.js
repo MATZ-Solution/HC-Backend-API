@@ -28,6 +28,8 @@ const advisorRoute = require('./routes/advisorRoutes');
 const corporateRoutes = require('./routes/corporateRoutes');
 const superAdminRoutes = require('./routes/superAdminRoutes');
 const favoriteRoutes = require('./routes/favourateRoutes');
+//=========blog route=======================================
+const blogRoutes = require('./routes/blogRoutes');
 
 dotenv.config();
 
@@ -68,6 +70,9 @@ app.use('/api/advisor', advisorRoute);
 app.use('/api/corporate', corporateRoutes);
 app.use('/api/superAdmin', superAdminRoutes);
 app.use('/api/favoriteRoutes', favoriteRoutes);
+
+//=========Blog Routes===================
+app.use('/api/blogs', blogRoutes )
 
 app.use(errorMiddleware);
 
