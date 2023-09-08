@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const otpSchema = new Schema({
   patientId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'patApplyService',
   },
   corporateId: {
     type: mongoose.Schema.Types.ObjectId,
