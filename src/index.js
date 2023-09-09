@@ -30,6 +30,8 @@ const superAdminRoutes = require('./routes/superAdminRoutes');
 const favoriteRoutes = require('./routes/favourateRoutes');
 //=========blog route=======================================
 const blogRoutes = require('./routes/blogRoutes');
+//=========invoice route====================================
+const getInvoice = require('./routes/invoiceRoute')
 
 dotenv.config();
 
@@ -73,6 +75,9 @@ app.use('/api/favoriteRoutes', favoriteRoutes);
 
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes )
+//=======================================
+//==========Invoice Routes================
+app.use('/api/invoice', getInvoice);
 
 app.use(errorMiddleware);
 
@@ -81,6 +86,6 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 // Start the server and listen for incoming requests
-app.listen(5000, () => {
-  console.log('Backend server is running on 5000!');
+app.listen(3000, () => {
+  console.log('Backend server is running on 3000!');
 });
