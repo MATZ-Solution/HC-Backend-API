@@ -1,5 +1,5 @@
 const express = require('express');
-const blogModel = require('../Model/blogmodel');
+const Blog = require('../Model/blogmodel');
 const bodyParser = require('body-parser');
 
 
@@ -62,9 +62,17 @@ const acceptedBlogs = async (req, res, next) => {
         res.status(400).json({ message: err.message });
       }
 };
-
+const getAllBlog = async (req, res, next) => {
+    try {
+        const blogs = await Blog.find();
+        res.json(blogs);
+      } catch (err) {
+        res.status(400).json({ message: err.message });
+      }
+};
 module.exports = {
     blogCreate,
+    getAllBlog,
     blogUpdate,
     deleteBlog,
     getPendingBlogs,
