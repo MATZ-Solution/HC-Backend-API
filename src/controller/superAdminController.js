@@ -59,6 +59,7 @@ const superAdminClt = {
           return { scraped: scrapedResponse.data.name, review };
         })
       );
+      
       const modifyResponse = scrapedResponses.map((review) => ({
         serviceName: review.scraped,
         isReviewApproved: review.review.isReviewApproved,
