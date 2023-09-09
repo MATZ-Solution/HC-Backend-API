@@ -1,31 +1,34 @@
 const mongoose = require('mongoose');
 
 // Define a schema for your model
-const reviewSchema = new mongoose.Schema({
+const reviewSchema = new mongoose.Schema(
+  {
     mongoDbID: {
-        type: String,
+      type: String,
     },
     category: {
-        type: String,
+      type: String,
     },
     name: {
-        type: String,
+      type: String,
     },
     email: {
-        type: String,
+      type: String,
     },
     reviews: {
-        type: String,
+      type: String,
     },
     startRating: {
-        type: Number,
-        default: 3,
+      type: Number,
+      default: 3,
     },
     isReviewRejected: {
-        type: Boolean,
-        default:false
-    }
-});
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
 // Create a model based on the schema
 const reviewModel = mongoose.model('reviewsModel', reviewSchema);
