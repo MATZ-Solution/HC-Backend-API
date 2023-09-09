@@ -9,7 +9,7 @@ router
 router.route('/addReviews').post(superAdminClt.addReview);
 router
   .route('/getReviews')
-  .get(verifyTokenAndAdmin, superAdminClt.rejectReviews);
+  .get(verifyTokenAndAdmin, superAdminClt.getReviews);
 router
   .route('/rejectReviews')
   .put(verifyTokenAndAdmin, superAdminClt.rejectReviews);
