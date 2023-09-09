@@ -57,7 +57,7 @@ router.put(
 );
 
 //super Admin
-router.get('/getAllUsers', verifyTokenAndAdmin, allUsers);
+router.get('/getAllRegisteredPatient', verifyTokenAndAdmin, allUsers);
 router.get('/getAllPatServices', verifyTokenAndAdmin, getPatApplyService);
 router.get('/getAllCorporates', verifyTokenAndAdmin, getAllCorporates);
 

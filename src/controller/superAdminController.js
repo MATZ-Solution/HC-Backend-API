@@ -47,6 +47,20 @@ const superAdminClt = {
       next(error);
     }
   },
+  rejectReviews: async (req, res, next) => {
+    try {
+      const { reviewMongoId } = req.body;
+
+      const getReviews = await reviewModel.findOneAndUpdate(
+        { _id: reviewMongoId },
+        { isReviewRejected: true }
+      );
+
+      res.status(200).json(getReviews);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = superAdminClt;

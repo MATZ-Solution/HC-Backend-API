@@ -21,6 +21,10 @@ const reviewSchema = new mongoose.Schema({
         type: Number,
         default: 3,
     },
+    isReviewRejected: {
+        type: Boolean,
+        default:false
+    }
 });
 
 // Create a model based on the schema
