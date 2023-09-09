@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const rolesEnum = ["super-admin"];
-const genderEnum = ["male", "female", "non-binary"];
+const rolesEnum = ['super-admin'];
+const genderEnum = ['male', 'female', 'non-binary'];
 
 const superAdminSchema = new mongoose.Schema(
   {
@@ -13,7 +13,7 @@ const superAdminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "super-admin",
+      default: 'super-admin',
       enum: rolesEnum,
     },
     firstName: {
@@ -31,12 +31,15 @@ const superAdminSchema = new mongoose.Schema(
     profilePic: {
       type: String,
     },
+    fcmToken: {
+      type: String,
+    },
     dateOfBirth: {
       type: String,
     },
     gender: {
       type: String,
-      default: "male",
+      default: 'male',
       enum: genderEnum,
     },
     region: {
@@ -50,9 +53,9 @@ const superAdminSchema = new mongoose.Schema(
     },
     zipCode: {
       type: String,
-    }
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("superAdmin", superAdminSchema);
+module.exports = mongoose.model('superAdmin', superAdminSchema);

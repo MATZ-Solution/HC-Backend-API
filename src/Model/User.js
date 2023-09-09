@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const rolesEnum = ["super-admin", "care-givers", "patient", "corporate"];
-const genderEnum = ["male", "female", "non-binary"];
+const rolesEnum = ['super-admin', 'care-givers', 'patient', 'corporate'];
+const genderEnum = ['male', 'female', 'non-binary'];
 
 const UserSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "patient",
+      default: 'patient',
       enum: rolesEnum,
     },
     firstName: {
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      default: "male",
+      default: 'male',
       enum: genderEnum,
     },
     region: {
@@ -53,6 +53,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
     },
     seekCareFor: {
+      type: String,
+    },
+    fcmToken: {
       type: String,
     },
     //otp verfied then true otherwise false
@@ -86,4 +89,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', UserSchema);
