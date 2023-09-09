@@ -8,7 +8,9 @@ router
   .get(verifyTokenAndAdmin, superAdminClt.getInvoices);
 router.route('/addReviews').post(superAdminClt.addReview);
 router
+  .route('/getReviews')
+  .get(verifyTokenAndAdmin, superAdminClt.rejectReviews);
+router
   .route('/rejectReviews')
   .put(verifyTokenAndAdmin, superAdminClt.rejectReviews);
-
 module.exports = router;
