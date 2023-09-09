@@ -7,9 +7,8 @@ router
   .route('/getAllInvoices')
   .get(verifyTokenAndAdmin, superAdminClt.getInvoices);
 router.route('/addReviews').post(superAdminClt.addReview);
-router
-  .route('/getReviews')
-  .get(verifyTokenAndAdmin, superAdminClt.getReviews);
+router.route('/getReviews').get(verifyTokenAndAdmin, superAdminClt.getReviews);
+router.route('/approvedReviews').put(verifyTokenAndAdmin, superAdminClt.approvedReviews);
 router
   .route('/rejectReviews')
   .put(verifyTokenAndAdmin, superAdminClt.rejectReviews);
