@@ -536,7 +536,7 @@ const patApplyforcoroporate = async (req, res, next) => {
     const notificationData = 'A new patient request has been submitted.';
 
     getSuperAdminfcmToken.forEach((token) => {
-      FcmNotify(token.fcmToken, notificationData);
+      FcmNotify(token.fcmToken, notificationData, 'super-admin');
     });
 
     res.status(201).json({
@@ -577,7 +577,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
       if (existEmail.length !== 0) {
         let corporate = await Corporate.findOneAndUpdate(
-          { email: updatedData.servicePhoneNumber },
+          { organizationContactNo: updatedData.servicePhoneNumber },
           { $inc: { conatactedCustomer: 1 } },
           { new: true }
         );
@@ -596,6 +596,9 @@ const isAdminApprovePatientService = async (req, res, next) => {
         });
 
         await createInvoie.save();
+
+        const notificationData = 'You get the new leads'
+        FcmNotify(corporate.fcmToken, notificationData, 'corporate');
 
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {

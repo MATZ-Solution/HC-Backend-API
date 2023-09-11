@@ -3,8 +3,7 @@ const serviceAccount = require('../utils/healthcare-f8e9b-firebase-adminsdk-3rc8
 
 process.env.GOOGLE_APPLICATION_CREDIENTIALS;
 
-
-function FcmNotify(token, data) {
+function FcmNotify(token, data, type) {
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
@@ -16,6 +15,9 @@ function FcmNotify(token, data) {
     notification: {
       title: 'Patient Requested',
       body: data,
+    },
+    data: {
+      type: type,
     },
     token: token,
   };

@@ -1,16 +1,16 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const genderEnum = ["male", "female", "non-binary"];
-const rolesEnum = ["super-admin", "care-givers", "patient", "corporate"];
+const genderEnum = ['male', 'female', 'non-binary'];
+const rolesEnum = ['super-admin', 'care-givers', 'patient', 'corporate'];
 
 const corporateSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      default: ""
+      default: '',
     },
     phoneNumber: {
-      type: Number
+      type: Number,
     },
     password: {
       type: String,
@@ -20,21 +20,21 @@ const corporateSchema = new mongoose.Schema(
       enum: rolesEnum,
     },
     firstName: {
-      type: String
+      type: String,
     },
     middleName: {
-      type: String
+      type: String,
     },
     lastName: {
       type: String,
-      defautl: ""
+      defautl: '',
     },
     adminPhoneNo: {
       type: Number,
     },
     profilePic: {
       type: String,
-      default: ""
+      default: '',
     },
     dateOfBirth: {
       type: Date,
@@ -44,12 +44,17 @@ const corporateSchema = new mongoose.Schema(
       enum: genderEnum,
     },
     position: {
-      type: String
+      type: String,
     },
-    complaintIds: [{
-      mongoDbID: String,
-      category: String
-    }],
+    fcmToken: {
+      type: String,
+    },
+    complaintIds: [
+      {
+        mongoDbID: String,
+        category: String,
+      },
+    ],
     adminAddress: {
       type: String,
     },
@@ -66,16 +71,16 @@ const corporateSchema = new mongoose.Schema(
       type: String,
     },
     latitude: {
-      type: String
+      type: String,
     },
     longitude: {
-      type: String
+      type: String,
     },
     mongoDbID: {
-      type: String
+      type: String,
     },
     category: {
-      type: String
+      type: String,
     },
     organizationName: {
       type: String,
@@ -118,7 +123,7 @@ const corporateSchema = new mongoose.Schema(
     },
     isCreatedByProperRegisteration: {
       type: Boolean,
-      default: false
+      default: false,
     },
     //otp verfied then true otherwise false
     isOtpVerified: {
@@ -149,12 +154,15 @@ const corporateSchema = new mongoose.Schema(
     //how many customerContacted this corporate
     conatactedCustomer: {
       type: Number,
-      default: 0
+      default: 0,
     },
   },
   { timestamps: true }
 );
 
-const Corporate = mongoose.model("facilityOwnerAndProfessional", corporateSchema);
+const Corporate = mongoose.model(
+  'facilityOwnerAndProfessional',
+  corporateSchema
+);
 
 module.exports = Corporate;
