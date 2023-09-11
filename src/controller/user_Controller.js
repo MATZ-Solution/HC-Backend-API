@@ -14,6 +14,7 @@ const superAdmin = require('../Model/superAdminModel');
 const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
 const noOfCallsMade = require('../Model/noOfCallsMade');
+const FcmNotify = require('../utils/fcmNotify');
 // const { Console } = require('console');
 
 // Controller for changing password
@@ -528,7 +529,16 @@ const patApplyforcoroporate = async (req, res, next) => {
     // Save the new application to the database
     const savedApplication = await newApplication.save();
 
-    // Return a success response
+    const getSuperAdminfcmToken = await superAdmin
+      .find()
+      .select('fcmToken -_id');
+
+    const notificationData = 'A new patient request has been submitted.';
+
+    getSuperAdminfcmToken.forEach((token) => {
+      FcmNotify(token.fcmToken, notificationData);
+    });
+
     res.status(201).json({
       message: 'Application submitted successfully.',
       application: savedApplication,
@@ -542,7 +552,7 @@ const patApplyforcoroporate = async (req, res, next) => {
 
 const getPatApplyService = async (req, res, next) => {
   try {
-    const patServices = await patService.find().lean();
+    const patServices = await patService.find().lean().sort({ createdAt: -1 });
     res.status(200).json(patServices);
   } catch (err) {
     next(err);

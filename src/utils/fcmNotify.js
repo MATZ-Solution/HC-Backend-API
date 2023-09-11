@@ -1,25 +1,23 @@
-const admin = require('firebase-admin'); // Make sure to import the Firebase Admin SDK
-const serviceAccount = require('path/to/serviceAccountKey.json');
+const admin = require('firebase-admin');
+const serviceAccount = require('../utils/healthcare-f8e9b-firebase-adminsdk-3rc82-ab38bc6b10.json');
+
+process.env.GOOGLE_APPLICATION_CREDIENTIALS;
+
 
 function FcmNotify(token, data) {
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      messagingSenderId: '314005293340',
+      messagingSenderId: '75432506166',
     });
   }
 
   const message = {
     notification: {
-      title: 'Medication Reminder',
-      body: data, // Use the data parameter as the notification body
+      title: 'Patient Requested',
+      body: data,
     },
     token: token,
-    data: {
-      // Include any custom data as needed
-      orderId: '353463',
-      orderDate: '54236456',
-    },
   };
 
   admin
@@ -32,3 +30,5 @@ function FcmNotify(token, data) {
       console.error('Error sending notification:', error.stack);
     });
 }
+
+module.exports = FcmNotify; // Export the function
