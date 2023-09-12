@@ -535,9 +535,11 @@ const patApplyforcoroporate = async (req, res, next) => {
 
     const notificationData = 'A new patient request has been submitted.';
 
-    getSuperAdminfcmToken.forEach((token) => {
-      FcmNotify(token.fcmToken, notificationData, 'super-admin');
-    });
+    if (getSuperAdminfcmToken.length > 0) {
+      getSuperAdminfcmToken.forEach((token) => {
+        FcmNotify(token.fcmToken, notificationData, 'super-admin');
+      });
+    }
 
     res.status(201).json({
       message: 'Application submitted successfully.',
@@ -597,9 +599,10 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         await createInvoie.save();
 
-        const notificationData = 'You get the new leads'
-        FcmNotify(corporate.fcmToken, notificationData, 'corporate');
-
+        const notificationData = 'You get the new leads';
+        if (corporate.fcmToken) {
+          FcmNotify(corporate.fcmToken, notificationData, 'corporate');
+        }
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
         const createUser = await Corporate.create({
