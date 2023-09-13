@@ -639,12 +639,11 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //if fcm token send notification to corporate
 
         if (corporate.fcmToken) {
-          corporate.fcmToken.map(token => {
-            console.log(token)
+          corporate.fcmToken.map((token) => {
             FcmNotify(token, notificationData, 'corporate');
-          })
+          });
         }
-            
+
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
         const createUser = await Corporate.create({
