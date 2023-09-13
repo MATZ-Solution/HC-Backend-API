@@ -15,6 +15,7 @@ const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
 const noOfCallsMade = require('../Model/noOfCallsMade');
 const FcmNotify = require('utils/fcmNotify');
+const Notification = require('../Model/notiHistoryModel');
 // const { Console } = require('console');
 
 // Controller for changing password
@@ -529,11 +530,25 @@ const patApplyforcoroporate = async (req, res, next) => {
     // Save the new application to the database
     const savedApplication = await newApplication.save();
 
+    //get All superAdmin
+    const getAllSuperAdmin = await superAdmin.find();
+
     const getSuperAdminfcmToken = await superAdmin
       .find()
       .select('fcmToken -_id');
 
     const notificationData = 'A new patient request has been submitted.';
+
+    for (const superAdmin of getAllSuperAdmin) {
+      const saveNotiHistory = new Notification({
+        title: 'Patient Requested',
+        Notification: 'A new patient request has been submitted.',
+        type: 'super-admin',
+        superAdminId: superAdmin._id,
+      });
+
+      await saveNotiHistory.save();
+    }
 
     getSuperAdminfcmToken.forEach((token) => {
       if (token.fcmToken !== '') {
@@ -577,6 +592,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         organizationContactNo: updatedData.servicePhoneNumber,
       });
 
+      //increase number
       if (existEmail.length !== 0) {
         let corporate = await Corporate.findOneAndUpdate(
           { organizationContactNo: updatedData.servicePhoneNumber },
@@ -584,6 +600,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
           { new: true }
         );
 
+        //generate invoice
         let createInvoie = await invoice.create({
           category: corporate.category,
           leadsId: corporate.mongoDbID,
@@ -599,7 +616,25 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         await createInvoie.save();
 
+
+        //notification Body
         const notificationData = 'You get the new leads';
+
+        //save notification history
+
+        let saveNotiHistory = await Notification.create({
+          title: 'Patient Requested',
+          Notification: notificationData,
+          type: 'corporate',
+          corporateId: corporate._id,
+        });
+
+        await saveNotiHistory.save();
+
+        //save notification history
+
+        //if fcm token send notification to corporate
+
         if (corporate.fcmToken) {
           FcmNotify(corporate.fcmToken, notificationData, 'corporate');
         }

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Define the Mongoose schema for the advisor
 const notiHistorySchema = new mongoose.Schema({
@@ -8,25 +8,20 @@ const notiHistorySchema = new mongoose.Schema({
   Notification: {
     type: String,
   },
-  lastName: {
+  type: {
     type: String,
   },
-  advisorEmail: {
-    type: String,
-  },
-  advisorContactNo: {
-    type: Number,
-  },
-  advisorAddress: {
-    type: String,
+  corporateId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'facilityOwnerAndProfessional',
   },
   superAdminId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "superAdmin",
+    ref: 'superAdmin',
   },
 });
 
 // Create the Mongoose model
-const Notification = mongoose.model("NotificationHistory", notiHistorySchema);
+const Notification = mongoose.model('NotificationHistory', notiHistorySchema);
 
 module.exports = Notification;

@@ -29,6 +29,7 @@ const corporateRoutes = require('./routes/corporateRoutes');
 const superAdminRoutes = require('./routes/superAdminRoutes');
 const favoriteRoutes = require('./routes/favourateRoutes');
 const fcmRoute = require('./routes/fcmRoute');
+const notificationRoute = require('./routes/notiRoutes');
 //=========blog route=======================================
 const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
@@ -73,7 +74,8 @@ app.use('/api/advisor', advisorRoute);
 app.use('/api/corporate', corporateRoutes);
 app.use('/api/superAdmin', superAdminRoutes);
 app.use('/api/favoriteRoutes', favoriteRoutes);
-app.use('/api/fcmRoutes/',fcmRoute)
+app.use('/api/fcmRoutes/', fcmRoute)
+app.use('/api/notificationHistory', notificationRoute)
 
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes )
