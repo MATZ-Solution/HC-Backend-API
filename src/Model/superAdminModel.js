@@ -32,7 +32,7 @@ const superAdminSchema = new mongoose.Schema(
       type: String,
     },
     fcmToken: {
-      type: String,
+      type: Array,
     },
     dateOfBirth: {
       type: String,

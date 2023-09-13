@@ -28,34 +28,56 @@ const FCM_Clt = {
           throw new ErrorHandler("Patient doesn't Exist", 400);
         }
       } else if (isAdmin === 'super-admin') {
-        const superAdminUser = await superAdmin.findOneAndUpdate(
-          { _id },
-          { fcmToken: fcmToken },
-          { new: true }
-        );
+        const newsuperAdmin = await superAdmin.findById(_id);
 
-        if (superAdminUser) {
-          res.status(200).json({
-            msg: 'Updated!',
-          });
-        } else {
-          throw new ErrorHandler("Super-Admin doesn't Exist", 400);
+        if (!superAdmin) {
+          throw new Error('Super Admin not found');
         }
+
+        // Check if the newToken already exists in the fcmToken array
+        const tokenExists = newsuperAdmin.fcmToken.includes(fcmToken);
+        console.log('tokenExists', tokenExists);
+
+        if (tokenExists) {
+          // if Token  exists, then remove it
+          newsuperAdmin.fcmToken = newsuperAdmin.fcmToken.filter(
+            (token) => token !== fcmToken
+          );
+        } else {
+          // Token doesn't exist, so add it
+          newsuperAdmin.fcmToken.push(fcmToken);
+        }
+
+        // Save the updated superAdmin document
+        await newsuperAdmin.save();
+        res
+          .status(200)
+          .json({ success: true, message: 'FCM token updated successfully' });
       } else if (isAdmin === 'corporate') {
-        const corporateUser = await corporate.findOneAndUpdate(
-          { _id },
-          { fcmToken: fcmToken },
-          { new: true }
-        );
+        const getCorporate = await corporate.findById(_id);
 
-        if (corporateUser) {
-          res.status(200).json({
-            msg: 'Updated!',
-            corporateUser,
-          });
-        } else {
-          throw new ErrorHandler("Corporate doesn't Exist", 400);
+        if (!getCorporate) {
+          throw new Error('Super Admin not found');
         }
+
+        // Check if the newToken already exists in the fcmToken array
+        const tokenExists = getCorporate.fcmToken.includes(fcmToken);
+        
+        if (tokenExists) {
+          // if Token  exists, then remove it
+          getCorporate.fcmToken = getCorporate.fcmToken.filter(
+            (token) => token !== fcmToken
+          );
+        } else {
+          // Token doesn't exist, so add it
+          getCorporate.fcmToken.push(fcmToken);
+        }
+
+        // Save the updated superAdmin document
+        await getCorporate.save();
+        res
+          .status(200)
+          .json({ success: true, message: 'FCM token updated successfully' });
       }
     } catch (err) {
       next(err);

@@ -551,8 +551,12 @@ const patApplyforcoroporate = async (req, res, next) => {
     }
 
     getSuperAdminfcmToken.forEach((token) => {
-      if (token.fcmToken !== '') {
-        FcmNotify(token.fcmToken, notificationData, 'super-admin');
+      if (token.fcmToken) {
+        token.fcmToken.map((fcmToken) => {
+          if (fcmToken) {
+            FcmNotify(fcmToken, notificationData, 'super-admin');
+          }
+        });
       }
     });
 
@@ -616,7 +620,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         await createInvoie.save();
 
-
         //notification Body
         const notificationData = 'You get the new leads';
 
@@ -636,8 +639,12 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //if fcm token send notification to corporate
 
         if (corporate.fcmToken) {
-          FcmNotify(corporate.fcmToken, notificationData, 'corporate');
+          corporate.fcmToken.map(token => {
+            console.log(token)
+            FcmNotify(token, notificationData, 'corporate');
+          })
         }
+            
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
         const createUser = await Corporate.create({

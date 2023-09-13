@@ -47,7 +47,7 @@ const corporateSchema = new mongoose.Schema(
       type: String,
     },
     fcmToken: {
-      type: String,
+      type: Array,
     },
     complaintIds: [
       {
