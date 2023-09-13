@@ -1,6 +1,4 @@
 const cookieSession = require('cookie-session');
-const passportSetup = require('./passport');
-const passport = require('passport');
 
 const express = require('express');
 const app = express();
@@ -11,7 +9,6 @@ const userRoute = require('./routes/user');
 const privacyRoute = require('./routes/privacy');
 const meetRoute = require('./routes/meet_Route');
 const databaseConnection = require('./utils/db');
-const authsRoute = require('./routes/auths');
 const regionRoute = require('./routes/region');
 const healthCareRoute = require('./routes/healthCareRoute');
 const geoLocationRoute = require('./routes/geoPlacesRoute');
@@ -33,20 +30,11 @@ const notificationRoute = require('./routes/notiRoutes');
 //=========blog route=======================================
 const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
-const getInvoice = require('./routes/invoiceRoute')
+const getInvoice = require('./routes/invoiceRoute');
 
 dotenv.config();
 
 app.use(cors());
-
-app.use(
-  cookieSession({ name: 'session', keys: ['lama'], maxAge: 24 * 60 * 60 * 100 })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-//this is only for passport initialization
 
 app.use(express.json()); // Parse incoming JSON data
 
@@ -58,7 +46,6 @@ app.use('/api/auth', authRoute); // Route for authentication
 app.use('/api/user', userRoute); // Route for user-related operations
 app.use('/api/privacy', privacyRoute); //Route for Privacy
 app.use('/api/meetSchedule', meetRoute); //Route for Privacy
-app.use('/auth', authsRoute);
 app.use('/api/regionRoute', regionRoute);
 app.use('/api/healthCareRoute', healthCareRoute);
 app.use('/api/geoLocation', geoLocationRoute);
@@ -74,17 +61,16 @@ app.use('/api/advisor', advisorRoute);
 app.use('/api/corporate', corporateRoutes);
 app.use('/api/superAdmin', superAdminRoutes);
 app.use('/api/favoriteRoutes', favoriteRoutes);
-app.use('/api/fcmRoutes/', fcmRoute)
-app.use('/api/notificationHistory', notificationRoute)
+app.use('/api/fcmRoutes/', fcmRoute);
+app.use('/api/notificationHistory', notificationRoute);
 
 //=========Blog Routes===================
-app.use('/api/blogs', blogRoutes )
+app.use('/api/blogs', blogRoutes);
 //=======================================
 //==========Invoice Routes================
 app.use('/api/invoice', getInvoice);
 
 app.use(errorMiddleware);
-
 
 app.get('/', (req, res) => {
   res.send('Hello World');
