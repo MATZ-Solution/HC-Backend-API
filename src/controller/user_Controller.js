@@ -4,7 +4,7 @@ const Otp = require('../Model/Otp');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
-const ErrorHandler = require('utils/ErrorHandler');
+const ErrorHandler = require('../utils/ErrorHandler');
 const otherCareModel = require('../Model/otherCareModel');
 const Vital = require('../Model/vitalModel');
 const patService = require('../Model/patApplyService');
@@ -14,7 +14,7 @@ const superAdmin = require('../Model/superAdminModel');
 const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
 const noOfCallsMade = require('../Model/noOfCallsMade');
-const FcmNotify = require('utils/fcmNotify');
+const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
 // const { Console } = require('console');
 
