@@ -4,7 +4,7 @@ const Otp = require('../Model/Otp');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
-const ErrorHandler = require('../utils/ErrorHandler');
+const ErrorHandler = require('utils/ErrorHandler');
 const otherCareModel = require('../Model/otherCareModel');
 const Vital = require('../Model/vitalModel');
 const patService = require('../Model/patApplyService');
@@ -14,7 +14,7 @@ const superAdmin = require('../Model/superAdminModel');
 const facilityOtp = require('../Model/facilityOtp');
 const medicalPractice = require('../Model/medicalPracticeModel');
 const noOfCallsMade = require('../Model/noOfCallsMade');
-const FcmNotify = require('../utils/fcmNotify');
+const FcmNotify = require('utils/fcmNotify');
 // const { Console } = require('console');
 
 // Controller for changing password
@@ -535,11 +535,11 @@ const patApplyforcoroporate = async (req, res, next) => {
 
     const notificationData = 'A new patient request has been submitted.';
 
-    if (getSuperAdminfcmToken.length > 0) {
-      getSuperAdminfcmToken.forEach((token) => {
+    getSuperAdminfcmToken.forEach((token) => {
+      if (token.fcmToken !== '') {
         FcmNotify(token.fcmToken, notificationData, 'super-admin');
-      });
-    }
+      }
+    });
 
     res.status(201).json({
       message: 'Application submitted successfully.',

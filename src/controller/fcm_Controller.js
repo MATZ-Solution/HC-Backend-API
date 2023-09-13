@@ -1,5 +1,5 @@
 var admin = require('firebase-admin');
-const serviceAccount = require('../utils/healthcare-f8e9b-firebase-adminsdk-3rc82-ab38bc6b10.json');
+// const serviceAccount = require('../utils/healthcare-f8e9b-firebase-adminsdk-3rc82-ab38bc6b10.json');
 const User = require('../Model/User');
 const superAdmin = require('../Model/superAdminModel');
 const corporate = require('../Model/corporateModel');
