@@ -1,6 +1,6 @@
 const patService = require('../Model/patApplyService');
 const superAdmin = require('../Model/superAdminModel');
-const FcmNotify = require('utils/fcmNotify');
+const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
 
 //patient apply for service

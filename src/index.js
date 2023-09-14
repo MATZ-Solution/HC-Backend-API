@@ -77,5 +77,5 @@ app.get('/', (req, res) => {
 });
 // Start the server and listen for incoming requests
 app.listen(5000, () => {
-  console.log('Backend server is running on 3000!');
+  console.log('Backend server is running on 5000!');
 });
