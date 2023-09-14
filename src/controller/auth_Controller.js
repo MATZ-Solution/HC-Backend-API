@@ -534,12 +534,12 @@ const mailer = async (to, otp) => {
   const transporter = await createTransporter();
 
   const mailOptions = {
-    from: 'lacassa@gmail.com',
+    from: 'HealthCare@gmail.com',
     to,
-    subject: 'OTP - Lacassa',
+    subject: 'OTP - HealthCare',
     html: `<p>Dear ${to.split('@')[0]},</p>
 
-    <p>Your OTP for login to Lacassa is: <strong>${otp}</strong></p>
+    <p>Your OTP for login to HealthCare is: <strong>${otp}</strong></p>
 
     <p>Regards,</p>
     <p>Admin</p>`,
