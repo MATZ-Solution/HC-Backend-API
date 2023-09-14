@@ -539,10 +539,10 @@ const mailer = async (to, otp) => {
     subject: 'OTP - Lacassa',
     html: `<p>Dear ${to.split('@')[0]},</p>
 
-<p>Your OTP  Lacassa  is: <strong>${otp}</strong></p>
+    <p>Your OTP for login to Lacassa is: <strong>${otp}</strong></p>
 
-<p>Regards,</p>
-<p>Admin</p>`,
+    <p>Regards,</p>
+    <p>Admin</p>`,
   };
 
   transporter.sendMail(mailOptions, function (error, info) {
