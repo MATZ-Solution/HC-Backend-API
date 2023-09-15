@@ -1,47 +1,53 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const payStatus = ['PAID', 'UNPAID', 'PARTIALLY-PAID'];
 
 const invoiceSchema = mongoose.Schema(
   {
     leadAmount: {
-      type: Number
+      type: Number,
     },
     subTotal: {
-      type: Number
+      type: Number,
     },
     grandTotal: {
-      type: Number
+      type: Number,
     },
     discount: {
-      type: Number
+      type: Number,
+    },
+    balance: {
+      type: Number,
+      default: 0,
     },
     dueDate: {
-      type: String
+      type: String,
     },
     category: {
-      type: String
+      type: String,
     },
     additionalMessage: {
-      type: String
+      type: String,
     },
     leadsId: {
-      type: String
+      type: String,
     },
     patientId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "patApplyService",
+      ref: 'patApplyService',
     },
     corporateId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "facilityOwnerAndProfessional",
+      ref: 'facilityOwnerAndProfessional',
     },
-    isPayNow: {
-      type: Boolean,
-      default:false
-    }
+    payStatus: {
+      type: String,
+      default: 'UNPAID',
+      enum: payStatus,
+    },
   },
   { timestamps: true }
 );
 
-const Invoice = mongoose.model("FaciltyInvoice", invoiceSchema);
+const Invoice = mongoose.model('FaciltyInvoice', invoiceSchema);
 
 module.exports = Invoice;

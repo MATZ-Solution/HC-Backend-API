@@ -59,7 +59,7 @@ const superAdminClt = {
           return { scraped: scrapedResponse.data.name, review };
         })
       );
-      
+
       const modifyResponse = scrapedResponses.map((review) => ({
         serviceName: review.scraped,
         isReviewApproved: review.review.isReviewApproved,
@@ -71,7 +71,7 @@ const superAdminClt = {
         reviews: review.review.reviews,
         startRating: review.review.startRating,
         isReviewRejected: review.review.isReviewRejected,
-        createdAt:review.review.createdAt,
+        createdAt: review.review.createdAt,
         updatedAt: review.review.updatedAt,
       }));
 
@@ -98,16 +98,16 @@ const superAdminClt = {
     try {
       const { _id, mongoDbID, category, name, email, reviews, startRating } =
         req.body;
-      
+
       const apiUrl =
-        "http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/approveReview";
-  
+        'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/approveReview';
+
       // Update the review status in the local database
       const updatedReview = await reviewModel.findOneAndUpdate(
         { _id: _id },
         { isReviewApproved: true }
       );
-  
+
       // Send a request to the external API to approve the review
       const scrapedResponse = await axios.put(apiUrl, {
         mongoDbID: mongoDbID,
@@ -117,11 +117,49 @@ const superAdminClt = {
         reviews,
         startRating,
       });
-  
+
       res.status(200).json(updatedReview);
     } catch (error) {
       next(error);
     }
+  },
+  getInvoiceCount: async (req, res, next) => {
+    try {
+      const getAllInvoices = await invoice.find();
+      const counts = getAllInvoices.reduce(
+        (accumulator, invoice) => {
+          switch (invoice.payStatus) {
+            case 'PAID':
+              accumulator.paid++;
+              break;
+            case 'PARTIALLY-PAID':
+              accumulator.partiallyPaid++;
+              break;
+            case 'UNPAID':
+              accumulator.unpaid++;
+              break;
+            default:
+              break;
+          }
+          return accumulator;
+        },
+        { paid: 0, partiallyPaid: 0, unpaid: 0 }
+      );
+
+      res.status(200).json(counts);
+    } catch (error) {
+      next(error);
+    }
+  },
+  getRecordsOnPayStatus: async (req, res, next) => {
+    console.log(req.params.payStatus);
+    const records = await invoice.find({
+      payStatus: req.params.payStatus,
+    });
+
+    !records || records.length === 0
+      ? res.status(404).json({ message: 'No records found.' })
+      : res.status(200).json(records);
   },
 };
 
