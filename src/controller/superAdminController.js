@@ -160,14 +160,20 @@ const superAdminClt = {
     }
   },
   getRecordsOnPayStatus: async (req, res, next) => {
-    console.log(req.params.payStatus);
-    const records = await invoice.find({
-      payStatus: req.params.payStatus,
-    });
+    if (req.params.payStatus == 'ALL') {
+      const records = await invoice.find();
+      !records || records.length === 0
+        ? res.status(404).json({ message: 'No records found.' })
+        : res.status(200).json(records);
+    } else {
+      const records = await invoice.find({
+        payStatus: req.params.payStatus,
+      });
 
-    !records || records.length === 0
-      ? res.status(404).json({ message: 'No records found.' })
-      : res.status(200).json(records);
+      !records || records.length === 0
+        ? res.status(404).json({ message: 'No records found.' })
+        : res.status(200).json(records);
+    }
   },
 };
 
