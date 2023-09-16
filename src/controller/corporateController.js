@@ -188,11 +188,9 @@ const getRecordsOnPayStatus = async (req, res, next) => {
 };
 
 const payFacilityInvoice = async (req, res, next) => {
-
-
   try {
     const invoiceId = req.params.invoiceId;
-    const { paymentAmount } = req.body; // Assuming you receive the payment amount in the request body
+    const { paymentAmount, attachement } = req.body; // Assuming you receive the payment amount in the request body
 
     //find the invoice by id
     const foundInvoice = await invoice.findById(invoiceId);
@@ -226,7 +224,7 @@ const payFacilityInvoice = async (req, res, next) => {
           : foundInvoice.grandTotal;
 
         //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
-
+        foundInvoice.attachement = attachement ? attachement : '';
         //save invoice
         await foundInvoice.save();
       } else {
@@ -246,7 +244,6 @@ const payFacilityInvoice = async (req, res, next) => {
     next(err);
   }
 };
-
 
 module.exports = {
   emailController,
