@@ -44,6 +44,9 @@ const invoiceSchema = mongoose.Schema(
       default: 'UNPAID',
       enum: payStatus,
     },
+    attachement: {
+      type: String,
+    }
   },
   { timestamps: true }
 );
