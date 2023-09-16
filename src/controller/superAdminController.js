@@ -132,7 +132,7 @@ const superAdminClt = {
           accumulator.total++;
           return accumulator;
         },
-        { paid: 0, 'partially-paid': 0, unpaid: 0, total: 0 }
+        { paid: 0, 'partiallyPaid': 0, unPaid: 0, total: 0 }
       );
       // const counts = getAllInvoices.reduce(
       //   (accumulator, invoice) => {
@@ -160,7 +160,7 @@ const superAdminClt = {
     }
   },
   getRecordsOnPayStatus: async (req, res, next) => {
-    if (req.params.payStatus == 'ALL') {
+    if (req.params.payStatus == 'total') {
       const records = await invoice.find();
       !records || records.length === 0
         ? res.status(404).json({ message: 'No records found.' })

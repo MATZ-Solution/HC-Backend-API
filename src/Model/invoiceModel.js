@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const payStatus = ['PAID', 'UNPAID', 'PARTIALLY-PAID'];
+const payStatus = ['paid', 'unPaid', 'partiallyPaid'];
 
 const invoiceSchema = mongoose.Schema(
   {
@@ -46,7 +46,7 @@ const invoiceSchema = mongoose.Schema(
     },
     attachement: {
       type: String,
-    }
+    },
   },
   { timestamps: true }
 );
