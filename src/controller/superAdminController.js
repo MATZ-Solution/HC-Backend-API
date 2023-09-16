@@ -128,23 +128,31 @@ const superAdminClt = {
       const getAllInvoices = await invoice.find();
       const counts = getAllInvoices.reduce(
         (accumulator, invoice) => {
-          switch (invoice.payStatus) {
-            case 'PAID':
-              accumulator.paid++;
-              break;
-            case 'PARTIALLY-PAID':
-              accumulator.partiallyPaid++;
-              break;
-            case 'UNPAID':
-              accumulator.unpaid++;
-              break;
-            default:
-              break;
-          }
+          accumulator[invoice.payStatus.toLowerCase()]++;
+          accumulator.total++;
           return accumulator;
         },
-        { paid: 0, partiallyPaid: 0, unpaid: 0 }
+        { paid: 0, 'partially-paid': 0, unpaid: 0, total: 0 }
       );
+      // const counts = getAllInvoices.reduce(
+      //   (accumulator, invoice) => {
+      //     switch (invoice.payStatus) {
+      //       case 'PAID':
+      //         accumulator.paid++;
+      //         break;
+      //       case 'PARTIALLY-PAID':
+      //         accumulator.partiallyPaid++;
+      //         break;
+      //       case 'UNPAID':
+      //         accumulator.unpaid++;
+      //         break;
+      //       default:
+      //         break;
+      //     }
+      //     return accumulator;
+      //   },
+      //   { paid: 0, partiallyPaid: 0, unpaid: 0 }
+      // );
 
       res.status(200).json(counts);
     } catch (error) {
