@@ -132,7 +132,7 @@ const superAdminClt = {
           accumulator.total++;
           return accumulator;
         },
-        { paid: 0, 'partiallyPaid': 0, unPaid: 0, total: 0 }
+        { paid: 0, partiallyPaid: 0, unpaid: 0, total: 0 }
       );
       // const counts = getAllInvoices.reduce(
       //   (accumulator, invoice) => {
