@@ -180,7 +180,7 @@ const getRecordsOnPayStatus = async (req, res, next) => {
   const records = await invoice.find({
     corporateId: _id,
     payStatus: req.params.payStatus,
-  });
+  }).populate('patientId');
 
   !records || records.length === 0
     ? res.status(404).json({ message: 'No records found.' })
