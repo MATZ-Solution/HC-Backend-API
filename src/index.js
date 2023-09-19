@@ -1,9 +1,8 @@
-const cookieSession = require('cookie-session');
-
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 const privacyRoute = require('./routes/privacy');
@@ -40,6 +39,16 @@ app.use(express.json()); // Parse incoming JSON data
 
 // Connect to the MongoDB database
 databaseConnection.connect();
+
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 15, 
+  message: 'Too many requests from this IP, please try again later.',
+});
+
+// limiter middleware to your routes
+app.use('/api', limiter); 
 
 //routes
 app.use('/api/auth', authRoute); // Route for authentication
