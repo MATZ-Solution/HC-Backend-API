@@ -134,25 +134,6 @@ const superAdminClt = {
         },
         { paid: 0, partiallyPaid: 0, unpaid: 0, total: 0 }
       );
-      // const counts = getAllInvoices.reduce(
-      //   (accumulator, invoice) => {
-      //     switch (invoice.payStatus) {
-      //       case 'PAID':
-      //         accumulator.paid++;
-      //         break;
-      //       case 'PARTIALLY-PAID':
-      //         accumulator.partiallyPaid++;
-      //         break;
-      //       case 'UNPAID':
-      //         accumulator.unpaid++;
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //     return accumulator;
-      //   },
-      //   { paid: 0, partiallyPaid: 0, unpaid: 0 }
-      // );
 
       res.status(200).json(counts);
     } catch (error) {
@@ -161,12 +142,18 @@ const superAdminClt = {
   },
   getRecordsOnPayStatus: async (req, res, next) => {
     if (req.params.payStatus == 'total') {
-      const records = await invoice.find();
+      const records = await invoice
+        .find()
+        .populate('patientId')
+        .populate('corporateId');
       res.status(200).json(records);
     } else {
-      const records = await invoice.find({
-        payStatus: req.params.payStatus,
-      });
+      const records = await invoice
+        .find({
+          payStatus: req.params.payStatus,
+        })
+        .populate('patientId')
+        .populate('corporateId');
 
       res.status(200).json(records);
     }
