@@ -227,11 +227,12 @@ const payFacilityInvoice = async (req, res, next) => {
         foundInvoice.attachement = attachement ? attachement : '';
         //save invoice
         await foundInvoice.save();
+
       } else {
         throw new ErrorHandler('Amount Should be Greater than 0', 200);
       }
     } else {
-      res.status.json('Already Paid');
+      res.status(200).json('Already Paid');
     }
 
     //return response
