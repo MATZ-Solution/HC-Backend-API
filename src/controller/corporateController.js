@@ -177,10 +177,12 @@ const getIndividualInvoiceCount = async (req, res, next) => {
 const getRecordsOnPayStatus = async (req, res, next) => {
   const { _id } = req.user;
 
-  const records = await invoice.find({
-    corporateId: _id,
-    payStatus: req.params.payStatus,
-  }).populate('patientId');
+  const records = await invoice
+    .find({
+      corporateId: _id,
+      payStatus: req.params.payStatus,
+    })
+    .populate('patientId');
 
   !records || records.length === 0
     ? res.status(404).json({ message: 'No records found.' })
@@ -227,7 +229,6 @@ const payFacilityInvoice = async (req, res, next) => {
         foundInvoice.attachement = attachement ? attachement : '';
         //save invoice
         await foundInvoice.save();
-
       } else {
         throw new ErrorHandler('Amount Should be Greater than 0', 200);
       }
