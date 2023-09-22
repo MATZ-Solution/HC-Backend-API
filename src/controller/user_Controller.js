@@ -727,8 +727,10 @@ const getAllCorporates = async (req, res, next) => {
       isCreatedByProperRegisteration: false,
     });
 
-    const apiUrl =
-      'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
+    // const apiUrl =
+    //   'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
+
+    const apiUrl = process.env.apiUrl;
 
     const corporatesWithComplaints = await Promise.all(
       getAllCorporatesData.map(async (corporate) => {

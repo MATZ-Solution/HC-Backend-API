@@ -49,8 +49,10 @@ const favoriteClt = {
     try {
       const { _id, isAdmin } = req.user;
 
-      const apiUrl =
-        "http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId";
+      // const apiUrl =
+      //   "http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId";
+
+      const apiUrl = procees.env.getCategory;
 
       if (isAdmin === "patient") {
         let getFavourates = await Favourate.find({ patId: _id }).populate(

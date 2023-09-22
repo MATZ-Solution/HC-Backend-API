@@ -41,8 +41,10 @@ const superAdminClt = {
   },
   getReviews: async (req, res, next) => {
     try {
-      const apiUrl =
-        'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
+      // const apiUrl =
+      //   'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
+
+      const apiUrl = process.env.apiUrl;
 
       const getReviews = await reviewModel.find();
       const scraped = [];
@@ -99,8 +101,10 @@ const superAdminClt = {
       const { _id, mongoDbID, category, name, email, reviews, startRating } =
         req.body;
 
-      const apiUrl =
-        'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/approveReview';
+      // const apiUrl =
+      //   'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/approveReview';
+
+      const apiUrl = process.env.approveReview;
 
       // Update the review status in the local database
       const updatedReview = await reviewModel.findOneAndUpdate(
