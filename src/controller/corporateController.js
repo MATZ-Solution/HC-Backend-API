@@ -204,9 +204,12 @@ const payFacilityInvoice = async (req, res, next) => {
     }
 
     const totalAmount = calculateTotalAmount(foundInvoice);
+
+    console.log(foundInvoice.isButtonClicked)
   
 
-    if (foundInvoice.isButtonClicked) {
+    if (!foundInvoice.isButtonClicked) {
+      console.log("not run");
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
           paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';

@@ -637,7 +637,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //save notification history
 
         //if fcm token send notification to corporate
-
+        console.log('run');
         if (corporate.fcmToken) {
           corporate.fcmToken.map((token) => {
             FcmNotify(token, notificationData, 'corporate');
