@@ -205,11 +205,7 @@ const payFacilityInvoice = async (req, res, next) => {
 
     const totalAmount = calculateTotalAmount(foundInvoice);
 
-    console.log(foundInvoice.isButtonClicked)
-  
-
     if (!foundInvoice.isButtonClicked) {
-      console.log("not run");
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
           paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
@@ -231,25 +227,25 @@ const payFacilityInvoice = async (req, res, next) => {
 
         //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
         foundInvoice.attachement = attachement ? attachement : '';
-        
+
         // change status to true on button clicked
-        foundInvoice.isButtonClicked = true
+        foundInvoice.isButtonClicked = true;
         //save invoice
         await foundInvoice.save();
 
+        //return response
+        return res.status(200).json({
+          success: true,
+          message: 'Payment processed successfully',
+          foundInvoice,
+        });
+        
       } else {
         throw new ErrorHandler('Amount Should be Greater than 0', 200);
       }
     } else {
       res.status(200).json('Already Paid');
     }
-
-    //return response
-    return res.status(200).json({
-      success: true,
-      message: 'Payment processed successfully',
-      foundInvoice,
-    });
   } catch (err) {
     next(err);
   }
