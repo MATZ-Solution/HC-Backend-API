@@ -151,13 +151,13 @@ const getIndividualInvoiceCount = async (req, res, next) => {
     const counts = getAllInvoices.reduce(
       (accumulator, invoice) => {
         switch (invoice.payStatus) {
-          case 'PAID':
+          case 'paid':
             accumulator.paid++;
             break;
-          case 'PARTIALLY-PAID':
+          case 'partiallyPaid':
             accumulator.partiallyPaid++;
             break;
-          case 'UNPAID':
+          case 'unPaid':
             accumulator.unpaid++;
             break;
           default:
@@ -204,8 +204,9 @@ const payFacilityInvoice = async (req, res, next) => {
     }
 
     const totalAmount = calculateTotalAmount(foundInvoice);
+  
 
-    if (totalAmount !== 0) {
+    if (foundInvoice.isButtonClicked) {
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
           paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
@@ -227,8 +228,12 @@ const payFacilityInvoice = async (req, res, next) => {
 
         //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
         foundInvoice.attachement = attachement ? attachement : '';
+        
+        // change status to true on button clicked
+        foundInvoice.isButtonClicked = true
         //save invoice
         await foundInvoice.save();
+
       } else {
         throw new ErrorHandler('Amount Should be Greater than 0', 200);
       }

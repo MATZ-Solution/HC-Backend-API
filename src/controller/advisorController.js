@@ -1,6 +1,6 @@
-const Advisor = require("../Model/advisorModel");
-const ErrorHandler = require("../utils/ErrorHandler");
-const CryptoJS = require("crypto-js");
+const Advisor = require('../Model/advisorModel');
+const ErrorHandler = require('../utils/ErrorHandler');
+const CryptoJS = require('crypto-js');
 
 const advisorClt = {
   createAdvisor: async (req, res, next) => {
@@ -22,7 +22,7 @@ const advisorClt = {
 
       if (password !== confirmPass) {
         throw new ErrorHandler(
-          "Password and confirm password are not same",
+          'Password and confirm password are not same',
           400
         );
       }
@@ -54,7 +54,7 @@ const advisorClt = {
           advisor: savedAdvisor,
         });
       } else {
-        throw new ErrorHandler("Emal Already Exist", 400);
+        throw new ErrorHandler('Emal Already Exist', 400);
       }
     } catch (err) {
       next(err);
@@ -64,14 +64,12 @@ const advisorClt = {
   // Update a branch manager by ID
   getAdvisors: async (req, res, next) => {
     try {
-      const advisors = await Advisor.find().select(
-        "-password -__v"
-      );
+      const advisors = await Advisor.find().select('-password -__v');
       if (!advisors) {
-        return res.status(404).json({ error: "Advisors  not found." });
+        return res.status(404).json({ error: 'Advisors  not found.' });
       }
 
-      res.status(200).json({data:advisors});
+      res.status(200).json({ data: advisors });
     } catch (err) {
       next(err);
     }
@@ -84,9 +82,9 @@ const advisorClt = {
         req.params.id
       );
       if (!deletedBranchManager) {
-        return res.status(404).json({ error: "Branch manager not found." });
+        return res.status(404).json({ error: 'Branch manager not found.' });
       }
-      res.status(200).json({ message: "Branch manager deleted successfully." });
+      res.status(200).json({ message: 'Branch manager deleted successfully.' });
     } catch (err) {
       next(err);
     }

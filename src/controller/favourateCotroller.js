@@ -1,6 +1,6 @@
-const Favourate = require("../Model/favourateModel");
-const ErrorHandler = require("../utils/ErrorHandler");
-const axios = require("axios");
+const Favourate = require('../Model/favourateModel');
+const ErrorHandler = require('../utils/ErrorHandler');
+const axios = require('axios');
 
 const favoriteClt = {
   createFavourate: async (req, res, next) => {
@@ -8,7 +8,7 @@ const favoriteClt = {
       const { _id, isAdmin } = req.user;
       const { category, scrapeObjectId } = req.body;
 
-      if (isAdmin === "patient") {
+      if (isAdmin === 'patient') {
         const newFavorite = new Favourate({
           category,
           scrapeObjectId,
@@ -17,8 +17,8 @@ const favoriteClt = {
 
         await newFavorite.save();
 
-        res.status(201).json({ message: "Favorite created successfully" });
-      } else if (isAdmin === "super-admin") {
+        res.status(201).json({ message: 'Favorite created successfully' });
+      } else if (isAdmin === 'super-admin') {
         const newFavorite = new Favourate({
           category,
           scrapeObjectId,
@@ -27,8 +27,8 @@ const favoriteClt = {
 
         await newFavorite.save();
 
-        res.status(201).json({ message: "Favorite created successfully" });
-      } else if (isAdmin === "corporate") {
+        res.status(201).json({ message: 'Favorite created successfully' });
+      } else if (isAdmin === 'corporate') {
         const newFavorite = new Favourate({
           category,
           scrapeObjectId,
@@ -37,7 +37,7 @@ const favoriteClt = {
 
         await newFavorite.save();
 
-        res.status(201).json({ message: "Favorite created successfully" });
+        res.status(201).json({ message: 'Favorite created successfully' });
       }
     } catch (err) {
       next(err);
@@ -52,11 +52,12 @@ const favoriteClt = {
       // const apiUrl =
       //   "http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId";
 
-      const apiUrl = procees.env.getCategory;
+      const apiUrl = process.env.getCategory;
+      console.log(isAdmin)
 
-      if (isAdmin === "patient") {
+      if (isAdmin === 'patient') {
         let getFavourates = await Favourate.find({ patId: _id }).populate(
-          "patId"
+          'patId'
         );
 
         const getFavourateWithResponse = await Promise.all(
@@ -74,10 +75,10 @@ const favoriteClt = {
         );
 
         res.status(200).json(getFavourateWithResponse);
-      } else if (isAdmin === "super-admin") {
+      } else if (isAdmin === 'super-admin') {
         let getFavourates = await Favourate.find({
           superAdminId: _id,
-        }).populate("patId");
+        }).populate('patId');
 
         const getFavourateWithResponse = await Promise.all(
           getFavourates.map(async (favourate) => {
@@ -94,10 +95,10 @@ const favoriteClt = {
         );
 
         res.status(200).json(getFavourateWithResponse);
-      } else if (isAdmin === "corporate") {
+      } else if (isAdmin === 'corporate') {
         let getFavourates = await Favourate.find({
           corporateId: _id,
-        }).populate("patId");
+        }).populate('patId');
 
         const getFavourateWithResponse = await Promise.all(
           getFavourates.map(async (favourate) => {
@@ -127,9 +128,9 @@ const favoriteClt = {
         scrapeObjectId: req.params.id,
       });
       if (!deleteFavourate) {
-        res.status(404).json({ error: "not found." });
+        res.status(404).json({ error: 'not found.' });
       }
-      res.status(200).json({ message: "deleted successfully." });
+      res.status(200).json({ message: 'deleted successfully.' });
     } catch (err) {
       next(err);
     }

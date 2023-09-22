@@ -47,6 +47,10 @@ const invoiceSchema = mongoose.Schema(
     attachement: {
       type: String,
     },
+    isButtonClicked: {
+      type: Boolean,
+      default:false
+    },
   },
   { timestamps: true }
 );
