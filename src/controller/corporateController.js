@@ -150,24 +150,12 @@ const getIndividualInvoiceCount = async (req, res, next) => {
     const getAllInvoices = await invoice.find({ corporateId: _id });
     const counts = getAllInvoices.reduce(
       (accumulator, invoice) => {
-        switch (invoice.payStatus) {
-          case 'paid':
-            accumulator.paid++;
-            break;
-          case 'partiallyPaid':
-            accumulator.partiallyPaid++;
-            break;
-          case 'unPaid':
-            accumulator.unpaid++;
-            break;
-          default:
-            break;
-        }
+        accumulator[invoice.payStatus.toLowerCase()]++;
+        accumulator.total++;
         return accumulator;
       },
-      { paid: 0, partiallyPaid: 0, unpaid: 0 }
+      { paid: 0, partiallypaid: 0, unpaid: 0, total: 0 }
     );
-
     res.status(200).json(counts);
   } catch (error) {
     next(error);
@@ -177,16 +165,21 @@ const getIndividualInvoiceCount = async (req, res, next) => {
 const getRecordsOnPayStatus = async (req, res, next) => {
   const { _id } = req.user;
 
-  const records = await invoice
-    .find({
-      corporateId: _id,
-      payStatus: req.params.payStatus,
-    })
-    .populate('patientId');
-
-  !records || records.length === 0
-    ? res.status(404).json({ message: 'No records found.' })
-    : res.status(200).json(records);
+  console.log(_id);
+  if (req.params.payStatus == 'total') {
+    const records = await invoice
+      .find({ corporateId: _id })
+      .populate('patientId');
+    res.status(404).json({ success: true, data: records });
+  } else {
+    const records = await invoice
+      .find({
+        corporateId: _id,
+        payStatus: req.params.payStatus,
+      })
+      .populate('patientId');
+    res.status(404).json({ success: true, data: records });
+  }
 };
 
 const payFacilityInvoice = async (req, res, next) => {
@@ -239,12 +232,11 @@ const payFacilityInvoice = async (req, res, next) => {
           message: 'Payment processed successfully',
           foundInvoice,
         });
-        
       } else {
         throw new ErrorHandler('Amount Should be Greater than 0', 200);
       }
     } else {
-      res.status(200).json('Already Paid');
+      return res.status(404).json({ success: false, message: 'Already Paid' });
     }
   } catch (err) {
     next(err);
