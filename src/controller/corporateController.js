@@ -133,6 +133,7 @@ const getIndividualInvoice = async (req, res, next) => {
           invoice.patientId.servicePatientSurveyRating,
         servicePatientSurveyRating:
           invoice.patientId.servicePatientSurveyRating,
+        isButtonClicked: invoice.isButtonClicked,
       }));
 
       res.status(200).json(formattedInvoices);

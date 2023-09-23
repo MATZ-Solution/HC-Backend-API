@@ -12,13 +12,17 @@ const otpSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'facilityOwnerAndProfessional',
   },
-  from: {
-    type: String,
-    enum: fromEnum,
-  },
-  noOfCounts: {
-    type: Number,
-  },
+  callDetails: [
+    {
+      from: {
+        type: String,
+        enum: fromEnum,
+      },
+      noOfCounts: {
+        type: Number,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model('NoOfCallsMade', otpSchema);

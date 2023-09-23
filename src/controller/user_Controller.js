@@ -683,6 +683,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         await createInvoie.save();
 
+        //generate unique otp for facility to connect
         async function generateUniqueOTP() {
           let otp;
           let isUnique = false;
@@ -702,11 +703,13 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         const otp = await generateUniqueOTP();
 
+        //create otp in the model
         const createFacilityOtp = await facilityOtp.create({
           corporateId: corporate._id,
           clinicanCode: otp,
         });
 
+        //save otp
         await createFacilityOtp.save();
 
         res.status(200).json({ message: 'Updated', data: updatedData });
@@ -725,7 +728,7 @@ const getAllCorporates = async (req, res, next) => {
   try {
     const getAllCorporatesData = await Corporate.find({
       isCreatedByProperRegisteration: false,
-    });
+    }).sort({ _id: -1 });
 
     // const apiUrl =
     //   'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
