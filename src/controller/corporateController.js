@@ -165,7 +165,6 @@ const getIndividualInvoiceCount = async (req, res, next) => {
 const getRecordsOnPayStatus = async (req, res, next) => {
   const { _id } = req.user;
 
-  console.log(_id);
   if (req.params.payStatus == 'total') {
     const records = await invoice
       .find({ corporateId: _id })
