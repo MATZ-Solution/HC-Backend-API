@@ -170,7 +170,8 @@ const getRecordsOnPayStatus = async (req, res, next) => {
       .find({ corporateId: _id })
       .populate('patientId')
       .populate('corporateId');
-    res.status(404).json({ success: true, data: records });
+    // res.status(200).json({ success: true, data: records });
+    res.status(200).json(records);
   } else {
     const records = await invoice
       .find({
@@ -179,18 +180,20 @@ const getRecordsOnPayStatus = async (req, res, next) => {
       })
       .populate('patientId')
       .populate('corporateId');
-    res.status(404).json({ success: true, data: records });
+    // res.status(200).json({ success: true, data: records });
+    res.status(200).json(records);
   }
 };
 
 const payFacilityInvoice = async (req, res, next) => {
   try {
-    const invoiceId = req.params.invoiceId;
-    const { paymentAmount, attachement } = req.body; // Assuming you receive the payment amount in the request body
+    const invoiceId = req.params.invoiceId; //getting invoice id from param
+    const { paymentAmount, attachement } = req.body; // receive the payment amount in the request body
 
     //find the invoice by id
     const foundInvoice = await invoice.findById(invoiceId);
 
+    //not found invoice send message Invoice not found
     if (!foundInvoice) {
       return res
         .status(404)
