@@ -169,7 +169,8 @@ const getRecordsOnPayStatus = async (req, res, next) => {
   if (req.params.payStatus == 'total') {
     const records = await invoice
       .find({ corporateId: _id })
-      .populate('patientId');
+      .populate('patientId')
+      .populate('corporateId');
     res.status(404).json({ success: true, data: records });
   } else {
     const records = await invoice
@@ -177,7 +178,8 @@ const getRecordsOnPayStatus = async (req, res, next) => {
         corporateId: _id,
         payStatus: req.params.payStatus,
       })
-      .populate('patientId');
+      .populate('patientId')
+      .populate('corporateId');
     res.status(404).json({ success: true, data: records });
   }
 };
