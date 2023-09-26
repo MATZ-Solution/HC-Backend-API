@@ -214,20 +214,20 @@ const payFacilityInvoice = async (req, res, next) => {
 
         foundInvoice.paidAmount = paymentAmount;
 
-        foundInvoice.balance =
+        foundInvoice.dues =
           paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
 
-        foundInvoice.leadAmount = paymentAmount
-          ? foundInvoice.leadAmount - paymentAmount
-          : foundInvoice.leadAmount;
+        // foundInvoice.leadAmount = paymentAmount
+        //   ? foundInvoice.leadAmount - paymentAmount
+        //   : foundInvoice.leadAmount;
 
-        foundInvoice.subTotal = paymentAmount
-          ? foundInvoice.subTotal - paymentAmount
-          : foundInvoice.subTotal;
+        // foundInvoice.subTotal = paymentAmount
+        //   ? foundInvoice.subTotal - paymentAmount
+        //   : foundInvoice.subTotal;
 
-        foundInvoice.grandTotal = paymentAmount
-          ? foundInvoice.grandTotal - paymentAmount
-          : foundInvoice.grandTotal;
+        // foundInvoice.payableAmount = paymentAmount
+        //   ? foundInvoice.grandTotal - paymentAmount
+        //   : foundInvoice.grandTotal;
 
         //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
         foundInvoice.attachement = attachement ? attachement : '';
@@ -254,6 +254,66 @@ const payFacilityInvoice = async (req, res, next) => {
   }
 };
 
+const payPartiallyAndUPInvoice = async (req, res, next) => {
+  try {
+    const invoiceId = req.params.invoiceId; //getting invoice id from param
+    const { paymentAmount, attachement } = req.body; // receive the payment amount in the request body
+
+    //find the invoice by id
+    const foundInvoice = await invoice.findById(invoiceId);
+
+    //not found invoice send message Invoice not found
+    if (!foundInvoice) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Invoice not found' });
+    }
+
+    const totalAmount = calculateTotalAmount(foundInvoice);
+
+    if (paymentAmount > 0) {
+      foundInvoice.payStatus =
+        paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
+
+      foundInvoice.paidAmount = foundInvoice.paidAmount + paymentAmount;
+
+      foundInvoice.dues =
+        paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
+
+      foundInvoice.leadAmount = paymentAmount
+        ? foundInvoice.leadAmount - paymentAmount
+        : foundInvoice.leadAmount;
+
+      foundInvoice.subTotal = paymentAmount
+        ? foundInvoice.subTotal - paymentAmount
+        : foundInvoice.subTotal;
+
+      foundInvoice.payableAmount = paymentAmount
+        ? foundInvoice.payableAmount - paymentAmount
+        : foundInvoice.payableAmount;
+
+      //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
+      foundInvoice.attachement = attachement ? attachement : '';
+
+      // change status to true on button clicked
+      foundInvoice.isButtonClicked = true;
+      //save invoice
+      await foundInvoice.save();
+
+      //return response
+      return res.status(200).json({
+        success: true,
+        message: 'Payment processed successfully',
+        foundInvoice,
+      });
+    } else {
+      throw new ErrorHandler('Amount Should be Greater than 0', 200);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   emailController,
   updateCorporate,
@@ -262,4 +322,5 @@ module.exports = {
   payFacilityInvoice,
   getIndividualInvoiceCount,
   getRecordsOnPayStatus,
+  payPartiallyAndUPInvoice,
 };

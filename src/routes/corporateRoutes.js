@@ -7,6 +7,7 @@ const {
   payFacilityInvoice,
   getIndividualInvoiceCount,
   getRecordsOnPayStatus,
+  payPartiallyAndUPInvoice
 } = require('../controller/corporateController');
 const {
   verifyTokenAndCorporateAndSuperAdmin,
@@ -44,5 +45,12 @@ router.get(
   getRecordsOnPayStatus
 );
 
+router.put(
+  '/payPartiallyAndUPInvoice/:invoiceId',
+  verifyTokenAndCorporate,
+  payPartiallyAndUPInvoice
+);
+
 
 module.exports = router;
+
