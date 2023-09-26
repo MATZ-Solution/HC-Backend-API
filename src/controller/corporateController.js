@@ -254,7 +254,7 @@ const payFacilityInvoice = async (req, res, next) => {
   }
 };
 
-const payPartiallyAndUPInvoice = async (req, res, next) => {
+const payPartiallyInvoice = async (req, res, next) => {
   try {
     const invoiceId = req.params.invoiceId; //getting invoice id from param
     const { paymentAmount, attachement } = req.body; // receive the payment amount in the request body
@@ -269,28 +269,26 @@ const payPartiallyAndUPInvoice = async (req, res, next) => {
         .json({ success: false, message: 'Invoice not found' });
     }
 
-    const totalAmount = calculateTotalAmount(foundInvoice);
+    // const totalAmount = calculateTotalAmount(foundInvoice);
 
     if (paymentAmount > 0) {
       foundInvoice.payStatus =
-        paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
-
-      foundInvoice.paidAmount = foundInvoice.paidAmount + paymentAmount;
+        paymentAmount === foundInvoice.dues ? 'paid' : 'partiallyPaid';
 
       foundInvoice.dues =
-        paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
+        paymentAmount === foundInvoice.dues ? 0 : foundInvoice - paymentAmount;
 
-      foundInvoice.leadAmount = paymentAmount
-        ? foundInvoice.leadAmount - paymentAmount
-        : foundInvoice.leadAmount;
+      // foundInvoice.leadAmount = paymentAmount
+      //   ? foundInvoice.leadAmount - paymentAmount
+      //   : foundInvoice.leadAmount;
 
-      foundInvoice.subTotal = paymentAmount
-        ? foundInvoice.subTotal - paymentAmount
-        : foundInvoice.subTotal;
+      // foundInvoice.subTotal = paymentAmount
+      //   ? foundInvoice.subTotal - paymentAmount
+      //   : foundInvoice.subTotal;
 
-      foundInvoice.payableAmount = paymentAmount
-        ? foundInvoice.payableAmount - paymentAmount
-        : foundInvoice.payableAmount;
+      // foundInvoice.payableAmount = paymentAmount
+      //   ? foundInvoice.payableAmount - paymentAmount
+      //   : foundInvoice.payableAmount;
 
       //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
       foundInvoice.attachement = attachement ? attachement : '';
@@ -322,5 +320,5 @@ module.exports = {
   payFacilityInvoice,
   getIndividualInvoiceCount,
   getRecordsOnPayStatus,
-  payPartiallyAndUPInvoice,
+  payPartiallyInvoice,
 };
