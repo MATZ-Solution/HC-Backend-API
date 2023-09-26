@@ -138,7 +138,9 @@ const getIndividualInvoice = async (req, res, next) => {
 
       res.status(200).json(formattedInvoices);
     } else {
-      res.status(404).json('Not Found');
+      return res
+        .status(404)
+        .json({ success: false, message: 'Invoice not found' });
     }
   } catch (err) {
     next(err);
@@ -206,11 +208,10 @@ const payFacilityInvoice = async (req, res, next) => {
     if (!foundInvoice.isButtonClicked) {
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
-        paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
-        
+          paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
+
         foundInvoice.paidAmount = paymentAmount;
 
-        
         foundInvoice.balance =
           paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
 
