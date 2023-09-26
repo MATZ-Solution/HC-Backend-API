@@ -612,7 +612,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
           corporateId: corporate._id,
           leadAmount: req.body.leadAmount,
           subTotal: req.body.subTotal,
-          grandTotal: req.body.grandTotal,
+          payableAmount: req.body.grandTotal,
           discount: req.body.discount,
           dueDate: req.body.dueDate,
           additionalMessage: req.body.additionalMessage,
@@ -637,10 +637,11 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //save notification history
 
         //if fcm token send notification to corporate
-        console.log('run');
         if (corporate.fcmToken) {
           corporate.fcmToken.map((token) => {
-            FcmNotify(token, notificationData, 'corporate');
+            if (token !== ' ') {
+              FcmNotify(token, notificationData, 'corporate');
+            }
           });
         }
 

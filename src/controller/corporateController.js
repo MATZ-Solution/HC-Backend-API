@@ -206,8 +206,11 @@ const payFacilityInvoice = async (req, res, next) => {
     if (!foundInvoice.isButtonClicked) {
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
-          paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
+        paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
+        
+        foundInvoice.paidAmount = paymentAmount;
 
+        
         foundInvoice.balance =
           paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
 

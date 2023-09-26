@@ -53,8 +53,6 @@ const favoriteClt = {
       //   "http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId";
 
       const apiUrl = process.env.getCategory;
-      console.log(isAdmin)
-
       if (isAdmin === 'patient') {
         let getFavourates = await Favourate.find({ patId: _id }).populate(
           'patId'

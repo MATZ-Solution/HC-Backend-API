@@ -9,13 +9,13 @@ const invoiceSchema = mongoose.Schema(
     subTotal: {
       type: Number,
     },
-    grandTotal: {
+    payableAmount: {
       type: Number,
     },
     discount: {
       type: Number,
     },
-    balance: {
+    dues: {
       type: Number,
       default: 0,
     },
@@ -49,7 +49,11 @@ const invoiceSchema = mongoose.Schema(
     },
     isButtonClicked: {
       type: Boolean,
-      default:false
+      default: false,
+    },
+    paidAmount: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }
