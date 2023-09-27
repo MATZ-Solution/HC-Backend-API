@@ -23,6 +23,7 @@ const {
   toConnectCorporate,
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
+  getpatrequest
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -74,5 +75,9 @@ router.post(
   verifyToken,
   getMedicalPracticeForIndividualUser
 );
+
+//getpatapplyserviceforpat
+
+router.post('/getMedicalPracticeForIndividualUser', verifyToken, getpatrequest);
 
 module.exports = router;

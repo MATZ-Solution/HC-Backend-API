@@ -501,7 +501,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       serviceName,
       registeredPatId,
       registeredSuperAdminId,
-      registeredCorporateId
+      registeredCorporateId,
     } = req.body;
 
     // Create a new instance of the Mongoose model using the provided data
@@ -530,7 +530,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       servicePatientSurveyRating: servicePatientSurveyRating,
       registeredPatId,
       registeredSuperAdminId,
-      registeredCorporateId
+      registeredCorporateId,
     });
 
     // Save the new application to the database
@@ -570,6 +570,35 @@ const patApplyforcoroporate = async (req, res, next) => {
       message: 'Application submitted successfully.',
       application: savedApplication,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//getpatapplyservicefor patient to view his own request
+
+const getpatrequest = async (req, res, next) => {
+  try {
+    const { _id, role } = req.user;
+
+    let patServices;
+    role === 'patient'
+      ? (patServices = await patService
+          .find({ registeredPatId: _id })
+          .lean()
+          .sort({ createdAt: -1 }))
+      : role === 'super-admin'
+      ? (patServices = await patService
+          .find({ registeredSuperAdminId: _id })
+          .lean()
+          .sort({ createdAt: -1 }))
+      : role === 'corporate'
+      ? (patServices = await patService
+          .find({ registeredCorporateId: _id })
+          .lean()
+          .sort({ createdAt: -1 }))
+      : '';
+    res.status(200).json(patServices);
   } catch (err) {
     next(err);
   }
@@ -1194,4 +1223,5 @@ module.exports = {
   toConnectCorporate,
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
+  getpatrequest
 };
