@@ -282,6 +282,14 @@ const payPartiallyInvoice = async (req, res, next) => {
       foundInvoice.payStatus =
         paymentAmount === foundInvoice.dues ? 'paid' : 'partiallyPaid';
 
+      //push the object into the paid amount array
+      const newPayment = {
+        date: new Date(),
+        amount: paymentAmount,
+      };
+
+      foundInvoice.paidAmount.push(newPayment);
+
       foundInvoice.dues =
         paymentAmount === foundInvoice.dues ? 0 : foundInvoice - paymentAmount;
 
