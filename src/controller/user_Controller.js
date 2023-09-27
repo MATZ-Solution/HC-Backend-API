@@ -918,7 +918,7 @@ const toConnectCorporate = async (req, res, next) => {
 
 //generate random 4 digits Otp
 const generateOTP = async () => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
   let otp = '';
 
   for (let i = 0; i < 4; i++) {
@@ -930,12 +930,21 @@ const generateOTP = async () => {
 };
 
 const generateInvoiceOtp = async () => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const alphabeticCharacters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ';
+  const numericDigits = '0123456789';
+
   let otp = '';
 
-  for (let i = 0; i < 10; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    otp += characters.charAt(randomIndex);
+  // Generate the first 5 alphabetic characters
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * alphabeticCharacters.length);
+    otp += alphabeticCharacters.charAt(randomIndex);
+  }
+
+  // Generate the last 5 numeric digits
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * numericDigits.length);
+    otp += numericDigits.charAt(randomIndex);
   }
 
   return otp;
