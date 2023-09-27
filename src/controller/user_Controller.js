@@ -598,10 +598,7 @@ const getpatrequest = async (req, res, next) => {
           .lean()
           .sort({ createdAt: -1 }))
       : '';
-    res.status(200).json({
-      success: true,
-      data: patServices,
-    });
+    res.status(200).json(patServices);
   } catch (err) {
     next(err);
   }
