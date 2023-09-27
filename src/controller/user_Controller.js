@@ -629,6 +629,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
       { new: true }
     );
 
+    //if data is found else send message no data found
     if (updatedData) {
       const existEmail = await Corporate.find({
         organizationContactNo: updatedData.servicePhoneNumber,
@@ -642,6 +643,28 @@ const isAdminApprovePatientService = async (req, res, next) => {
           { new: true }
         );
 
+        //<-------------------------invoice flow start here -------------------------->
+
+        //genearate random invoice id
+        async function generateInvoiceId() {
+          let otp;
+          let isUnique = false;
+
+          while (!isUnique) {
+            otp = await generateInvoiceOtp();
+            const existingOtp = await invoice.findOne({
+              invoiceId: otp,
+            });
+
+            if (!existingOtp) {
+              isUnique = true;
+            }
+          }
+          return otp;
+        }
+
+        const invoiceId = await generateInvoiceId();
+        console.log(invoiceId);
         //generate invoice
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -654,9 +677,14 @@ const isAdminApprovePatientService = async (req, res, next) => {
           discount: req.body.discount,
           dueDate: req.body.dueDate,
           additionalMessage: req.body.additionalMessage,
+          invoiceId,
         });
 
         await createInvoie.save();
+
+        //<-------------------------invoice flow start here -------------------------->
+
+        //<-------------------------notification flow start here -------------------------->
 
         //notification Body
         const notificationData = 'You get the new leads';
@@ -683,8 +711,13 @@ const isAdminApprovePatientService = async (req, res, next) => {
           });
         }
 
+        //<-------------------------notification flow start here -------------------------->
+
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
+        //<-------------------------corporate flow start here -------------------------->
+
+        //create facilty ownere records if corporate not exist
         const createUser = await Corporate.create({
           email: updatedData.servicePhoneNumber,
           password: CryptoJS.AES.encrypt(
@@ -705,7 +738,32 @@ const isAdminApprovePatientService = async (req, res, next) => {
           conatactedCustomer: 1,
         });
 
+        //save corporate
         let corporate = await createUser.save();
+
+        //<-------------------------corporate flow end here -------------------------->
+
+        //<-------------------------invoice flow start here -------------------------->
+
+        //genearate random invoice id
+        async function generateInvoiceId() {
+          let otp;
+          let isUnique = false;
+
+          while (!isUnique) {
+            otp = await generateInvoiceOtp();
+            const existingOtp = await invoice.findOne({
+              invoiceId: otp,
+            });
+
+            if (!existingOtp) {
+              isUnique = true;
+            }
+          }
+          return otp;
+        }
+
+        const invoiceId = await generateInvoiceId();
 
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -718,9 +776,15 @@ const isAdminApprovePatientService = async (req, res, next) => {
           discount: req.body.discount,
           dueDate: req.body.dueDate,
           additionalMessage: req.body.additionalMessage,
+          invoiceId,
         });
 
+        //save invoice
         await createInvoie.save();
+
+        //<-------------------------invoice flow end here -------------------------->
+
+        //<-------------------------facility otp flow start here -------------------------->
 
         //generate unique otp for facility to connect
         async function generateUniqueOTP() {
@@ -740,6 +804,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
           return otp;
         }
 
+        //generate otp
         const otp = await generateUniqueOTP();
 
         //create otp in the model
@@ -751,10 +816,12 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //save otp
         await createFacilityOtp.save();
 
+        //<-------------------------facility otp flow end here -------------------------->
+
         res.status(200).json({ message: 'Updated', data: updatedData });
       }
     } else {
-      res.status(200).json({ message: 'No Data Found' });
+      res.status(200).json({ success: false, message: 'No Data Found' });
     }
   } catch (err) {
     next(err);
@@ -858,6 +925,18 @@ const generateOTP = async () => {
   let otp = '';
 
   for (let i = 0; i < 4; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    otp += characters.charAt(randomIndex);
+  }
+
+  return otp;
+};
+
+const generateInvoiceOtp = async () => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let otp = '';
+
+  for (let i = 0; i < 10; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     otp += characters.charAt(randomIndex);
   }
