@@ -196,6 +196,7 @@ const payFacilityInvoice = async (req, res, next) => {
     const { paymentAmount, attachement } = req.body; // receive the payment amount in the request body
 
     //find the invoice by id
+
     const foundInvoice = await invoice.findById(invoiceId);
 
     //not found invoice send message Invoice not found
@@ -212,7 +213,13 @@ const payFacilityInvoice = async (req, res, next) => {
         foundInvoice.payStatus =
           paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
 
-        foundInvoice.paidAmount = paymentAmount;
+        //push the object into the paid amount array
+        const newPayment = {
+          date: new Date(),
+          amount: paymentAmount,
+        };
+
+        foundInvoice.paidAmount.push(newPayment);
 
         foundInvoice.dues =
           paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;

@@ -23,6 +23,17 @@ const otpSchema = new Schema({
       },
     },
   ],
+  emailDetails: [
+    {
+      from: {
+        type: String,
+        enum: fromEnum,
+      },
+      noOfCounts: {
+        type: Number,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model('NoOfCallsMade', otpSchema);

@@ -4,7 +4,7 @@ const payStatus = ['paid', 'unPaid', 'partiallyPaid'];
 const paymentSchema = new mongoose.Schema({
   date: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   paidAmount: {
     type: Number,
@@ -62,7 +62,18 @@ const invoiceSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    paidAmount: [paymentSchema]
+    paidAmount: [
+      {
+        date: {
+          type: Date,
+          default: Date.now(),
+        },
+        amount: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

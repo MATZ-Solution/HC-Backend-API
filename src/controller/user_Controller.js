@@ -830,38 +830,173 @@ const generateOTP = async () => {
 const noOfCallsMadeMethod = async (req, res, next) => {
   try {
     let { _id } = req.user;
-    const { patientId, from } = req.body;
+    const { patientId, callDetails, emailDetails } = req.body;
 
     const isExist = await noOfCallsMade.findOne({
       patientId,
       corporateId: _id,
-      from,
     });
 
     if (isExist) {
-      await noOfCallsMade.findOneAndUpdate(
-        {
+      if (callDetails) {
+        const fromValue = callDetails[0].from;
+
+        // Check if the document exists first
+        const isExist = await noOfCallsMade.findOne({
           patientId,
           corporateId: _id,
-          from,
-        },
-        {
-          $inc: { noOfCounts: 1 },
-        }
-      );
+          'callDetails.from': fromValue,
+        });
 
-      res.status(200).json('Record Updated');
+        if (isExist) {
+          await noOfCallsMade.findOneAndUpdate(
+            {
+              patientId,
+              corporateId: _id,
+              'callDetails.from': fromValue,
+            },
+            {
+              $inc: { 'callDetails.$.noOfCounts': 1 },
+            }
+          );
+
+          return res.status(200).json({
+            success: true,
+            message: 'Record Updated',
+          });
+        }
+      } else if (emailDetails) {
+        const fromValue = emailDetails[0].from;
+
+        // Check if the document exists first
+        const isExist = await noOfCallsMade.findOne({
+          patientId,
+          corporateId: _id,
+          'emailDetails.from': fromValue,
+        });
+
+        if (isExist) {
+          await noOfCallsMade.findOneAndUpdate(
+            {
+              patientId,
+              corporateId: _id,
+              'emailDetails.from': fromValue,
+            },
+            {
+              $inc: { 'emailDetails.$.noOfCounts': 1 },
+            }
+          );
+
+          return res.status(200).json({
+            success: true,
+            message: 'Record Updated',
+          });
+        }
+      }
     } else {
-      const createNoOfCallsMade = await noOfCallsMade.create({
+      let createData = {
         patientId,
         corporateId: _id,
-        from,
-        noOfCounts: 1,
-      });
+        callDetails: [],
+        emailDetails: [],
+      };
 
+      if (callDetails) {
+        if (callDetails[0].from === 'WEB') {
+          createData.callDetails.push({
+            from: 'WEB',
+            noOfCounts: 1,
+          });
+
+          createData.callDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 0,
+          });
+
+          //email detail will be initalized with 0 by default
+
+          createData.emailDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.emailDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 0,
+          });
+        } else if (callDetails[0].from === 'MOBILE') {
+          createData.callDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.callDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 1,
+          });
+
+          //email detail will be initalized with 0 by default
+          createData.emailDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.emailDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 0,
+          });
+        }
+      }
+
+      if (emailDetails) {
+        if (emailDetails[0].from === 'WEB') {
+          createData.emailDetails.push({
+            from: 'WEB',
+            noOfCounts: 1,
+          });
+
+          createData.emailDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 0,
+          });
+
+          //call details will be initialized with 0 by default
+          createData.callDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.callDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 1,
+          });
+        } else if (emailDetails[0].from === 'MOBILE') {
+          createData.emailDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.emailDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 1,
+          });
+
+          //call details will be initialized with 0 by default
+          createData.callDetails.push({
+            from: 'WEB',
+            noOfCounts: 0,
+          });
+
+          createData.callDetails.push({
+            from: 'MOBILE',
+            noOfCounts: 1,
+          });
+        }
+      }
+
+      const createNoOfCallsMade = await noOfCallsMade.create(createData);
       await createNoOfCallsMade.save();
-
-      res.status(200).json('Record Created');
+      return res.status(200).json('Record Created');
     }
   } catch (error) {
     next(error);
