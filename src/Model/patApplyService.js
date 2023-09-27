@@ -78,6 +78,16 @@ const patApplyService = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    //for registeredsuperadminid
+    registeredSuperAdminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'superAdmin',
+    },
+    //for registeredcorporateId
+    registeredCorporateId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'facilityOwnerAndProfessional',
+    },
   },
   { timestamps: true }
 );
