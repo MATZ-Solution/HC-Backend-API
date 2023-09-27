@@ -499,6 +499,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       servicePatientSurveyRating,
       category,
       serviceName,
+      registeredPatId,
     } = req.body;
 
     // Create a new instance of the Mongoose model using the provided data
@@ -525,6 +526,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       serviceLongitude: serviceLongitude,
       serviceOverAllRating: serviceOverAllRating,
       servicePatientSurveyRating: servicePatientSurveyRating,
+      registeredPatId,
     });
 
     // Save the new application to the database
