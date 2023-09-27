@@ -101,7 +101,6 @@ const getIndividualInvoice = async (req, res, next) => {
       .find({ corporateId: _id })
       .populate('patientId');
 
-    console.log(getAllInvoices);
     if (getAllInvoices && getAllInvoices.length > 0) {
       const formattedInvoices = getAllInvoices.map((invoice) => ({
         _id: invoice._id,
