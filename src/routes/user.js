@@ -78,6 +78,6 @@ router.post(
 
 //getpatapplyserviceforpat
 
-router.post('/getMedicalPracticeForIndividualUser', verifyToken, getpatrequest);
+router.get('/getPatRequest', verifyToken, getpatrequest);
 
 module.exports = router;

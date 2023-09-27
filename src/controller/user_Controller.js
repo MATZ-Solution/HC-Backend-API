@@ -579,26 +579,29 @@ const patApplyforcoroporate = async (req, res, next) => {
 
 const getpatrequest = async (req, res, next) => {
   try {
-    const { _id, role } = req.user;
+    const { _id, isAdmin } = req.user;
 
     let patServices;
-    role === 'patient'
+    isAdmin === 'patient'
       ? (patServices = await patService
           .find({ registeredPatId: _id })
           .lean()
           .sort({ createdAt: -1 }))
-      : role === 'super-admin'
+      : isAdmin === 'super-admin'
       ? (patServices = await patService
           .find({ registeredSuperAdminId: _id })
           .lean()
           .sort({ createdAt: -1 }))
-      : role === 'corporate'
+      : isAdmin === 'corporate'
       ? (patServices = await patService
           .find({ registeredCorporateId: _id })
           .lean()
           .sort({ createdAt: -1 }))
       : '';
-    res.status(200).json(patServices);
+    res.status(200).json({
+      success: true,
+      data: patServices,
+    });
   } catch (err) {
     next(err);
   }
@@ -1223,5 +1226,5 @@ module.exports = {
   toConnectCorporate,
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
-  getpatrequest
+  getpatrequest,
 };
