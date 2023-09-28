@@ -39,9 +39,26 @@ const upload = multer({
     key: function (req, file, cb) {
       cb(null, Date.now().toString() + '_' + file.originalname);
     },
-    ContentType:
-      'image/jpeg/png/jpg video/mp4 application/pdf audio/mpeg audio/aac',
+    contentType: multerS3.AUTO_CONTENT_TYPE, // Use the correct content type
   }),
 });
+
+// const upload = multer({
+//   fileFilter,
+//   limits: { fileSize: 25 * 1024 * 1024 },
+//   storage: multerS3({
+//     acl: 'public-read-write',
+//     s3: s3,
+//     bucket: 'health-care-matz',
+//     metadata: function (req, file, cb) {
+//       cb(null, { fieldName: 'TESTING_METADATA' });
+//     },
+//     key: function (req, file, cb) {
+//       cb(null, Date.now().toString() + '_' + file.originalname);
+//     },
+//     ContentType:
+//       'image/jpeg/png/jpg video/mp4 application/pdf audio/mpeg audio/aac',
+//   }),
+// });
 
 module.exports = upload;
