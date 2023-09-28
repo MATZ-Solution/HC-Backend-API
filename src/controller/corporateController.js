@@ -100,7 +100,6 @@ const getIndividualInvoice = async (req, res, next) => {
     const getAllInvoices = await invoice
       .find({ corporateId: _id })
       .populate('patientId');
-
     if (getAllInvoices && getAllInvoices.length > 0) {
       const formattedInvoices = getAllInvoices.map((invoice) => ({
         _id: invoice._id,
@@ -138,6 +137,7 @@ const getIndividualInvoice = async (req, res, next) => {
           invoice.patientId.servicePatientSurveyRating,
         isButtonClicked: invoice.isButtonClicked,
         inoviceId: invoice.invoiceId,
+        payStatus:invoice.payStatus
       }));
 
       res.status(200).json(formattedInvoices);
@@ -219,6 +219,7 @@ const payFacilityInvoice = async (req, res, next) => {
         const newPayment = {
           date: new Date(),
           amount: paymentAmount,
+          attachement: attachement ? attachement : '',
         };
 
         foundInvoice.paidAmount.push(newPayment);
@@ -239,7 +240,7 @@ const payFacilityInvoice = async (req, res, next) => {
         //   : foundInvoice.grandTotal;
 
         //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
-        foundInvoice.attachement = attachement ? attachement : '';
+        // foundInvoice.attachement = attachement ? attachement : '';
 
         // change status to true on button clicked
         foundInvoice.isButtonClicked = true;
@@ -280,50 +281,59 @@ const payPartiallyInvoice = async (req, res, next) => {
 
     // const totalAmount = calculateTotalAmount(foundInvoice);
 
-    if (paymentAmount > 0) {
-      foundInvoice.payStatus =
-        paymentAmount === foundInvoice.dues ? 'paid' : 'partiallyPaid';
+    if (foundInvoice.dues > 0) {
+      if (paymentAmount > 0) {
+        foundInvoice.payStatus =
+          paymentAmount === foundInvoice.dues ? 'paid' : 'partiallyPaid';
 
-      //push the object into the paid amount array
-      const newPayment = {
-        date: new Date(),
-        amount: paymentAmount,
-      };
+        //push the object into the paid amount array
+        const newPayment = {
+          date: new Date(),
+          amount: paymentAmount,
+          attachement: attachement ? attachement : '',
+        };
 
-      foundInvoice.paidAmount.push(newPayment);
+        foundInvoice.paidAmount.push(newPayment);
 
+        foundInvoice.dues =
+          paymentAmount === foundInvoice.dues
+            ? 0
+            : foundInvoice.dues - paymentAmount;
 
-      foundInvoice.dues =
-        paymentAmount === foundInvoice.dues ? 0 : foundInvoice.dues - paymentAmount;
+        // foundInvoice.leadAmount = paymentAmount
+        //   ? foundInvoice.leadAmount - paymentAmount
+        //   : foundInvoice.leadAmount;
 
-      // foundInvoice.leadAmount = paymentAmount
-      //   ? foundInvoice.leadAmount - paymentAmount
-      //   : foundInvoice.leadAmount;
+        // foundInvoice.subTotal = paymentAmount
+        //   ? foundInvoice.subTotal - paymentAmount
+        //   : foundInvoice.subTotal;
 
-      // foundInvoice.subTotal = paymentAmount
-      //   ? foundInvoice.subTotal - paymentAmount
-      //   : foundInvoice.subTotal;
+        // foundInvoice.payableAmount = paymentAmount
+        //   ? foundInvoice.payableAmount - paymentAmount
+        //   : foundInvoice.payableAmount;
 
-      // foundInvoice.payableAmount = paymentAmount
-      //   ? foundInvoice.payableAmount - paymentAmount
-      //   : foundInvoice.payableAmount;
+        //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
+        // foundInvoice.attachement = attachement ? attachement : '';
 
-      //   foundInvoice.discount = paymentAmount ? 0 : foundInvoice.discount;
-      foundInvoice.attachement = attachement ? attachement : '';
+        // change status to true on button clicked
+        foundInvoice.isButtonClicked = true;
+        //save invoice
+        await foundInvoice.save();
 
-      // change status to true on button clicked
-      foundInvoice.isButtonClicked = true;
-      //save invoice
-      await foundInvoice.save();
-
-      //return response
-      return res.status(200).json({
-        success: true,
-        message: 'Payment processed successfully',
-        foundInvoice,
-      });
+        //return response
+        return res.status(200).json({
+          success: true,
+          message: 'Payment processed successfully',
+          foundInvoice,
+        });
+      } else {
+        throw new ErrorHandler('Amount Should be Greater than 0', 200);
+      }
     } else {
-      throw new ErrorHandler('Amount Should be Greater than 0', 200);
+      res.status(200).json({
+        success: false,
+        message: 'Already Paid',
+      });
     }
   } catch (err) {
     next(err);

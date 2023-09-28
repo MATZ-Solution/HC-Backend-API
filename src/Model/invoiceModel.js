@@ -61,6 +61,9 @@ const invoiceSchema = mongoose.Schema(
           type: Number,
           default: 0,
         },
+        attachement: {
+          type: String,
+        },
       },
     ],
     invoiceId: {
