@@ -26,6 +26,7 @@ const superAdminRoutes = require('./routes/superAdminRoutes');
 const favoriteRoutes = require('./routes/favourateRoutes');
 const fcmRoute = require('./routes/fcmRoute');
 const notificationRoute = require('./routes/notiRoutes');
+const noOfCallsMadeRoute = require('./routes/noOfCallMadeRoutes')
 //=========blog route=======================================
 const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
@@ -71,6 +72,7 @@ app.use('/api/superAdmin', superAdminRoutes);
 app.use('/api/favoriteRoutes', favoriteRoutes);
 app.use('/api/fcmRoutes/', fcmRoute);
 app.use('/api/notificationHistory', notificationRoute);
+app.use('/api/noOfCallsMade',noOfCallsMadeRoute)
 
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes);
