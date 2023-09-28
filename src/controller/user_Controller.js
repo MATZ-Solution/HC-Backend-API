@@ -16,6 +16,7 @@ const medicalPractice = require('../Model/medicalPracticeModel');
 const noOfCallsMade = require('../Model/noOfCallsMade');
 const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
+const generateRandomNo = require('../utils/generatingRandomNo');
 // const { Console } = require('console');
 
 // Controller for changing password
@@ -615,7 +616,7 @@ const getPatApplyService = async (req, res, next) => {
   }
 };
 
-//is admin approve patienapply service
+//<----------------------------is admin approve patienapply service Start------------------------------->
 
 const isAdminApprovePatientService = async (req, res, next) => {
   try {
@@ -646,9 +647,11 @@ const isAdminApprovePatientService = async (req, res, next) => {
         async function generateInvoiceId() {
           let otp;
           let isUnique = false;
+          let randomNoGenerator = new generateRandomNo(5);
 
           while (!isUnique) {
-            otp = await generateInvoiceOtp();
+            otp = randomNoGenerator.generate10RandomNo();
+            // otp = await generateInvoiceOtp();
             const existingOtp = await invoice.findOne({
               invoiceId: otp,
             });
@@ -661,7 +664,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
         }
 
         const invoiceId = await generateInvoiceId();
-        console.log(invoiceId);
         //generate invoice
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -747,8 +749,11 @@ const isAdminApprovePatientService = async (req, res, next) => {
           let otp;
           let isUnique = false;
 
+          let randomNoGenerator = new generateRandomNo(5);
+
           while (!isUnique) {
-            otp = await generateInvoiceOtp();
+            otp = randomNoGenerator.generate10RandomNo();
+            // otp = await generateInvoiceOtp();
             const existingOtp = await invoice.findOne({
               invoiceId: otp,
             });
@@ -787,9 +792,12 @@ const isAdminApprovePatientService = async (req, res, next) => {
         async function generateUniqueOTP() {
           let otp;
           let isUnique = false;
+          //<-------------------- object instance------------------------->
+          let obj = new generateRandomNo(4);
 
           while (!isUnique) {
-            otp = await generateOTP();
+            // otp = await generateOTP();
+            otp = obj.generateOtp();
             const existingOtp = await facilityOtp.findOne({
               clinicanCode: otp,
             });
@@ -824,6 +832,8 @@ const isAdminApprovePatientService = async (req, res, next) => {
     next(err);
   }
 };
+
+//<----------------------------is admin approve patienapply service End------------------------------->
 
 //Super Admin getting all the corporates data which are coming from scrapping
 
@@ -916,6 +926,7 @@ const toConnectCorporate = async (req, res, next) => {
   }
 };
 
+//<---------------------------no in use start--------------------------------------> 
 //generate random 4 digits Otp
 const generateOTP = async () => {
   const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -949,6 +960,8 @@ const generateInvoiceOtp = async () => {
 
   return otp;
 };
+
+//<---------------------------no in use End--------------------------------------> 
 
 const noOfCallsMadeMethod = async (req, res, next) => {
   try {
