@@ -137,7 +137,7 @@ const getIndividualInvoice = async (req, res, next) => {
         servicePatientSurveyRating:
           invoice.patientId.servicePatientSurveyRating,
         isButtonClicked: invoice.isButtonClicked,
-        inoviceId:invoice.invoiceId
+        inoviceId: invoice.invoiceId,
       }));
 
       res.status(200).json(formattedInvoices);
@@ -292,8 +292,9 @@ const payPartiallyInvoice = async (req, res, next) => {
 
       foundInvoice.paidAmount.push(newPayment);
 
+
       foundInvoice.dues =
-        paymentAmount === foundInvoice.dues ? 0 : foundInvoice - paymentAmount;
+        paymentAmount === foundInvoice.dues ? 0 : foundInvoice.dues - paymentAmount;
 
       // foundInvoice.leadAmount = paymentAmount
       //   ? foundInvoice.leadAmount - paymentAmount
