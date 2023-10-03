@@ -472,7 +472,7 @@ const generateAccessToken = (user) => {
       isAdmin: user.role,
     },
     process.env.JWT_SEC,
-    { expiresIn: '3d' }
+    { expiresIn: '' }
   );
 };
 
