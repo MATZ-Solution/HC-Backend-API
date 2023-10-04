@@ -472,7 +472,7 @@ const generateAccessToken = (user) => {
       isAdmin: user.role,
     },
     process.env.JWT_SEC,
-    { expiresIn: '' }
+    // { expiresIn: '' } no limit
   );
 };
 
