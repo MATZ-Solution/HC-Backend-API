@@ -3,8 +3,8 @@ const multer = require('multer');
 const multerS3 = require('multer-s3-v2');
 
 aws.config.update({
-  accessKeyId: 'AKIATDHV5OSVCQP3DK4C',
-  secretAccessKey: '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',
+  accessKeyId: 'AKIAQPZG37TR3Q74X2LQ',
+  secretAccessKey: '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',
   region: 'us-east-1',
 });
 
@@ -32,7 +32,7 @@ const upload = multer({
   storage: multerS3({
     acl: 'public-read-write',
     s3: s3,
-    bucket: 'health-care-matz',
+    bucket: 'healthcare-assets',
     metadata: function (req, file, cb) {
       cb(null, { fieldName: 'TESTING_METADATA' });
     },
