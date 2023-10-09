@@ -666,7 +666,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         const invoiceId = await generateInvoiceId();
         //generate invoice
 
-        console.log(req.body.grandTotal)
+        console.log('payableAmount', req.body.grandTotal);
         let createInvoie = await invoice.create({
           category: corporate.category,
           leadsId: corporate.mongoDbID,
@@ -768,7 +768,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         }
 
         const invoiceId = await generateInvoiceId();
-        console.log(req.body.grandTotal)
+        console.log(payableAmount, req.body.grandTotal);
 
         let createInvoie = await invoice.create({
           category: corporate.category,
@@ -777,7 +777,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
           corporateId: corporate._id,
           leadAmount: req.body.leadAmount,
           subTotal: req.body.subTotal,
-          grandTotal: req.body.grandTotal,
+          payableAmount: req.body.grandTotal,
           discount: req.body.discount,
           dueDate: req.body.dueDate,
           additionalMessage: req.body.additionalMessage,
@@ -929,7 +929,7 @@ const toConnectCorporate = async (req, res, next) => {
   }
 };
 
-//<---------------------------no in use start--------------------------------------> 
+//<---------------------------no in use start-------------------------------------->
 //generate random 4 digits Otp
 const generateOTP = async () => {
   const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -964,7 +964,7 @@ const generateInvoiceOtp = async () => {
   return otp;
 };
 
-//<---------------------------no in use End--------------------------------------> 
+//<---------------------------no in use End-------------------------------------->
 
 const noOfCallsMadeMethod = async (req, res, next) => {
   try {
