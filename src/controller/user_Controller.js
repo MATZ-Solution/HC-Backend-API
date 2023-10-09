@@ -665,6 +665,8 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
         const invoiceId = await generateInvoiceId();
         //generate invoice
+
+        console.log(req.body.grandTotal)
         let createInvoie = await invoice.create({
           category: corporate.category,
           leadsId: corporate.mongoDbID,
@@ -766,6 +768,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         }
 
         const invoiceId = await generateInvoiceId();
+        console.log(req.body.grandTotal)
 
         let createInvoie = await invoice.create({
           category: corporate.category,
