@@ -17,6 +17,7 @@ const noOfCallsMade = require('../Model/noOfCallsMade');
 const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
 const generateRandomNo = require('../utils/generatingRandomNo');
+
 // const { Console } = require('console');
 
 // Controller for changing password
@@ -109,8 +110,14 @@ const userInfoController = async (req, res, next) => {
         .status(200)
         .json({ message: 'Care-givers data can be handled here.' });
     } else if (isAdmin === 'corporate') {
-      let data = await Corporate.find({ _id }).lean();
-      res.status(200).json(data);
+      let [data, findOtp] = await Promise.all([
+        Corporate.find({ _id }).lean(),
+        facilityOtp.find({ corporateId: _id }).lean(),
+      ]);
+
+      let combinedArray = [...data, ...findOtp];
+      res.status(200).json(combinedArray);
+
     } else if (isAdmin === 'super-admin') {
       let data = await superAdmin.findOne({ _id }).lean();
       res.status(200).json(data);
@@ -767,7 +774,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         }
 
         const invoiceId = await generateInvoiceId();
-      
+
         let createInvoie = await invoice.create({
           category: corporate.category,
           leadsId: corporate.mongoDbID,
