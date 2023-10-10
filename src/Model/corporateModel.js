@@ -34,7 +34,8 @@ const corporateSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: '',
+      default:
+        'https://healthcare-assets.s3.amazonaws.com/Untitled+design+(11).png',
     },
     dateOfBirth: {
       type: Date,
