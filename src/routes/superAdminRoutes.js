@@ -22,4 +22,10 @@ router
   .route('/getRecordsOnPayStatus/:payStatus')
   .get(verifyTokenAndAdmin, superAdminClt.getRecordsOnPayStatus);
 
+router.delete(
+  '/deletePatOrFacBySuperAdmin',
+  verifyTokenAndAdmin,
+  superAdminClt.deletePatBySuperAdmin
+);
+
 module.exports = router;

@@ -3,6 +3,7 @@ const corporate = require('../Model/corporateModel');
 const invoice = require('../Model/invoiceModel');
 const reviewModel = require('../Model/reviewModel');
 const { default: axios } = require('axios');
+const User = require('../Model/User');
 
 const superAdminClt = {
   getInvoices: async (req, res, next) => {
@@ -160,6 +161,20 @@ const superAdminClt = {
         .populate('corporateId');
 
       res.status(200).json(records);
+    }
+  },
+  deletePatBySuperAdmin: async (req, res, next) => {
+    try {
+      const { role, _id } = req.body;
+      let data;
+      role === 'patient'
+        ? (data = await User.findByIdAndDelete({ _id }, { new: true }))
+        : role === 'corporate'
+        ? (data = await corporate.findByIdAndDelete({ _id }, { new: true }))
+        : '';
+      res.status(200).json(data);
+    } catch (err) {
+      next(err);
     }
   },
 };
