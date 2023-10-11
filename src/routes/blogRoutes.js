@@ -8,7 +8,7 @@ router.route('/getallblogs').get(getAllBlog);
 router.route('/updateblog/:id').put(blogUpdate);
 router.route('/deleteblog/:id').delete(deleteBlog);
 router.route('/pendingblog').get(getPendingBlogs);
-router.route('/acceptedblog').get(acceptedBlogs);
+router.route('/acceptedblog').post(acceptedBlogs);
 // router.put('/:id', blogUpdate);
 // router.delete('/:id', deleteBlog);
 // router.get('/pending', getPendingBlogs);
