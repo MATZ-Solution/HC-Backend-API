@@ -2,8 +2,10 @@ const patApplyService = require('../Model/patApplyService');
 const corporate = require('../Model/corporateModel');
 const invoice = require('../Model/invoiceModel');
 const reviewModel = require('../Model/reviewModel');
+const facilityOtp = require('../Model/facilityOtp');
 const { default: axios } = require('axios');
 const User = require('../Model/User');
+const ErrorHandler = require('../utils/ErrorHandler');
 
 const superAdminClt = {
   getInvoices: async (req, res, next) => {
@@ -167,12 +169,27 @@ const superAdminClt = {
     try {
       const { role, _id } = req.body;
       let data;
-      role === 'patient'
-        ? (data = await User.findByIdAndDelete({ _id }, { new: true }))
-        : role === 'corporate'
-        ? (data = await corporate.findByIdAndDelete({ _id }, { new: true }))
-        : '';
-      res.status(200).json(data);
+
+      if (role === 'patient') {
+        data = await User.deleteOne({_id}, { new: true });
+        res.status(200).json({
+          message: 'User deleted successfully',
+          data,
+        });
+      } else if (role === 'corporate') {
+        data = await Promise.all([
+          corporate.deleteOne({ _id }, { new: true }),
+          facilityOtp.deleteOne({ corporateId: _id }),
+          invoice.deleteMany({ corporateId: _id }),
+        ]);
+
+        res.status(200).json({
+          message: 'Corporate record and related data deleted successfully',
+          data,
+        });
+      } else {
+        throw new ErrorHandler('Invalid Role Specified', 400);
+      }
     } catch (err) {
       next(err);
     }
