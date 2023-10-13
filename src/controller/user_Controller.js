@@ -117,7 +117,6 @@ const userInfoController = async (req, res, next) => {
 
       let combinedArray = [...data, ...findOtp];
       res.status(200).json(combinedArray);
-
     } else if (isAdmin === 'super-admin') {
       let data = await superAdmin.findOne({ _id }).lean();
       res.status(200).json(data);
