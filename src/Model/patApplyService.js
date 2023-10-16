@@ -88,6 +88,10 @@ const patApplyService = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'facilityOwnerAndProfessional',
     },
+    isRejected: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

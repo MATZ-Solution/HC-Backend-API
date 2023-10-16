@@ -28,4 +28,10 @@ router.delete(
   superAdminClt.deletePatBySuperAdmin
 );
 
+router.get(
+  '/rejectPatServiceBySuperAdmin/:id',
+  verifyTokenAndAdmin,
+  superAdminClt.rejectPatServiceBySuperAdmin
+);
+
 module.exports = router;

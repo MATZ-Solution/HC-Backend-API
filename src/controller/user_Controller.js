@@ -511,7 +511,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       registeredCorporateId,
     } = req.body;
 
-    // Create a new instance of the Mongoose model using the provided data
+    // Create a new instance of the Mongoose model
 
     const newApplication = new patService({
       patFullName: patName,
@@ -574,7 +574,7 @@ const patApplyforcoroporate = async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: 'Request Submitted Successfully.',
+      message: 'Request Submitted Successfully',
       application: savedApplication,
     });
   } catch (err) {
@@ -615,7 +615,10 @@ const getpatrequest = async (req, res, next) => {
 
 const getPatApplyService = async (req, res, next) => {
   try {
-    const patServices = await patService.find().lean().sort({ createdAt: -1 });
+    const patServices = await patService
+      .find({ isRejected: false })
+      .lean()
+      .sort({ createdAt: -1 });
     res.status(200).json(patServices);
   } catch (err) {
     next(err);

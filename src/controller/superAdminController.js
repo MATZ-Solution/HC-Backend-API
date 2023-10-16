@@ -3,11 +3,27 @@ const corporate = require('../Model/corporateModel');
 const invoice = require('../Model/invoiceModel');
 const reviewModel = require('../Model/reviewModel');
 const facilityOtp = require('../Model/facilityOtp');
+const patService = require('../Model/patApplyService');
 const { default: axios } = require('axios');
 const User = require('../Model/User');
 const ErrorHandler = require('../utils/ErrorHandler');
 
 const superAdminClt = {
+  //Reject Patient Services By SuperAdmin
+
+  rejectPatServiceBySuperAdmin: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const patServices = await patService.findByIdAndUpdate(
+        { _id: id },
+        { isRejected: true }
+      );
+      res.status(200).json('Request Removed');
+    } catch (err) {
+      next(err);
+    }
+  },
   getInvoices: async (req, res, next) => {
     try {
       const getAllInvoices = await invoice
@@ -171,7 +187,7 @@ const superAdminClt = {
       let data;
 
       if (role === 'patient') {
-        data = await User.deleteOne({_id}, { new: true });
+        data = await User.deleteOne({ _id }, { new: true });
         res.status(200).json({
           message: 'User deleted successfully',
           data,
