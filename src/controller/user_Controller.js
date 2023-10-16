@@ -574,7 +574,7 @@ const patApplyforcoroporate = async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: 'Application submitted successfully.',
+      message: 'Request Submitted Successfully.',
       application: savedApplication,
     });
   } catch (err) {
