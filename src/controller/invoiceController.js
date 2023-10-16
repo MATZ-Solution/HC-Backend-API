@@ -11,7 +11,7 @@ const getInvoice = async (req, res, next) => {
     const invoices = await Invoice.find();
     const fnpaccountIds = invoices.map((invoice) => invoice.corporateId);
     const pataccountIds = invoices.map((invoice) => invoice.patientId);
-
+  
     const foundAccounts = await fnpaccounts.find({
       _id: { $in: fnpaccountIds },
     });
@@ -29,8 +29,8 @@ const getInvoice = async (req, res, next) => {
 
       return {
         ...invoice._doc, // Spread all properties of the invoice into the resulting object
-        corporateAccount: relatedAccount._doc, // Nest the corporateAccount details under its own property
-        patientDetails: relatedPatient._doc, // Nest the patientDetails under its own property
+        corporateAccount: relatedAccount, // Nest the corporateAccount details under its own property
+        patientDetails: relatedPatient, // Nest the patientDetails under its own property
       };
     });
 

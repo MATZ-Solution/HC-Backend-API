@@ -7,6 +7,6 @@ const {
     verifyTokenAndCorporate,
   } = require('../middleware/verifytokens');
 
-router.route('/getinvoice').get(verifyToken, getInvoice);
+router.route('/getinvoice').get( getInvoice);
 
 module.exports = router;
