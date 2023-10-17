@@ -735,6 +735,14 @@ const isAdminApprovePatientService = async (req, res, next) => {
               We are pleased to inform you that your health service request has
               been successfully received and forwarded to the ${updatedData.serviceName}.
             </p>
+            <p>
+              Facility Details 
+              Name: ${updatedData.serviceName}
+              City: ${updatedData.serviceCity}
+              Address : ${updatedData.serviceFullAddress}
+              Zip Code : ${updatedData.serviceZipCode}
+              State : ${updatedData.serviceState}
+            </p>
 
             <p>
               The facility owner will be in touch with you as soon as possible
@@ -760,7 +768,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
             <img
               src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
-              alt="Company Logo" width="200" height="200"
+              alt="Company Logo" width="150" height="150"
             />
           `,
         };
@@ -891,6 +899,15 @@ const isAdminApprovePatientService = async (req, res, next) => {
             <p>
               We are pleased to inform you that your health service request has
               been successfully received and forwarded to the ${updatedData.serviceName}.
+            </p>
+
+            <p>
+              Facility Details 
+              Name: ${updatedData.serviceName}
+              City: ${updatedData.serviceCity}
+              Address : ${updatedData.serviceFullAddress}
+              Zip Code : ${updatedData.serviceZipCode}
+              State : ${updatedData.serviceState}
             </p>
 
             <p>
