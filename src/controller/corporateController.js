@@ -3,7 +3,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const patientApplyService = require('../Model/patApplyService');
 const Corporate = require('../Model/corporateModel');
 const invoice = require('../Model/invoiceModel');
-const calculateTotalAmount = require('../utils/calculateTotalAmount');
+// const calculatefoundInvoice = require('../utils/calculatefoundInvoice.payableAmount');
 
 const emailController = async (req, res, next) => {
   try {
@@ -208,12 +208,11 @@ const payFacilityInvoice = async (req, res, next) => {
         .json({ success: false, message: 'Invoice not found' });
     }
 
-    const totalAmount = calculateTotalAmount(foundInvoice);
 
     if (!foundInvoice.isButtonClicked) {
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
-          paymentAmount === totalAmount ? 'paid' : 'partiallyPaid';
+          paymentAmount === foundInvoice.payableAmount ? 'paid' : 'partiallyPaid';
 
         //push the object into the paid amount array
         const newPayment = {
@@ -225,7 +224,7 @@ const payFacilityInvoice = async (req, res, next) => {
         foundInvoice.paidAmount.push(newPayment);
 
         foundInvoice.dues =
-          paymentAmount === totalAmount ? 0 : totalAmount - paymentAmount;
+          paymentAmount === foundInvoice.payableAmount ? 0 : foundInvoice.payableAmount - paymentAmount;
 
         // foundInvoice.leadAmount = paymentAmount
         //   ? foundInvoice.leadAmount - paymentAmount
@@ -279,7 +278,7 @@ const payPartiallyInvoice = async (req, res, next) => {
         .json({ success: false, message: 'Invoice not found' });
     }
 
-    // const totalAmount = calculateTotalAmount(foundInvoice);
+    // const foundInvoice.payableAmount = calculatefoundInvoice.payableAmount(foundInvoice);
 
     if (foundInvoice.dues > 0) {
       if (paymentAmount > 0) {
