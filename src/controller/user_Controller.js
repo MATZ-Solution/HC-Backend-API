@@ -17,6 +17,7 @@ const noOfCallsMade = require('../Model/noOfCallsMade');
 const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
 const generateRandomNo = require('../utils/generatingRandomNo');
+const EmailSender = require('../utils/email');
 
 // const { Console } = require('console');
 
@@ -720,7 +721,53 @@ const isAdminApprovePatientService = async (req, res, next) => {
           });
         }
 
-        //<-------------------------notification flow start here -------------------------->
+        //<-------------------------notification flow end here -------------------------->
+
+        //<-------------------------Send Email to User start -------------------------->
+
+        const emailOptions = {
+          to: updatedData.patEmail,
+          subject: 'Your Health Service Request is Underway',
+          html: `
+            <p>Dear ${updatedData.patFullName},</p>
+
+            <p>
+              We are pleased to inform you that your health service request has
+              been successfully received and forwarded to the ${updatedData.serviceName}.
+            </p>
+
+            <p>
+              The facility owner will be in touch with you as soon as possible
+              to discuss your specific requirements and preferences. If you have
+              any immediate questions or if there's anything specific you would
+              like to share, please Contact Our Customer Support.
+            </p>
+
+            <p>
+              Your well-being is our top priority, and our team is here to
+              assist you.
+            </p>
+
+            <p>
+              Thank you for choosing our health services. Your trust means the
+              world to us.
+            </p>
+
+            <p>
+              Warm regards,<br />
+              Best Health Service Team
+            </p>
+
+            <img
+              src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+              alt="Company Logo" width="200" height="200"
+            />
+          `,
+        };
+
+        await EmailSender(emailOptions);
+
+        //<-------------------------Send Email to User End -------------------------->
 
         res.status(200).json({ message: 'Updated', data: updatedData });
       } else {
@@ -832,6 +879,50 @@ const isAdminApprovePatientService = async (req, res, next) => {
         await createFacilityOtp.save();
 
         //<-------------------------facility otp flow end here -------------------------->
+
+        //<----------------------send email to user-------------------------------------->
+
+        const emailOptions = {
+          to: updatedData.patEmail,
+          subject: 'Your Health Service Request is Underway',
+          html: `
+            <p>Dear ${updatedData.patFullName},</p>
+
+            <p>
+              We are pleased to inform you that your health service request has
+              been successfully received and forwarded to the ${updatedData.serviceName}.
+            </p>
+
+            <p>
+              The facility owner will be in touch with you as soon as possible
+              to discuss your specific requirements and preferences. If you have
+              any immediate questions or if there's anything specific you would
+              like to share, please Contact Our Customer Support.
+            </p>
+
+            <p>
+              Your well-being is our top priority, and our team is here to
+              assist you.
+            </p>
+
+            <p>
+              Thank you for choosing our health services. Your trust means the
+              world to us.
+            </p>
+
+            <p>
+              Warm regards,<br />
+              Best Health Service Team
+            </p>
+
+            <img
+              src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+              alt="Company Logo" width="200" height="200"
+            />
+          `,
+        };
+
+        await EmailSender(emailOptions);
 
         res.status(200).json({ message: 'Updated', data: updatedData });
       }
