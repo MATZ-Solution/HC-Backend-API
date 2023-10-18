@@ -26,7 +26,7 @@ const superAdminRoutes = require('./routes/superAdminRoutes');
 const favoriteRoutes = require('./routes/favourateRoutes');
 const fcmRoute = require('./routes/fcmRoute');
 const notificationRoute = require('./routes/notiRoutes');
-const noOfCallsMadeRoute = require('./routes/noOfCallMadeRoutes')
+const noOfCallsMadeRoute = require('./routes/noOfCallMadeRoutes');
 //=========blog route=======================================
 const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
@@ -72,7 +72,7 @@ app.use('/api/superAdmin', superAdminRoutes);
 app.use('/api/favoriteRoutes', favoriteRoutes);
 app.use('/api/fcmRoutes/', fcmRoute);
 app.use('/api/notificationHistory', notificationRoute);
-app.use('/api/noOfCallsMade',noOfCallsMadeRoute)
+app.use('/api/noOfCallsMade', noOfCallsMadeRoute);
 
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes);
@@ -83,7 +83,7 @@ app.use('/api/invoice', getInvoice);
 app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.send('Hello World 10/18/23 3:15PM');
 });
 // Start the server and listen for incoming requests
 app.listen(5000, () => {

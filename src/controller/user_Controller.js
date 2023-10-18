@@ -639,6 +639,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
     //if data is found else send message no data found
     if (updatedData) {
+      console.log("if");
       const existEmail = await Corporate.find({
         organizationContactNo: updatedData.servicePhoneNumber,
       });
@@ -715,7 +716,7 @@ const isAdminApprovePatientService = async (req, res, next) => {
         //if fcm token send notification to corporate
         if (corporate.fcmToken) {
           corporate.fcmToken.map((token) => {
-            if (token !== ' ') {
+            if (token && token.trim() !== '') {
               FcmNotify(token, notificationData, 'corporate');
             }
           });
