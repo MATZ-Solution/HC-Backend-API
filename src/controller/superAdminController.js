@@ -7,6 +7,7 @@ const patService = require('../Model/patApplyService');
 const { default: axios } = require('axios');
 const User = require('../Model/User');
 const ErrorHandler = require('../utils/ErrorHandler');
+const EmailSender = require('../utils/email');
 
 const superAdminClt = {
   //Reject Patient Services By SuperAdmin
@@ -17,8 +18,61 @@ const superAdminClt = {
 
       const patServices = await patService.findByIdAndUpdate(
         { _id: id },
-        { isRejected: true }
+        { isRejected: true },
+        { new: true }
       );
+
+
+      const emailOptions = {
+        to: patServices.patEmail,
+        subject: 'Your Health Service Request is Rejected',
+        html: `
+          <p>Dear ${patServices.patFullName},</p>
+
+          <p>
+            We are pleased to inform you that your health service request has
+            been successfully received and forwarded to the ${patServices.serviceName}.
+          </p>
+          <p>
+            Facility Details 
+            Name: ${patServices.serviceName}
+            City: ${patServices.serviceCity}
+            Address : ${patServices.serviceFullAddress}
+            Zip Code : ${patServices.serviceZipCode}
+            State : ${patServices.serviceState}
+          </p>
+
+          <p>
+            The facility owner will be in touch with you as soon as possible
+            to discuss your specific requirements and preferences. If you have
+            any immediate questions or if there's anything specific you would
+            like to share, please Contact Our Customer Support.
+          </p>
+
+          <p>
+            Your well-being is our top priority, and our team is here to
+            assist you.
+          </p>
+
+          <p>
+            Thank you for choosing our health services. Your trust means the
+            world to us.
+          </p>
+
+          <p>
+            Warm regards,<br />
+            Best Health Service Team
+          </p>
+
+          <img
+            src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+            alt="Company Logo" width="150" height="150"
+          />
+        `,
+      };
+
+      await EmailSender(emailOptions);
+
       res.status(200).json('Request Removed');
     } catch (err) {
       next(err);
