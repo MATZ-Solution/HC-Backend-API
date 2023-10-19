@@ -83,7 +83,7 @@ app.use('/api/invoice', getInvoice);
 app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
-  res.send('Hello World 10/19/23 11:04PM');
+  res.send('Hello World 10/19/23 11:06PM');
 });
 // Start the server and listen for incoming requests
 app.listen(5000, () => {
