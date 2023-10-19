@@ -616,10 +616,7 @@ const getpatrequest = async (req, res, next) => {
 
 const getPatApplyService = async (req, res, next) => {
   try {
-    const patServices = await patService
-      .find({ isRejected: false })
-      .lean()
-      .sort({ createdAt: -1 });
+    const patServices = await patService.find().lean().sort({ createdAt: -1 });
     res.status(200).json(patServices);
   } catch (err) {
     next(err);
@@ -639,7 +636,6 @@ const isAdminApprovePatientService = async (req, res, next) => {
 
     //if data is found else send message no data found
     if (updatedData) {
-      console.log("if");
       const existEmail = await Corporate.find({
         organizationContactNo: updatedData.servicePhoneNumber,
       });

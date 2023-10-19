@@ -90,7 +90,7 @@ const patApplyService = mongoose.Schema(
     },
     isRejected: {
       type: Boolean,
-      default: false,
+      default: 'false',
     },
   },
   { timestamps: true }
