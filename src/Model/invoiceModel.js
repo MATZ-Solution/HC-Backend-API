@@ -69,6 +69,10 @@ const invoiceSchema = mongoose.Schema(
     invoiceId: {
       type: String,
     },
+    isRejected: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

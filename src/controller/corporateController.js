@@ -36,6 +36,71 @@ const emailController = async (req, res, next) => {
   }
 };
 
+const rejectInvoiceByCorporate = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+
+    const rejectedInvoice = await invoice
+      .findByIdAndUpdate(
+        { _id: id },
+        { isRejected: true },
+        {
+          new: true,
+        }
+      )
+      .populate('patientId')
+      .populate('corporateId');
+
+
+    const emailOptions = {
+      to: rejectedInvoice.patientId.patEmail,
+      subject: 'Important: Your Health Service Request Update',
+      html: `
+        <p>Dear ${rejectedInvoice.patientId.patFullName},</p>
+
+        <p>
+          We appreciate your interest in our health services. We regret to inform you that after careful consideration,
+           your health service request for ${rejectedInvoice.corporateId.organizationName} has been declined by our team.
+        </p>
+
+        <p>
+          Facility Details:<br />
+          Name: ${rejectedInvoice.corporateId.organizationName}<br />
+          City: ${rejectedInvoice.corporateId.organizationCity}<br />
+          Address: ${rejectedInvoice.corporateId.organizationMainOfficeAddress}<br />
+          Zip Code: ${rejectedInvoice.corporateId.organizationZipCode}<br />
+          State: ${rejectedInvoice.corporateId.organizationState}
+        </p>
+
+        <p>
+        If you have any questions or require additional clarification regarding the rejection details, please feel free to contact our accounts payable department at BestHealthService@gmail.com.
+         Our team is here to assist you throughout this process.
+      </p>
+
+      <p>
+        We appreciate your understanding and cooperation in this matter. Thank you for your continued partnership with Best Health Service.
+         We look forward to resolving these issues promptly and continuing our positive collaboration.
+      </p>
+        <p>
+          Sincerely,<br />
+          Best Health Service
+        </p>
+
+        <img
+          src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+          alt="Company Logo" width="150" height="150"
+        />
+      `,
+    };
+
+    await sendEmail(emailOptions);
+
+    res.status(200).json('Request Declined');
+  } catch (err) {
+    next(err);
+  }
+};
+
 const updateCorporate = async (req, res, next) => {
   try {
     const { mongoDbId } = req.body;
@@ -137,7 +202,7 @@ const getIndividualInvoice = async (req, res, next) => {
           invoice.patientId.servicePatientSurveyRating,
         isButtonClicked: invoice.isButtonClicked,
         inoviceId: invoice.invoiceId,
-        payStatus:invoice.payStatus
+        payStatus: invoice.payStatus,
       }));
 
       res.status(200).json(formattedInvoices);
@@ -208,11 +273,12 @@ const payFacilityInvoice = async (req, res, next) => {
         .json({ success: false, message: 'Invoice not found' });
     }
 
-
     if (!foundInvoice.isButtonClicked) {
       if (paymentAmount > 0) {
         foundInvoice.payStatus =
-          paymentAmount === foundInvoice.payableAmount ? 'paid' : 'partiallyPaid';
+          paymentAmount === foundInvoice.payableAmount
+            ? 'paid'
+            : 'partiallyPaid';
 
         //push the object into the paid amount array
         const newPayment = {
@@ -224,7 +290,9 @@ const payFacilityInvoice = async (req, res, next) => {
         foundInvoice.paidAmount.push(newPayment);
 
         foundInvoice.dues =
-          paymentAmount === foundInvoice.payableAmount ? 0 : foundInvoice.payableAmount - paymentAmount;
+          paymentAmount === foundInvoice.payableAmount
+            ? 0
+            : foundInvoice.payableAmount - paymentAmount;
 
         // foundInvoice.leadAmount = paymentAmount
         //   ? foundInvoice.leadAmount - paymentAmount
@@ -348,4 +416,5 @@ module.exports = {
   getIndividualInvoiceCount,
   getRecordsOnPayStatus,
   payPartiallyInvoice,
+  rejectInvoiceByCorporate,
 };

@@ -7,7 +7,8 @@ const {
   payFacilityInvoice,
   getIndividualInvoiceCount,
   getRecordsOnPayStatus,
-  payPartiallyInvoice
+  payPartiallyInvoice,
+  rejectInvoiceByCorporate
 } = require('../controller/corporateController');
 const {
   verifyTokenAndCorporateAndSuperAdmin,
@@ -49,6 +50,12 @@ router.put(
   '/payPartiallyInvoice/:invoiceId',
   verifyTokenAndCorporate,
   payPartiallyInvoice
+);
+
+router.put(
+  '/rejectInvoiceByCorporate',
+  verifyTokenAndCorporate,
+  rejectInvoiceByCorporate
 );
 
 

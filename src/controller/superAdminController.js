@@ -22,48 +22,85 @@ const superAdminClt = {
         { new: true }
       );
 
+      // const emailOptions = {
+      //   to: patServices.patEmail,
+      //   subject: 'Your Health Service Request is Rejected',
+      //   html: `
+      //     <p>Dear ${patServices.patFullName},</p>
+
+      //     <p>
+      //       We are pleased to inform you that your health service request has
+      //       been successfully received and forwarded to the ${patServices.serviceName}.
+      //     </p>
+      //     <p>
+      //       Facility Details
+      //       Name: ${patServices.serviceName}
+      //       City: ${patServices.serviceCity}
+      //       Address : ${patServices.serviceFullAddress}
+      //       Zip Code : ${patServices.serviceZipCode}
+      //       State : ${patServices.serviceState}
+      //     </p>
+
+      //     <p>
+      //       The facility owner will be in touch with you as soon as possible
+      //       to discuss your specific requirements and preferences. If you have
+      //       any immediate questions or if there's anything specific you would
+      //       like to share, please Contact Our Customer Support.
+      //     </p>
+
+      //     <p>
+      //       Your well-being is our top priority, and our team is here to
+      //       assist you.
+      //     </p>
+
+      //     <p>
+      //       Thank you for choosing our health services. Your trust means the
+      //       world to us.
+      //     </p>
+
+      //     <p>
+      //       Warm regards,<br />
+      //       Best Health Service Team
+      //     </p>
+
+      //     <img
+      //       src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+      //       alt="Company Logo" width="150" height="150"
+      //     />
+      //   `,
+      // };
 
       const emailOptions = {
         to: patServices.patEmail,
-        subject: 'Your Health Service Request is Rejected',
+        subject: 'Important: Your Health Service Request Update',
         html: `
           <p>Dear ${patServices.patFullName},</p>
-
+      
           <p>
-            We are pleased to inform you that your health service request has
-            been successfully received and forwarded to the ${patServices.serviceName}.
+            We appreciate your interest in our health services. We regret to inform you that after careful consideration, your health service request for ${patServices.serviceName} has been declined by our team.
           </p>
+      
           <p>
-            Facility Details 
-            Name: ${patServices.serviceName}
-            City: ${patServices.serviceCity}
-            Address : ${patServices.serviceFullAddress}
-            Zip Code : ${patServices.serviceZipCode}
-            State : ${patServices.serviceState}
+            Facility Details:<br />
+            Name: ${patServices.serviceName}<br />
+            City: ${patServices.serviceCity}<br />
+            Address: ${patServices.serviceFullAddress}<br />
+            Zip Code: ${patServices.serviceZipCode}<br />
+            State: ${patServices.serviceState}
           </p>
-
+      
           <p>
-            The facility owner will be in touch with you as soon as possible
-            to discuss your specific requirements and preferences. If you have
-            any immediate questions or if there's anything specific you would
-            like to share, please Contact Our Customer Support.
+            We understand that this decision may be disappointing, and we want to assure you that we value your interest. If you have any further questions or would like to discuss this decision, please do not hesitate to reach out to our customer support team. We are here to assist you in any way we can.
           </p>
-
+      
           <p>
-            Your well-being is our top priority, and our team is here to
-            assist you.
+            Your well-being and satisfaction are important to us, and we appreciate your understanding. Thank you for considering our health services.
           </p>
-
+      
           <p>
-            Thank you for choosing our health services. Your trust means the
-            world to us.
+            Sincerely,<br />
           </p>
-
-          <p>
-            Warm regards,<br />
-            Best Health Service Team
-          </p>
-
+      
           <img
             src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
             alt="Company Logo" width="150" height="150"
@@ -73,7 +110,7 @@ const superAdminClt = {
 
       await EmailSender(emailOptions);
 
-      res.status(200).json('Request Removed');
+      res.status(200).json('Request Declined');
     } catch (err) {
       next(err);
     }
