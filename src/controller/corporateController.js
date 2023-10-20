@@ -202,12 +202,13 @@ const getIndividualInvoice = async (req, res, next) => {
         serviceLongitude: invoice.patientId.serviceLongitude,
         serviceOverAllRating: invoice.patientId.serviceOverAllRating,
         servicePatientSurveyRating:
-          invoice.patientId.servicePatientSurveyRating,
+        invoice.patientId.servicePatientSurveyRating,
         servicePatientSurveyRating:
-          invoice.patientId.servicePatientSurveyRating,
+        invoice.patientId.servicePatientSurveyRating,
         isButtonClicked: invoice.isButtonClicked,
         inoviceId: invoice.invoiceId,
         payStatus: invoice.payStatus,
+        isRejected: invoice.isRejected,
       }));
 
       res.status(200).json(formattedInvoices);
