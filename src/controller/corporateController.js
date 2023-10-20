@@ -273,6 +273,7 @@ const getRecordsOnPayStatus = async (req, res, next) => {
       .find({
         corporateId: _id,
         payStatus: req.params.payStatus,
+        isRejected: false,
       })
       .populate('patientId')
       .populate('corporateId');
