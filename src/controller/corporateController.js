@@ -51,7 +51,6 @@ const rejectInvoiceByCorporate = async (req, res, next) => {
       .populate('patientId')
       .populate('corporateId');
 
-
     const emailOptions = {
       to: rejectedInvoice.patientId.patEmail,
       subject: 'Important: Your Health Service Request Update',
@@ -60,16 +59,22 @@ const rejectInvoiceByCorporate = async (req, res, next) => {
 
         <p>
           We appreciate your interest in our health services. We regret to inform you that after careful consideration,
-           your health service request for ${rejectedInvoice.corporateId.organizationName} has been declined by our team.
+          your health service request for ${rejectedInvoice.corporateId.organizationName} has been declined 
+          by our team.
         </p>
-
+        
         <p>
-          Facility Details:<br />
-          Name: ${rejectedInvoice.corporateId.organizationName}<br />
-          City: ${rejectedInvoice.corporateId.organizationCity}<br />
-          Address: ${rejectedInvoice.corporateId.organizationMainOfficeAddress}<br />
-          Zip Code: ${rejectedInvoice.corporateId.organizationZipCode}<br />
-          State: ${rejectedInvoice.corporateId.organizationState}
+        Facility Details:<br />
+        Name: ${rejectedInvoice.corporateId.organizationName}<br />
+        City: ${rejectedInvoice.corporateId.organizationCity}<br />
+        Address: ${rejectedInvoice.corporateId.organizationMainOfficeAddress}<br />
+        Zip Code: ${rejectedInvoice.corporateId.organizationZipCode}<br />
+        State: ${rejectedInvoice.corporateId.organizationState}
+        </p>
+        
+        <p>
+          Your Request is Decliened By Facility Owner. You can check out other facilites.
+          from <a href="https://healthcare.matzsolutions.com/senior_care.html">here</a>
         </p>
 
         <p>
