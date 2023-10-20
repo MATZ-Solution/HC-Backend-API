@@ -225,13 +225,25 @@ const getIndividualInvoiceCount = async (req, res, next) => {
   try {
     const { _id } = req.user;
     const getAllInvoices = await invoice.find({ corporateId: _id });
+    // const counts = getAllInvoices.reduce(
+    //   (accumulator, invoice) => {
+    //     accumulator[invoice.payStatus.toLowerCase()]++;
+    //     accumulator.total++;
+    //     return accumulator;
+    //   },
+    //   { paid: 0, partiallypaid: 0, unpaid: 0, total: 0 }
+    // );
+
     const counts = getAllInvoices.reduce(
       (accumulator, invoice) => {
         accumulator[invoice.payStatus.toLowerCase()]++;
+        if (invoice.isRejected) {
+          accumulator.isRejected++;
+        }
         accumulator.total++;
         return accumulator;
       },
-      { paid: 0, partiallypaid: 0, unpaid: 0, total: 0 }
+      { paid: 0, partiallypaid: 0, unpaid: 0, total: 0, isRejected: 0 }
     );
     res.status(200).json(counts);
   } catch (error) {
@@ -245,6 +257,13 @@ const getRecordsOnPayStatus = async (req, res, next) => {
   if (req.params.payStatus == 'total') {
     const records = await invoice
       .find({ corporateId: _id })
+      .populate('patientId')
+      .populate('corporateId');
+    // res.status(200).json({ success: true, data: records });
+    res.status(200).json(records);
+  } else if (req.params.payStatus == 'rejected') {
+    const records = await invoice
+      .find({ corporateId: _id, isRejected: true })
       .populate('patientId')
       .populate('corporateId');
     // res.status(200).json({ success: true, data: records });
