@@ -34,4 +34,10 @@ router.get(
   superAdminClt.rejectPatServiceBySuperAdmin
 );
 
+router.get(
+  '/getRejectedInvoice',
+  verifyTokenAndAdmin,
+  superAdminClt.getRejectedInvoice
+);
+
 module.exports = router;
