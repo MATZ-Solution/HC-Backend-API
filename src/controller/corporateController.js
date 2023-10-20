@@ -239,6 +239,7 @@ const getIndividualInvoiceCount = async (req, res, next) => {
         accumulator[invoice.payStatus.toLowerCase()]++;
         if (invoice.isRejected) {
           accumulator.rejected++;
+          accumulator.total++;
         }
         accumulator.total++;
         return accumulator;
