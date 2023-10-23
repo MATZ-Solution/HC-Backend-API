@@ -89,7 +89,7 @@ const getAllBlog = async (req, res, next) => {
 
 const getLatestBlog = async (req, res, next) => {
   try {
-    const blogs = await Blog.find({}).sort({ createdAt: -1 }).limit(3);
+    const blogs = await Blog.find({status:"Accepted"}).sort({ createdAt: -1 }).limit(3);
     res.status(200).json(blogs);
   } catch (err) {
     next(err);
