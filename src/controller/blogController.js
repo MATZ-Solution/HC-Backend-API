@@ -56,7 +56,7 @@ const getPendingBlogs = async (req, res, next) => {
 const acceptedBlogs = async (req, res, next) => {
   try {
     const { pages, limit } = req.body;
-    
+
     let countBlogs;
     let blogs;
 
@@ -86,6 +86,15 @@ const getAllBlog = async (req, res, next) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+const getLatestBlog = async (req, res, next) => {
+  try {
+    const blogs = await Blog.find({}).sort({ createdAt: -1 }).limit(3);
+    res.status(200).json(blogs);
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = {
   blogCreate,
   getAllBlog,
@@ -93,4 +102,5 @@ module.exports = {
   deleteBlog,
   getPendingBlogs,
   acceptedBlogs,
+  getLatestBlog,
 };
