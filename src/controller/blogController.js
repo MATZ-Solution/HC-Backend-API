@@ -95,6 +95,16 @@ const getLatestBlog = async (req, res, next) => {
     next(err);
   }
 };
+const getacceptedBlogbyId=async(req,res,next)=>{
+  const {id}=req.params
+  try{
+    const blogs=await Blog.findOne({_id:id,status:"Accepted"})
+    res.status(200).json(blogs)
+  }
+  catch(err){
+    next(err)
+  }
+}
 module.exports = {
   blogCreate,
   getAllBlog,
@@ -103,4 +113,5 @@ module.exports = {
   getPendingBlogs,
   acceptedBlogs,
   getLatestBlog,
+  getacceptedBlogbyId
 };

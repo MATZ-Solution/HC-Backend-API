@@ -7,6 +7,7 @@ const {
   getPendingBlogs,
   acceptedBlogs,
   getLatestBlog,
+  getacceptedBlogbyId,
 } = require('../controller/blogController');
 const { verifyTokenAndAdmin } = require('../middleware/verifytokens');
 const router = express.Router();
@@ -18,6 +19,7 @@ router.route('/deleteblog/:id').delete(deleteBlog);
 router.route('/pendingblog').get(getPendingBlogs);
 router.route('/acceptedblog').post(acceptedBlogs);
 router.route('/getLatestBlog').get(getLatestBlog);
+router.route('/getSingleBlog/:id').post(getacceptedBlogbyId)
 // router.put('/:id', blogUpdate);
 // router.delete('/:id', deleteBlog);
 // router.get('/pending', getPendingBlogs);
