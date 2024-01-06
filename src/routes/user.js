@@ -23,13 +23,15 @@ const {
   toConnectCorporate,
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
-  getpatrequest
+  getpatrequest,
+  userInfoNameController
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
 router.put('/changePassword', verifyToken, changePasswordController);
 router.delete('/deleteAccount', verifyToken, deleteUserController);
 router.get('/userInfo', verifyToken, userInfoController);
+router.get('/userInfoName',verifyToken,userInfoNameController)
 router.post('/sendEmail', sendEmail);
 router.post('/forgotPassword', forgotPasswordController);
 router.post('/verifyEmail', verifyEmail);

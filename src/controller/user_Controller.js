@@ -129,6 +129,25 @@ const userInfoController = async (req, res, next) => {
   }
 };
 
+const userInfoNameController = async (req, res, next) => {
+  try {
+    const { _id, isAdmin } = req.user;
+
+    if (isAdmin === 'corporate') {
+      
+      const corporate=await Corporate.findOne({ _id })
+      
+
+      res.status(200).json({organizationName:corporate.organizationName});
+    } 
+     else {
+      throw new ErrorHandler('Invalid Role', 400);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 //corporate data
 const specificCorporateData = async (req, res, next) => {
   try {
@@ -1440,4 +1459,5 @@ module.exports = {
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
   getpatrequest,
+  userInfoNameController
 };
