@@ -9,9 +9,13 @@ const Otp = require('../Model/Otp');
 const nodemailer = require('nodemailer');
 const CryptoJS = require('crypto-js');
 const crypto = require('crypto');
-
+const { default: axios } = require("axios");
 const registerController = async (req, res, next) => {
+
   try {
+
+
+
     const { email, password, confirmPass, role } = req.body;
 
     if (role === 'patient') {
@@ -333,43 +337,127 @@ const registerController = async (req, res, next) => {
   }
 };
 
+// const registerWithSocialMedia = async (req, res, next) => {
+//   try {
+//     const { email, profile, profileId, firstName } = req.body;
+
+//     // Check if the user with the given profileId already exists
+//     const existingUser = await User.findOne({ profileId });
+
+//     if (existingUser) {
+//       // User with the same profileId already exists
+//       // Generate JWT token for the existing user
+//       const accessToken = generateAccessToken(existingUser);
+
+//       // Send the response with the access token
+//       res.status(200).json({ existingUser, accessToken });
+//     } else {
+//       // Create a new user with the Google registration
+//       const newUser = await User.create({
+//         email,
+//         profileId,
+//         profile,
+//         firstName,
+//         isSocialMediaAuth: true,
+//       });
+
+//       // Generate JWT token for the newly registered user
+//       const accessToken = generateAccessToken(newUser);
+
+//       // Exclude sensitive information (like password) from the response
+//       const { password: _, ...userWithoutPassword } = newUser._doc;
+
+//       // Send the response with the user data and access token
+//       res.status(201).json({ ...userWithoutPassword, accessToken });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
 const registerWithSocialMedia = async (req, res, next) => {
   try {
-    const { email, profile, profileId, firstName } = req.body;
 
-    // Check if the user with the given profileId already exists
-    const existingUser = await User.findOne({ profileId });
+
+    const user = req.user
+
+    const existingUser = await User.findOne({ email: user.email });
 
     if (existingUser) {
-      // User with the same profileId already exists
-      // Generate JWT token for the existing user
-      const accessToken = generateAccessToken(existingUser);
-
-      // Send the response with the access token
-      res.status(200).json({ existingUser, accessToken });
-    } else {
-      // Create a new user with the Google registration
-      const newUser = await User.create({
-        email,
-        profileId,
-        profile,
-        firstName,
-        isSocialMediaAuth: true,
-      });
-
-      // Generate JWT token for the newly registered user
-      const accessToken = generateAccessToken(newUser);
-
-      // Exclude sensitive information (like password) from the response
-      const { password: _, ...userWithoutPassword } = newUser._doc;
-
-      // Send the response with the user data and access token
-      res.status(201).json({ ...userWithoutPassword, accessToken });
+      return res.status(409).json("User Already Exists");
     }
-  } catch (error) {
+
+
+    let role = 'patient'
+
+    const savedUser = await User.create({
+      email: user.email,
+      role,
+      isOtpVerified: true
+    });
+
+
+    return res.status(200).json("User successfully signed up")
+
+
+
+
+  }
+  catch (error) {
     next(error);
   }
 };
+
+const loginWithSocialMedia = async (req, res, next) => {
+  try {
+
+    const user = req.user
+    // console.log(user, "user")
+
+    const existingUser = await User.findOne({ email: user.email });
+
+    // console.log(existingUser)
+
+    if (!existingUser) {
+      const savedUser = await User.create({
+        email: user.email,
+        role: "patient",
+        isOtpVerified: true
+      });
+      const accessToken = generateAccessToken(savedUser);
+
+      const { password: _, role, isVital, ...others } = savedUser._doc; // Exclude password from response
+
+      // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
+
+      res.status(200).json({ accessToken, role, isVital });
+      console.log("if block chala")
+
+
+    }
+    else {
+
+      const deleteUser = await User.deleteOne({ email: existingUser.email })
+      const savedUser = await User.create({
+        email: user.email,
+        role: "patient",
+        isOtpVerified: true
+      });
+      const accessToken = generateAccessToken(savedUser);
+
+      const { password: _, role, isVital, ...others } = savedUser._doc; // Exclude password from response
+
+      // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
+      // console.log("else if block chala")
+      res.status(200).json({ accessToken, role, isVital });
+
+    }
+  }
+  catch (err) {
+    next(err)
+  }
+}
 
 const loginController = async (req, res, next) => {
   try {
@@ -454,6 +542,9 @@ const loginController = async (req, res, next) => {
   }
 };
 
+
+
+
 //corporate s
 
 const isPasswordValid = (encryptedPassword, password) => {
@@ -475,6 +566,17 @@ const generateAccessToken = (user) => {
     // { expiresIn: '' } no limit
   );
 };
+
+// const userDataController=async(req,res,next)=>{
+//   try{
+
+
+
+//   }
+//   catch(err){
+
+//   }
+// }
 
 //sending email
 
@@ -558,4 +660,5 @@ module.exports = {
   registerController,
   loginController,
   registerWithSocialMedia,
+  loginWithSocialMedia
 };

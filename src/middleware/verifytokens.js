@@ -1,8 +1,30 @@
 const jwt = require('jsonwebtoken')
+const { default: axios } = require("axios");
+const verifyGoogleToken = (req, res, next) => {
+
+    const googleAccessToken = req.headers.authorization.split(" ")[1]
+    console.log(googleAccessToken,"token")
+
+    axios
+        .get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                Authorization: `Bearer ${googleAccessToken}`,
+            },
+        })
+        .then((res) => {
+            req.user=res.data
+            // console.log(res,"user")
+            next()
+        })
+        .catch((error) => {
+            res.status(400).json("invalid access token")
+        });
+
+}
 
 const verifyToken = (req, res, next) => {
     const { authorization } = req.headers;
-    if (authorization && authorization.startsWith("Bearer"))  {
+    if (authorization && authorization.startsWith("Bearer")) {
         const token = authorization.split(" ")[1];
         jwt.verify(token, process.env.JWT_SEC, (err, user) => {
             if (err) {
@@ -63,5 +85,6 @@ module.exports = {
     verifyTokenAndAdmin,
     verifyTokenAndCorporate,
     verifyTokenAndCareGivers,
-    verifyTokenAndCorporateAndSuperAdmin
+    verifyTokenAndCorporateAndSuperAdmin,
+    verifyGoogleToken
 };
