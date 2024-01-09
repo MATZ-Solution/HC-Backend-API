@@ -13,10 +13,11 @@ const verifyGoogleToken = (req, res, next) => {
         })
         .then((res) => {
             req.user=res.data
-            // console.log(res,"user")
             next()
+            // console.log(res,"user")
         })
         .catch((error) => {
+            console.log(error,"err")
             res.status(400).json("invalid access token")
         });
 

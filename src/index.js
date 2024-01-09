@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
+const passport=require('passport')
 const cors = require('cors');
+const session=require('express-session')
 // const rateLimit = require('express-rate-limit');
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
@@ -32,10 +34,21 @@ const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
 const getInvoice = require('./routes/invoiceRoute');
 
+// ============google route =============
+const googleRoutes = require('./routes/googleRoutes')
+
+// "=======================passport require=========="
+require('./utils/passport')
 dotenv.config();
+app.use(session({
+  secret:"maaz rehman",
+  resave:false,
+  saveUninitialized:true
+}))
 
 app.use(cors());
-
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.json()); // Parse incoming JSON data
 
 // Connect to the MongoDB database
@@ -73,7 +86,6 @@ app.use('/api/favoriteRoutes', favoriteRoutes);
 app.use('/api/fcmRoutes/', fcmRoute);
 app.use('/api/notificationHistory', notificationRoute);
 app.use('/api/noOfCallsMade', noOfCallsMadeRoute);
-
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes);
 //=======================================
@@ -81,6 +93,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/invoice', getInvoice);
 
 app.use(errorMiddleware);
+app.use("/", googleRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World 10/19/23 11:06PM');

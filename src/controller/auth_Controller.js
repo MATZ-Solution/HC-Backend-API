@@ -413,11 +413,9 @@ const loginWithSocialMedia = async (req, res, next) => {
   try {
 
     const user = req.user
-    // console.log(user, "user")
 
     const existingUser = await User.findOne({ email: user.email });
 
-    // console.log(existingUser)
 
     if (!existingUser) {
       const savedUser = await User.create({
@@ -426,12 +424,12 @@ const loginWithSocialMedia = async (req, res, next) => {
         isOtpVerified: true
       });
       const accessToken = generateAccessToken(savedUser);
-
-      const { password: _, role, isVital, ...others } = savedUser._doc; // Exclude password from response
+      
+      const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
 
       // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
-
-      res.status(200).json({ accessToken, role, isVital });
+      
+      res.status(200).json({ accessToken, role, email,isVital });
       console.log("if block chala")
 
 
@@ -446,11 +444,11 @@ const loginWithSocialMedia = async (req, res, next) => {
       });
       const accessToken = generateAccessToken(savedUser);
 
-      const { password: _, role, isVital, ...others } = savedUser._doc; // Exclude password from response
+      const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
 
       // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
       // console.log("else if block chala")
-      res.status(200).json({ accessToken, role, isVital });
+      res.status(200).json({ accessToken, role, email,isVital });
 
     }
   }
