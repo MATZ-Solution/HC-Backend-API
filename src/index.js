@@ -54,11 +54,12 @@ app.use(session({
 // }));
 
 const corsOptions = {
-  origin: '*',
+  origin: ["https://infosenior.care"],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
 };
+
 
 app.use(cors(corsOptions));
 app.use(passport.initialize())
