@@ -46,7 +46,12 @@ app.use(session({
   saveUninitialized:true
 }))
 
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+  origin: 'https://infosenior.care',
+  credentials: true,
+}));
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json()); // Parse incoming JSON data

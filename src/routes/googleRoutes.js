@@ -8,7 +8,7 @@ require('../utils/passport')
 
 
 router.get("/auth/protected", (req, res,next) => {
-    
+  res.redirect("https://infosenior.care")
     next()
 },loginWithSocialMedia);
 
