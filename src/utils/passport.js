@@ -1,4 +1,4 @@
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require("passport");
 require('dotenv').config()
 
@@ -20,8 +20,9 @@ passport.use(new GoogleStrategy({
     
    
 }
-catch(err){
-    console.log(err)
+catch(err) {
+    console.error(err);
+    return done(err);
 }
  }
 ));
