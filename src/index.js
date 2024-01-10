@@ -54,7 +54,7 @@ app.use(session({
 // }));
 
 const corsOptions = {
-  origin: 'https://infosenior.care',
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
