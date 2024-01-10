@@ -48,10 +48,19 @@ app.use(session({
 
 // app.use(cors());
 
-app.use(cors({
+// app.use(cors({
+//   origin: 'https://infosenior.care',
+//   credentials: true,
+// }));
+
+const corsOptions = {
   origin: 'https://infosenior.care',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-}));
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json()); // Parse incoming JSON data
