@@ -4,8 +4,8 @@ require('dotenv').config()
 
 const { default: axios } = require("axios");
 passport.use(new GoogleStrategy({
-    clientID:     process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientID:    "314005293340-fj82kqi8e4br6ocpvfhgrhc6i5e237t1.apps.googleusercontent.com",
+    clientSecret: "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",
     callbackURL: "http://localhost:5000/auth/google/callback",
   },
  async function(accessToken, refreshToken,profile, done) {
