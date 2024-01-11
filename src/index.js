@@ -35,7 +35,7 @@ const blogRoutes = require('./routes/blogRoutes');
 const getInvoice = require('./routes/invoiceRoute');
 
 // ============google route =============
-const googleRoutes = require('./routes/googleRoutes')
+// const googleRoutes = require('./routes/googleRoutes')
 
 // "=======================passport require=========="
 require('./utils/passport')
@@ -46,28 +46,28 @@ app.use(session({
   saveUninitialized:true
 }))
 
-// app.use(cors());
+app.use(cors());
 
 // app.use(cors({
 //   origin: 'https://infosenior.care',
 //   credentials: true,
 // }));
 
-const corsOptions = {
-  origin: ["https://infosenior.care"],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204,
-};
+// const corsOptions = {
+//   origin: ["http://127.0.0.1:5500", "https://infosenior.care"],
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true,
+//   optionsSuccessStatus: 204,
+// };
 
-
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json()); // Parse incoming JSON data
 
 // Connect to the MongoDB database
 databaseConnection.connect();
+
 
 // const limiter = rateLimit({
 //   windowMs: 60 * 1000,
@@ -108,7 +108,7 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/invoice', getInvoice);
 
 app.use(errorMiddleware);
-app.use("/", googleRoutes);
+// app.use("/", googleRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World 10/19/23 11:06PM');

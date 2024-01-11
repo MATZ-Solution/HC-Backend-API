@@ -11,9 +11,11 @@ const { verifyToken, verifyGoogleToken } = require("../middleware/verifytokens")
 
 router.post("/register", registerController);
 router.post("/login", loginController);
+router.post("/loginAuth",registerWithSocialMedia)
+
 // router.post("/socialAuth", registerWithSocialMedia);
-router.get("/registerAuth",verifyGoogleToken,registerWithSocialMedia)
-router.get("/loginAuth",verifyGoogleToken,loginWithSocialMedia)
+// router.get("/registerAuth",verifyGoogleToken,registerWithSocialMedia)
+// router.get("/loginAuth",verifyGoogleToken,loginWithSocialMedia)
 // router.get('/userInfo',verifyToken,userDataController)
 
 

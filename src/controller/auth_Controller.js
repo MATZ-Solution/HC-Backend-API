@@ -337,125 +337,121 @@ const registerController = async (req, res, next) => {
   }
 };
 
+const registerWithSocialMedia = async (req, res, next) => {
+  try {
+    const { email, profilePic, profileId, firstName, lastName } = req.body;
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+        const accessToken = generateAccessToken(existingUser);
+        res.status(200).json({ email: existingUser.email, accessToken });
+    } else {
+        const newUser = await User.create({
+            email,
+            role: "patient",
+            profileId,
+            firstName,
+            lastName,
+            isOtpVerified: true,
+            isSocialMediaAuth: true,
+        });
+
+        const accessToken = generateAccessToken(newUser);
+
+        const { password: _, email: newEmail, ...userWithoutPassword } = newUser._doc;
+
+        res.status(201).json({ email: newEmail, accessToken });
+    }
+} catch (error) {
+    // Log or handle the error appropriately
+    next(error);
+}
+
+
+};
+
+
 // const registerWithSocialMedia = async (req, res, next) => {
 //   try {
-//     const { email, profile, profileId, firstName } = req.body;
 
-//     // Check if the user with the given profileId already exists
-//     const existingUser = await User.findOne({ profileId });
+
+//     const user = req.user
+
+//     const existingUser = await User.findOne({ email: user.email });
 
 //     if (existingUser) {
-//       // User with the same profileId already exists
-//       // Generate JWT token for the existing user
-//       const accessToken = generateAccessToken(existingUser);
-
-//       // Send the response with the access token
-//       res.status(200).json({ existingUser, accessToken });
-//     } else {
-//       // Create a new user with the Google registration
-//       const newUser = await User.create({
-//         email,
-//         profileId,
-//         profile,
-//         firstName,
-//         isSocialMediaAuth: true,
-//       });
-
-//       // Generate JWT token for the newly registered user
-//       const accessToken = generateAccessToken(newUser);
-
-//       // Exclude sensitive information (like password) from the response
-//       const { password: _, ...userWithoutPassword } = newUser._doc;
-
-//       // Send the response with the user data and access token
-//       res.status(201).json({ ...userWithoutPassword, accessToken });
+//       return res.status(409).json("User Already Exists");
 //     }
-//   } catch (error) {
+
+
+//     let role = 'patient'
+
+//     const savedUser = await User.create({
+//       email: user.email,
+//       role,
+//       isOtpVerified: true
+//     });
+
+
+//     return res.status(200).json("User successfully signed up")
+
+
+
+
+//   }
+//   catch (error) {
 //     next(error);
 //   }
 // };
 
+// const loginWithSocialMedia = async (req, res, next) => {
+//   try {
 
-const registerWithSocialMedia = async (req, res, next) => {
-  try {
+//     const user = req.user
 
-
-    const user = req.user
-
-    const existingUser = await User.findOne({ email: user.email });
-
-    if (existingUser) {
-      return res.status(409).json("User Already Exists");
-    }
+//     const existingUser = await User.findOne({ email: user.email });
 
 
-    let role = 'patient'
-
-    const savedUser = await User.create({
-      email: user.email,
-      role,
-      isOtpVerified: true
-    });
-
-
-    return res.status(200).json("User successfully signed up")
-
-
-
-
-  }
-  catch (error) {
-    next(error);
-  }
-};
-
-const loginWithSocialMedia = async (req, res, next) => {
-  try {
-
-    const user = req.user
-
-    const existingUser = await User.findOne({ email: user.email });
-
-
-    if (!existingUser) {
-      const savedUser = await User.create({
-        email: user.email,
-        role: "patient",
-        isOtpVerified: true
-      });
-      const accessToken = generateAccessToken(savedUser);
+//     if (!existingUser) {
+//       const savedUser = await User.create({
+//         email: user.email,
+//         role: "patient",
+//         isOtpVerified: true
+//       });
+//       const accessToken = generateAccessToken(savedUser);
       
-      const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
+//       const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
 
-      // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
+//       // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
       
-      res.status(200).json({ accessToken, role, email,isVital });
-      console.log("if block chala")
+//       res.status(200).json({ accessToken, role, email,isVital });
+//       console.log("if block chala")
 
 
-    }
-    else {
+//     }
+//     else {
 
-      const deleteUser = await User.deleteOne({ email: existingUser.email })
-      const savedUser = await User.create({
-        email: user.email,
-        role: "patient",
-        isOtpVerified: true
-      });
-      const accessToken = generateAccessToken(savedUser);
+//       const deleteUser = await User.deleteOne({ email: existingUser.email })
+//       const savedUser = await User.create({
+//         email: user.email,
+//         role: "patient",
+//         isOtpVerified: true
+//       });
+//       const accessToken = generateAccessToken(savedUser);
 
-      const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
+//       const { password: _, role, email,isVital, ...others } = savedUser._doc; // Exclude password from response
 
-      // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
-      // console.log("else if block chala")
-      res.status(200).json({ accessToken, role, email,isVital });
+//       // const isVital = vitals.length > 0 ? vitals[0].isVital : false;
+//       // console.log("else if block chala")
+//       res.status(200).json({ accessToken, role, email,isVital });
 
-    }
-  }
-  catch (err) {
-    next(err)
-  }
-}
+//     }
+//   }
+//   catch (err) {
+//     next(err)
+//   }
+// }
 
 const loginController = async (req, res, next) => {
   try {
@@ -658,5 +654,5 @@ module.exports = {
   registerController,
   loginController,
   registerWithSocialMedia,
-  loginWithSocialMedia
+
 };
