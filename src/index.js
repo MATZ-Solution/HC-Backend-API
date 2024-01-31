@@ -33,6 +33,9 @@ const noOfCallsMadeRoute = require('./routes/noOfCallMadeRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 //=========invoice route====================================
 const getInvoice = require('./routes/invoiceRoute');
+//=========webReviews route====================================
+const webReviewsRoutes = require('./routes/webReviews');
+
 
 // ============google route =============
 // const googleRoutes = require('./routes/googleRoutes')
@@ -101,6 +104,9 @@ app.use('/api/favoriteRoutes', favoriteRoutes);
 app.use('/api/fcmRoutes/', fcmRoute);
 app.use('/api/notificationHistory', notificationRoute);
 app.use('/api/noOfCallsMade', noOfCallsMadeRoute);
+//=========WEB Routes===================
+
+app.use('/api/webReviews',webReviewsRoutes)
 //=========Blog Routes===================
 app.use('/api/blogs', blogRoutes);
 //=======================================
