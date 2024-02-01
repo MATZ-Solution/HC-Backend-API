@@ -266,37 +266,46 @@ const superAdminClt = {
     try {
       const reviewId = req.params.id;
       const { isToDisplay, isCommentApproved } = req.body;
+      // console.log(isToDisplay,"display")
   
-      if (isToDisplay) {
-          // Update the review based on the provided ID
-          await webReviewModel.findByIdAndUpdate(reviewId, {
-              isToDisplay,
-          }, { new: true });
+      let updateFields = {};
   
-          // Fetch the updated review
-          const updatedReview = await webReviewModel.findById(reviewId);
-  
-          // Send the updated review as a response
-          res.status(201).json({
-              success: true,
-              message: "Update Display Comment successfully",
-          });
-      } else {
-          await webReviewModel.findByIdAndUpdate(reviewId, {
-              isCommentApproved
-          }, { new: true });
-  
-          const updatedReview = await webReviewModel.findById(reviewId);
-  
-          res.status(201).json({
-              success: true,
-              message: "Update Approve Reviews successfully",
-          });
+      if (isToDisplay !== undefined) {
+          updateFields.isToDisplay = isToDisplay;
       }
+  
+      if (isCommentApproved !== undefined) {
+          updateFields.isCommentApproved = isCommentApproved;
+      }
+  
+      // Update the review based on the provided ID
+      const updatedReview = await webReviewModel.findByIdAndUpdate(
+          reviewId,
+          updateFields,
+          { new: true }
+      );
+  
+      // if (!updatedReview) {
+      //     return res.status(404).json({
+      //         success: false,
+      //         message: "Review not found",
+      //     });
+      // }
+  
+      
+      const successMessage = isToDisplay
+          ? "Update Display Comment successfully"
+          : "Update Approve Reviews successfully";
+  
+      res.status(201).json({
+          success: true,
+          message: successMessage,
+      });
   } catch (error) {
       // If an error occurs, pass it to the next middleware
       next(error);
   }
+  
   
 },
 // approvedReview: async (req, res, next) => {
