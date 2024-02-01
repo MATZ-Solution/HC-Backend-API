@@ -4,7 +4,5 @@ const router = express.Router();
 
 router.post('/addcomment',webReviewsController.addWebReviews)
 router.get('/getcomment',webReviewsController.getWebReviews)
-router.put('/approvecomment/:id',webReviewsController.approvedReview)
-router.put('/approvecommentdisplay/:id',webReviewsController.approvedDisplayComment)
 
 module.exports = router;

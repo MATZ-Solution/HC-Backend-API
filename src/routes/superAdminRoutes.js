@@ -39,6 +39,9 @@ router.get(
   verifyTokenAndAdmin,
   superAdminClt.getRejectedInvoice
 );
+// router.put('/approvecomment/:id',verifyTokenAndAdmin,superAdminClt.approvedReview)
+router.put('/approvecommentdisplay/:id',verifyTokenAndAdmin,superAdminClt.approvedDisplayComment)
+router.get('/getAllcomment',verifyTokenAndAdmin,superAdminClt.getallWebReviews)
 
 // router.post('/')
 module.exports = router;

@@ -8,6 +8,7 @@ const { default: axios } = require('axios');
 const User = require('../Model/User');
 const ErrorHandler = require('../utils/ErrorHandler');
 const EmailSender = require('../utils/email');
+const webReviewModel = require('../Model/webReviewModel');
 
 const superAdminClt = {
   //Reject Patient Services By SuperAdmin
@@ -261,6 +262,73 @@ const superAdminClt = {
       next(error);
     }
   },
-};
+  approvedDisplayComment: async (req, res, next) => {
+    try {
+      const reviewId = req.params.id;
+      const { isToDisplay, isCommentApproved } = req.body;
+  
+      if (isToDisplay) {
+          // Update the review based on the provided ID
+          await webReviewModel.findByIdAndUpdate(reviewId, {
+              isToDisplay,
+          }, { new: true });
+  
+          // Fetch the updated review
+          const updatedReview = await webReviewModel.findById(reviewId);
+  
+          // Send the updated review as a response
+          res.status(201).json({
+              success: true,
+              message: "Update Display Comment successfully",
+          });
+      } else {
+          await webReviewModel.findByIdAndUpdate(reviewId, {
+              isCommentApproved
+          }, { new: true });
+  
+          const updatedReview = await webReviewModel.findById(reviewId);
+  
+          res.status(201).json({
+              success: true,
+              message: "Update Approve Reviews successfully",
+          });
+      }
+  } catch (error) {
+      // If an error occurs, pass it to the next middleware
+      next(error);
+  }
+  
+},
+// approvedReview: async (req, res, next) => {
+//     try {
+//         const reviewId = req.params.id;
+//         const { isCommentApproved } = req.body;
+
+//         await webReviewModel.findByIdAndUpdate(reviewId, {
+//             isCommentApproved
+//         }, { new: true });
+
+//         const updatedReview = await webReviewModel.findById(reviewId);
+
+//         res.status(201).json({
+//             success: true,
+//             message: "update Approve Reviews successfully",
+            
+//           });
+//     } catch (error) {
+//         next(error);
+//     }
+// },
+getallWebReviews:async(req,res,next)=>{
+  try{
+    const displayReviews = await webReviewModel.find();
+
+        
+       res.status(200).json(displayReviews)
+    }
+  catch(error){
+    next(error)
+  }
+}};
 
 module.exports = superAdminClt;
