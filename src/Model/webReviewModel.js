@@ -15,8 +15,9 @@ const webReviewSchema = new mongoose.Schema(
     },
   
     isCommentApproved: {
-      type: Boolean,
-      default: false,
+      type: String,
+      enum: ['Rejected', 'Accepted','Pending'],
+      default: 'Pending',
     },
     isToDisplay: {
         type: Boolean,

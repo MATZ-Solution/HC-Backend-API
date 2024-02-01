@@ -32,7 +32,7 @@ router.get(
   '/rejectPatServiceBySuperAdmin/:id',
   verifyTokenAndAdmin,
   superAdminClt.rejectPatServiceBySuperAdmin
-);
+);  
 
 router.get(
   '/getRejectedInvoice',

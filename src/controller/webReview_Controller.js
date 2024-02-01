@@ -18,7 +18,7 @@ const webReviewsController = {
   },
   getWebReviews:async(req,res,next)=>{
     try{
-    const displayReviews = await webReviewModel.find({ $and: [{ isToDisplay: true }, { isCommentApproved: true }] });
+    const displayReviews = await webReviewModel.find({ $and: [{ isToDisplay: true }, { isCommentApproved: "Accepted" }] });
 
         
        res.status(200).json(displayReviews)

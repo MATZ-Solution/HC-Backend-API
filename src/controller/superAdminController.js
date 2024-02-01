@@ -270,11 +270,11 @@ const superAdminClt = {
   
       let updateFields = {};
   
-      if (isToDisplay !== undefined) {
+      if (isToDisplay ==true || isToDisplay || false) {
           updateFields.isToDisplay = isToDisplay;
       }
   
-      if (isCommentApproved !== undefined) {
+      if (isCommentApproved ==="Accepted" || isCommentApproved ==="Rejected") {
           updateFields.isCommentApproved = isCommentApproved;
       }
   
@@ -308,26 +308,7 @@ const superAdminClt = {
   
   
 },
-// approvedReview: async (req, res, next) => {
-//     try {
-//         const reviewId = req.params.id;
-//         const { isCommentApproved } = req.body;
 
-//         await webReviewModel.findByIdAndUpdate(reviewId, {
-//             isCommentApproved
-//         }, { new: true });
-
-//         const updatedReview = await webReviewModel.findById(reviewId);
-
-//         res.status(201).json({
-//             success: true,
-//             message: "update Approve Reviews successfully",
-            
-//           });
-//     } catch (error) {
-//         next(error);
-//     }
-// },
 getallWebReviews:async(req,res,next)=>{
   try{
     const displayReviews = await webReviewModel.find();
