@@ -270,7 +270,7 @@ const superAdminClt = {
   
       let updateFields = {};
   
-      if (isToDisplay ==true || isToDisplay || false) {
+      if (isToDisplay ==true || isToDisplay== false) {
           updateFields.isToDisplay = isToDisplay;
       }
   
