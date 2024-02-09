@@ -6,8 +6,9 @@ const favoriteClt = {
   createFavourate: async (req, res, next) => {
     try {
       const { _id, isAdmin } = req.user;
+      // console.log(_id,"id")
       const { category, scrapeObjectId } = req.body;
-
+      console.log(req.body)
       if (isAdmin === 'patient') {
         const newFavorite = new Favourate({
           category,
@@ -43,12 +44,53 @@ const favoriteClt = {
       next(err);
     }
   },
+   createAndDeleteFavorite : async (req, res, next) => {
+    try {
+      const { _id, isAdmin } = req.user;
+      const { category, scrapeObjectId } = req.body;
+      
+      if (isAdmin === 'patient' || isAdmin === 'super-admin' || isAdmin === 'corporate') {
+        let filter = {};
+        if (isAdmin === 'patient') {
+          filter = { patId: _id };
+        } else if (isAdmin === 'super-admin') {
+          filter = { superAdminId: _id };
+        } else if (isAdmin === 'corporate') {
+          filter = { corporateId: _id };
+        }
+  
+        const existingFavorite = await Favourate.findOne({
+          ...filter,
+          category,
+          scrapeObjectId
+        });
+  
+        if (!existingFavorite) {
+          const newFavorite = new Favourate({
+            category,
+            scrapeObjectId,
+            ...filter
+          });
+          await newFavorite.save();
+          res.status(201).json({ message: 'Favorite created successfully' });
+        } else {
+          await Favourate.findOneAndDelete(existingFavorite._id);
+          res.status(200).json({ message: 'Favorite deleted successfully' });
+        }
+      } else {
+        res.status(400).json({ error: 'Invalid isAdmin value' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+  
 
   // Update a branch manager by ID
   getFavourate: async (req, res, next) => {
     try {
       const { _id, isAdmin } = req.user;
-
+      // console.log(req.user,"rew")
       // const apiUrl =
       //   "http://scrapedapi.healthcare.matzsolutions.com/api/healthCareRoute/getCategoryDataUsingMongoId";
 
@@ -57,6 +99,7 @@ const favoriteClt = {
         let getFavourates = await Favourate.find({ patId: _id }).populate(
           'patId'
         );
+        // console.log(getFavourates,"dfs")
 
         const getFavourateWithResponse = await Promise.all(
           getFavourates.map(async (favourate) => {
@@ -71,7 +114,7 @@ const favoriteClt = {
             // };
           })
         );
-
+          console.log(getFavourateWithResponse,"sd")
         res.status(200).json(getFavourateWithResponse);
       } else if (isAdmin === 'super-admin') {
         let getFavourates = await Favourate.find({
@@ -115,9 +158,12 @@ const favoriteClt = {
         res.status(200).json(getFavourateWithResponse);
       }
     } catch (err) {
+      console.log(err)
       next(err);
     }
   },
+
+ 
 
   // Delete a branch manager by ID
   deleteFavourate: async (req, res, next) => {

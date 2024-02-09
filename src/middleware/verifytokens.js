@@ -25,12 +25,16 @@ const verifyGoogleToken = (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
     const { authorization } = req.headers;
+    console.log(authorization)
     if (authorization && authorization.startsWith("Bearer")) {
         const token = authorization.split(" ")[1];
+        
         jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+            
             if (err) {
                 res.status(400).json(err)
             } else {
+                console.log(user)
                 req.user = user;
                 next();
             }
