@@ -580,13 +580,13 @@ var OAuth2 = google.auth.OAuth2;
 // const nodemailer = require('nodemailer');
 
 const oauth2Client = new OAuth2(
-  '276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com',
-  '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',
+  '314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com',
+  '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',
   'https://developers.google.com/oauthplayground'
 );
 oauth2Client.setCredentials({
   refresh_token:
-    '1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI',
+    '1//04AOWCmqvdobSCgYIARAAGAQSNwF-L9Ire2LiZhFn3OUK8x00E38RLeEbC37vCdhtQAwcpXq0Sc5B8lKDgqxn5-bdcYd6wSG_fv0',
 });
 
 const createTransporter = async () => {
@@ -605,13 +605,13 @@ const createTransporter = async () => {
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: 'ns265331@gmail.com',
+        user: 'maazurrehman42@gmail.com',
         accessToken,
         clientId:
-          '276616160743-r47qv2h7idomeuijehg6971iulbjl2e1.apps.googleusercontent.com',
-        clientSecret: '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',
+          '314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com',
+        clientSecret: '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',
         refreshToken:
-          '1//04FEXZyHan0_dCgYIARAAGAQSNwF-L9Ir0jm-8dg6iU8yCI-miZTASosb5SBxHP0kacVa8k3XQi0mmuNGtNlex1R70OaYTo0crzI',
+          '1//04AOWCmqvdobSCgYIARAAGAQSNwF-L9Ire2LiZhFn3OUK8x00E38RLeEbC37vCdhtQAwcpXq0Sc5B8lKDgqxn5-bdcYd6wSG_fv0',
       },
       tls: {
         rejectUnauthorized: false, // Add this line to disable certificate verification
