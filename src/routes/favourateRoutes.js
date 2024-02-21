@@ -10,6 +10,8 @@ router.post('/createFavourateApp', verifyToken, favoriteClt.createAndDeleteFavor
 
 router.get('/getFavourate', verifyToken, favoriteClt.getFavourate)
 router.delete('/dltFavourate/:id', verifyToken, favoriteClt.deleteFavourate)
+router.get('/getAllFavourateCategoryId',  favoriteClt.getAllFavourate)
+
 
 
 module.exports = router;

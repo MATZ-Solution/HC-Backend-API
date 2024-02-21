@@ -179,5 +179,15 @@ const favoriteClt = {
       next(err);
     }
   },
+  getAllFavourate:async(req,res,next)=>{
+    try{
+      const getAllFavourate=await Favourate.find()
+      // console.log(getAllFavourate.length)
+      res.json(getAllFavourate)
+    }
+    catch(err){
+
+    }
+  }
 };
 module.exports = favoriteClt;

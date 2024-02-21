@@ -379,7 +379,7 @@ const deleteUserController = async (req, res, next) => {
 
 const sendEmail = async (req, res, next) => {
   try {
-    // if (role === 'patient') {
+    if (role === 'patient') {
       let data = await User.findOne({ email: req.body.email });
 
       if (data) {
@@ -408,37 +408,37 @@ const sendEmail = async (req, res, next) => {
       } else {
         throw new ErrorHandler('Your email id doesnot exist in db', 400);
       }
-    // } else if (role === 'care-givers') {
-    //   let data = await User.findOne({ email: req.body.email });
+    } else if (role === 'care-givers') {
+      let data = await User.findOne({ email: req.body.email });
 
-    //   if (data) {
-    //     const otpCode = '0123456789';
-    //     let result;
-    //     async function generateRandomString(length) {
-    //       result = '';
-    //       let charactersLength = otpCode.length;
-    //       for (let i = 0; i < length; i++) {
-    //         result += otpCode.charAt(
-    //           crypto.randomBytes(1)[0] % charactersLength
-    //         );
-    //       }
-    //     }
-    //     generateRandomString(4);
-    //     // let otpCode = Math.floor((Math.random()*10000) + 1);
-    //     let otpData = new Otp({
-    //       email: req.body.email,
-    //       code: result,
-    //       expiresIn: new Date(Date.now() + 60000),
-    //       // expiresIn: new Date().getTime() + 0.002 * 1000
-    //     });
-    //     let otpResponse = await otpData.save();
-    //     res.status(200).json({ msg: 'Please Check Your Email' });
-    //     mailer(req.body.email, otpResponse.code);
-    //   } else {
-    //     throw new ErrorHandler('Your email id doesnot exist in db', 400);
-    //   }
-    // } else {
-    // }
+      if (data) {
+        const otpCode = '0123456789';
+        let result;
+        async function generateRandomString(length) {
+          result = '';
+          let charactersLength = otpCode.length;
+          for (let i = 0; i < length; i++) {
+            result += otpCode.charAt(
+              crypto.randomBytes(1)[0] % charactersLength
+            );
+          }
+        }
+        generateRandomString(4);
+        // let otpCode = Math.floor((Math.random()*10000) + 1);
+        let otpData = new Otp({
+          email: req.body.email,
+          code: result,
+          expiresIn: new Date(Date.now() + 60000),
+          // expiresIn: new Date().getTime() + 0.002 * 1000
+        });
+        let otpResponse = await otpData.save();
+        res.status(200).json({ msg: 'Please Check Your Email' });
+        mailer(req.body.email, otpResponse.code);
+      } else {
+        throw new ErrorHandler('Your email id doesnot exist in db', 400);
+      }
+    } else {
+    }
   } catch (error) {
     next(error);
   }
