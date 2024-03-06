@@ -18,6 +18,7 @@ const FcmNotify = require('../utils/fcmNotify');
 const Notification = require('../Model/notiHistoryModel');
 const generateRandomNo = require('../utils/generatingRandomNo');
 const EmailSender = require('../utils/email');
+const notificationModel = require('../Model/notificationModel');
 
 // const { Console } = require('console');
 
@@ -222,6 +223,7 @@ const updatedUser = async (req, res, next) => {
       }
     }
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
@@ -1437,6 +1439,16 @@ const mailer = async (to, otp) => {
   });
 };
 
+const getNotifications=async(req,res,next)=>{
+  try{
+    const { 
+      email
+     } = req.query;
+      const notifications = await notificationModel.find({email:email}).sort({createdAt:-1});
+      res.status(200).json(notifications);
+  }catch(err){
+    next(err);
+  }}
 
 module.exports = {
   changePasswordController,
@@ -1459,5 +1471,6 @@ module.exports = {
   noOfCallsMadeMethod,
   getMedicalPracticeForIndividualUser,
   getpatrequest,
-  userInfoNameController
+  userInfoNameController,
+  getNotifications
 };

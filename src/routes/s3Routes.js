@@ -11,7 +11,9 @@ const MultiUpload = upload.fields([
 ]);
 
 router.post('/UploadDocumentToS3AndGetPublicUrl', function (req, res) {
+  console.log('req.body', req.body);
   MultiUpload(req, res, function (err) {
+    console.log('req.files', req.files);
     if (err) {
       return res.status(422).send({
         errors: [{ title: 'File Upload Error', detail: err.message }],
