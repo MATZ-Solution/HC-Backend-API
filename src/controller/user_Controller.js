@@ -535,6 +535,12 @@ const patApplyforcoroporate = async (req, res, next) => {
 
     // Create a new instance of the Mongoose model
 
+    const notification=await notificationModel.create({
+      email:patEmail,
+      message:`Request submitted for ${serviceName} successfully `,
+      mongoDbID:seviceId
+    })
+
     const newApplication = new patService({
       patFullName: patName,
       patAddress: patAddress,

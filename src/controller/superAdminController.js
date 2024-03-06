@@ -9,6 +9,7 @@ const User = require('../Model/User');
 const ErrorHandler = require('../utils/ErrorHandler');
 const EmailSender = require('../utils/email');
 const webReviewModel = require('../Model/webReviewModel');
+const notificationModel = require('../Model/notificationModel');
 
 const superAdminClt = {
   //Reject Patient Services By SuperAdmin
@@ -95,6 +96,11 @@ const superAdminClt = {
         reviews,
         startRating,
       });
+      const notification=await notificationModel.create({
+        email:email,
+        message:`Review submitted for  ${req.body?.serviceName} successfully `,
+        mongoDbID:mongoDbID
+      })
 
       const savedRecord = await createReview.save();
       res.status(201).json(savedRecord);

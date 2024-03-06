@@ -10,6 +10,7 @@ const nodemailer = require('nodemailer');
 const CryptoJS = require('crypto-js');
 const crypto = require('crypto');
 const { default: axios } = require("axios");
+const notificationModel = require('../Model/notificationModel');
 const registerController = async (req, res, next) => {
 
   try {
@@ -339,7 +340,7 @@ const registerController = async (req, res, next) => {
 
 const registerWithSocialMedia = async (req, res, next) => {
   try {
-    const { email, profilePic, profileId, firstName, lastName } = req.body;
+   
 
     const existingUser = await User.findOne({ email });
 
@@ -357,6 +358,11 @@ const registerWithSocialMedia = async (req, res, next) => {
             isSocialMediaAuth: true,
         });
 
+        const notification=await notificationModel.create({
+          email:email,
+          message:"Login Successfull",
+  
+        })
         const accessToken = generateAccessToken(newUser);
 
         const { password: _, email: newEmail, ...userWithoutPassword } = newUser._doc;
@@ -466,7 +472,12 @@ const loginController = async (req, res, next) => {
         // res.status(401).json("Wrong Credentials");
         // return;
       }
+      const notification=await notificationModel.create({
+        email:email,
+        message:"Login Successfull",
 
+      })
+      // console.log(notification)
       const accessToken = generateAccessToken(user);
 
       const { password: _, role, isVital, ...others } = user._doc; // Exclude password from response
