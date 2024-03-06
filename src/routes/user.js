@@ -82,5 +82,5 @@ router.post(
 //getpatapplyserviceforpat
 
 router.get('/getPatRequest', verifyToken, getpatrequest);
-router.get("/getNotification",getNotifications);
+router.get("/getNotification",verifyToken,getNotifications);
 module.exports = router;
