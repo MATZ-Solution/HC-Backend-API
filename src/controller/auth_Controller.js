@@ -340,7 +340,7 @@ const registerController = async (req, res, next) => {
 
 const registerWithSocialMedia = async (req, res, next) => {
   try {
-   
+    const { email, profilePic, profileId, firstName, lastName}=req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -354,6 +354,7 @@ const registerWithSocialMedia = async (req, res, next) => {
             profileId,
             firstName,
             lastName,
+            profilePic,
             isOtpVerified: true,
             isSocialMediaAuth: true,
         });
