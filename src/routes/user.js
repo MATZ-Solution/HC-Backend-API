@@ -25,7 +25,8 @@ const {
   getMedicalPracticeForIndividualUser,
   getpatrequest,
   userInfoNameController,
-  getNotifications
+  getNotifications,
+  cancelNotifications
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -83,4 +84,6 @@ router.post(
 
 router.get('/getPatRequest', verifyToken, getpatrequest);
 router.get("/getNotification",verifyToken,getNotifications);
+router.get("/cancelNotification",verifyToken,cancelNotifications);
+
 module.exports = router;

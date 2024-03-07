@@ -345,6 +345,12 @@ const registerWithSocialMedia = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
+      const notification=await notificationModel.create({
+        email:email,
+        message:"Login Successfull",
+
+      })
+
         const accessToken = generateAccessToken(existingUser);
         res.status(200).json({ email: existingUser.email, accessToken });
     } else {
@@ -359,11 +365,11 @@ const registerWithSocialMedia = async (req, res, next) => {
             isSocialMediaAuth: true,
         });
 
-        const notification=await notificationModel.create({
-          email:email,
-          message:"Login Successfull",
+        // const notification=await notificationModel.create({
+        //   email:email,
+        //   message:"Login Successfull",
   
-        })
+        // })
         const accessToken = generateAccessToken(newUser);
 
         const { password: _, email: newEmail, ...userWithoutPassword } = newUser._doc;

@@ -1455,6 +1455,16 @@ const getNotifications=async(req,res,next)=>{
   }catch(err){
     next(err);
   }}
+  const cancelNotifications=async(req,res,next)=>{
+    try{
+      
+      const { _id, isAdmin } = req.user;
+      const {email}=await User.findById({_id:_id})
+      await notificationModel.updateMany({ email: email, read: false },{ $set: { read: true } });
+        res.status(200).json("cancel notification");
+    }catch(err){
+      next(err);
+    }}
 
 module.exports = {
   changePasswordController,
@@ -1462,6 +1472,7 @@ module.exports = {
   sendEmail,
   verifyEmail,
   verifyOtp,
+  cancelNotifications,
   forgotPasswordController,
   updatedUser,
   userInfoController,
