@@ -17,12 +17,7 @@ const favoriteClt = {
           scrapeObjectId,
           patId: _id,
         });
-        const {email}=await User.findById({_id:_id})
-        const notification=await notificationModel.create({
-          email:email,
-          message:`favourate added`,
-          mongoDbID:scrapeObjectId
-        })
+       
 
         await newFavorite.save();
 
@@ -79,6 +74,12 @@ const favoriteClt = {
             scrapeObjectId,
             ...filter
           });
+          const {email}=await User.findById({_id:_id})
+          const notification=await notificationModel.create({
+            email:email,
+            message:`favourate added`,
+            mongoDbID:scrapeObjectId
+          })
           await newFavorite.save();
           res.status(201).json({ message: 'Favorite created successfully' });
         } else {
