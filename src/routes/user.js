@@ -86,7 +86,7 @@ router.post(
 
 router.get('/getPatRequest', verifyToken, getpatrequest);
 router.get("/getNotification",getNotifications);
-router.get('/checkNotificationRead',checkNotificationRead);
+router.get('/checkNotificationRead',verifyToken,checkNotificationRead);
 router.post('/postNotification',postNotification)
 router.get("/getNotification",verifyToken,getNotifications);
 router.get("/cancelNotification",verifyToken,cancelNotifications);

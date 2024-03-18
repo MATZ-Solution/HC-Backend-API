@@ -1479,9 +1479,8 @@ const postNotification=async(req,res,next)=>{
 const checkNotificationRead=async(req,res,next)=>{
   
   try{
-    const { 
-      email
-     } = req.query;
+    const { _id, isAdmin } = req.user;
+    const {email}=await User.findById({_id:_id})
      
      const notifications = await notificationModel.find({ email: email, read: false })
      
