@@ -1477,29 +1477,27 @@ const postNotification=async(req,res,next)=>{
   }
 }
 const checkNotificationRead=async(req,res,next)=>{
+  
   try{
     const { 
       email
      } = req.query;
+     
      const notifications = await notificationModel.find({ email: email, read: false })
+     
      if (notifications.length > 0) {
-      return {
-          success: true,
-          unread: true,
-          
-      };
-  } else {
-      return {
+      res.json({
         success: true,
+          unread: true,
+      })
+  } else {
+    res.json({
+      success: true,
         unread: false,
-      };
+    })
   }
 } catch (error) {
-  return {
-      success: false,
-      message: 'Failed to retrieve unread notifications.',
-      error: error.message
-  };
+  next(err);
 }
 }
 const cancelNotifications=async(req,res,next)=>{
