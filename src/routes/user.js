@@ -85,7 +85,6 @@ router.post(
 //getpatapplyserviceforpat
 
 router.get('/getPatRequest', verifyToken, getpatrequest);
-router.get("/getNotification",getNotifications);
 router.get('/checkNotificationRead',verifyToken,checkNotificationRead);
 router.post('/postNotification',postNotification)
 router.get("/getNotification",verifyToken,getNotifications);
