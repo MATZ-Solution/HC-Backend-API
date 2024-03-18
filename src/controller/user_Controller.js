@@ -1449,7 +1449,52 @@ const getNotifications=async(req,res,next)=>{
   }catch(err){
     next(err);
   }}
+const postNotification=async(req,res,next)=>{
+  try {
+    // Fetch all users' emails
+    const users = await User.find({}, 'email');
 
+    // Create notifications for each user
+    const notifications = users.map(user => ({
+      email: user.email,
+      message: 'New version of the app is available. Please update the app to the latest version.',
+    }));
+
+    // Insert notifications into the Notification schema
+    await notificationModel.insertMany(notifications);
+
+    res.json({ success: true, message: 'Notifications created successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+const checkNotificationRead=async(req,res,next)=>{
+  try{
+    const { 
+      email
+     } = req.query;
+     const notifications = await notificationModel.find({ email: email, read: false })
+     if (notifications.length > 0) {
+      return {
+          success: true,
+          unread: true,
+          
+      };
+  } else {
+      return {
+        success: true,
+        unread: false,
+      };
+  }
+} catch (error) {
+  return {
+      success: false,
+      message: 'Failed to retrieve unread notifications.',
+      error: error.message
+  };
+}
+}
 module.exports = {
   changePasswordController,
   deleteUserController,
@@ -1472,5 +1517,7 @@ module.exports = {
   getMedicalPracticeForIndividualUser,
   getpatrequest,
   userInfoNameController,
-  getNotifications
+  getNotifications,
+  postNotification,
+  checkNotificationRead
 };
