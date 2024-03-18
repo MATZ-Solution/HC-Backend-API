@@ -535,6 +535,12 @@ const patApplyforcoroporate = async (req, res, next) => {
 
     // Create a new instance of the Mongoose model
 
+    const notification=await notificationModel.create({
+      email:patEmail,
+      message:`Request submitted for ${serviceName} successfully `,
+      mongoDbID:seviceId
+    })
+
     const newApplication = new patService({
       patFullName: patName,
       patAddress: patAddress,
@@ -1441,9 +1447,9 @@ const mailer = async (to, otp) => {
 
 const getNotifications=async(req,res,next)=>{
   try{
-    const { 
-      email
-     } = req.query;
+    
+    const { _id, isAdmin } = req.user;
+    const {email}=await User.findById({_id:_id})
       const notifications = await notificationModel.find({email:email}).sort({createdAt:-1});
       res.status(200).json(notifications);
   }catch(err){
@@ -1453,6 +1459,7 @@ const postNotification=async(req,res,next)=>{
   try {
     // Fetch all users' emails
     const users = await User.find({}, 'email');
+
 
     // Create notifications for each user
     const notifications = users.map(user => ({
@@ -1495,12 +1502,23 @@ const checkNotificationRead=async(req,res,next)=>{
   };
 }
 }
+const cancelNotifications=async(req,res,next)=>{
+  try{
+    
+    const { _id, isAdmin } = req.user;
+    const {email}=await User.findById({_id:_id})
+    await notificationModel.updateMany({ email: email, read: false },{ $set: { read: true } });
+      res.status(200).json("cancel notification");
+  }catch(err){
+    next(err);
+  }}
 module.exports = {
   changePasswordController,
   deleteUserController,
   sendEmail,
   verifyEmail,
   verifyOtp,
+  cancelNotifications,
   forgotPasswordController,
   updatedUser,
   userInfoController,

@@ -27,7 +27,8 @@ const {
   userInfoNameController,
   getNotifications,
   postNotification,
-  checkNotificationRead
+  checkNotificationRead,
+  cancelNotifications
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -87,4 +88,7 @@ router.get('/getPatRequest', verifyToken, getpatrequest);
 router.get("/getNotification",getNotifications);
 router.get('/checkNotificationRead',checkNotificationRead);
 router.post('/postNotification',postNotification)
+router.get("/getNotification",verifyToken,getNotifications);
+router.get("/cancelNotification",verifyToken,cancelNotifications);
+
 module.exports = router;

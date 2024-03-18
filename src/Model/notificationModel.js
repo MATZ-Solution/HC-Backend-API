@@ -15,10 +15,10 @@ const notificationSchema = new Schema({
         type: String,
         require:false
     },
-    facilityName:{
-        type:String,
-        require:false
-    },
+    // facilityName:{
+    //     type:String,
+    //     require:false
+    // },
     
     createdAt: {
         type: Date,

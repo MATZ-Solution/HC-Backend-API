@@ -1,4 +1,6 @@
+const User = require('../Model/User');
 const Favourate = require('../Model/favourateModel');
+const notificationModel = require('../Model/notificationModel');
 const ErrorHandler = require('../utils/ErrorHandler');
 const axios = require('axios');
 
@@ -8,13 +10,14 @@ const favoriteClt = {
       const { _id, isAdmin } = req.user;
       // console.log(_id,"id")
       const { category, scrapeObjectId } = req.body;
-      console.log(req.body)
+      // console.log(req.body)
       if (isAdmin === 'patient') {
         const newFavorite = new Favourate({
           category,
           scrapeObjectId,
           patId: _id,
         });
+       
 
         await newFavorite.save();
 
@@ -71,6 +74,12 @@ const favoriteClt = {
             scrapeObjectId,
             ...filter
           });
+          const {email}=await User.findById({_id:_id})
+          const notification=await notificationModel.create({
+            email:email,
+            message:`favourate added`,
+            mongoDbID:scrapeObjectId
+          })
           await newFavorite.save();
           res.status(201).json({ message: 'Favorite created successfully' });
         } else {
