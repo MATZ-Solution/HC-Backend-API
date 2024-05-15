@@ -136,7 +136,7 @@ const superAdminClt = {
       );
       // console.log(scrapedResponses,"scrapedResponses")
       const modifyResponse = scrapedResponses.map((review) => ({
-        serviceName: review.scraped.name,
+        serviceName: review.scraped,
         isReviewApproved: review.review.isReviewApproved,
         _id: review.review._id,
         mongoDbID: review.review.mongoDbID,
