@@ -110,12 +110,16 @@ const superAdminClt = {
   },
   getReviews: async (req, res, next) => {
     try {
+
+  
       // const apiUrl =
       //   'http://hc-scrapted-data.eba-pmas6jv8.ap-south-1.elasticbeanstalk.com/api/healthCareRoute/getCorporatesUsingMongoId';
 
+      // console.log("res")
       const apiUrl = process.env.apiUrl;
-
+      console.log(apiUrl,"url")
       const getReviews = await reviewModel.find();
+      // console.log(getReviews.length,"getReviews")
       const scraped = [];
 
       const scrapedResponses = await Promise.all(
@@ -127,10 +131,10 @@ const superAdminClt = {
           // review.scraped = scrapedResponse.data.name;
           // return review;
           // scraped.push({ scraped: scrapedResponse.data.name, review });
-          return { scraped: scrapedResponse.data.name, review };
+          return { scraped: scrapedResponse.data, review };
         })
       );
-
+      // console.log(scrapedResponses.data,"scrapedResponses")
       const modifyResponse = scrapedResponses.map((review) => ({
         serviceName: review.scraped,
         isReviewApproved: review.review.isReviewApproved,
@@ -146,8 +150,9 @@ const superAdminClt = {
         updatedAt: review.review.updatedAt,
       }));
 
-      res.status(200).json(modifyResponse);
+      res.status(200).json(scrapedResponses);
     } catch (error) {
+      console.log(error,"errrrrrrrrrrrr")
       next(error);
     }
   },

@@ -470,7 +470,11 @@ const loginController = async (req, res, next) => {
   try {
     const { email, password, role } = req.body;
 
+      // console.log(req.body,"body")
+
     if (role === 'patient') {
+
+      // console.log(req.body,"body")
       const user = await User.findOne({ email });
 
       if (!user || !isPasswordValid(user.password, password)) {
@@ -486,6 +490,7 @@ const loginController = async (req, res, next) => {
       })
       // console.log(notification)
       const accessToken = generateAccessToken(user);
+      // console.log(accessToken)
 
       const { password: _, role, isVital, ...others } = user._doc; // Exclude password from response
 
@@ -639,7 +644,7 @@ const createTransporter = async () => {
     return transporter;
   } catch (error) {
     // Handle the error here
-    console.error('Error creating transporter:', error);
+    // console.error('Error creating transporter:', error);
     throw new Error('Failed to create transporter');
   }
 };

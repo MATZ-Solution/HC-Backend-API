@@ -3,7 +3,7 @@ const { default: axios } = require("axios");
 const verifyGoogleToken = (req, res, next) => {
 
     const googleAccessToken = req.headers.authorization.split(" ")[1]
-    console.log(googleAccessToken,"token")
+    // console.log(googleAccessToken,"token")
 
     axios
         .get("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -25,7 +25,7 @@ const verifyGoogleToken = (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
     const { authorization } = req.headers;
-    console.log(authorization)
+    // console.log(authorization)
     if (authorization && authorization.startsWith("Bearer")) {
         const token = authorization.split(" ")[1];
         
@@ -34,7 +34,7 @@ const verifyToken = (req, res, next) => {
             if (err) {
                 res.status(400).json(err)
             } else {
-                console.log(user)
+                // console.log(user)
                 req.user = user;
                 next();
             }
@@ -77,7 +77,8 @@ const verifyTokenAndCareGivers = (req, res, next) => {
 
 const verifyTokenAndAdmin = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.isAdmin === "super-admin") {
+        // console.log(req.user,'admin')
+        if (req.user.isAdmin === "super-admin")     {
             next();
         } else {
             res.status(403).json("You are not alowed to do that!");
