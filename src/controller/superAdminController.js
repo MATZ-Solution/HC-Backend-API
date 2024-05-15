@@ -152,7 +152,7 @@ const superAdminClt = {
 
       res.status(200).json(modifyResponse);
     } catch (error) {
-      console.log(error,"errrrrrrrrrrrr")
+      // console.log(error,"errrrrrrrrrrrr")
       next(error);
     }
   },
