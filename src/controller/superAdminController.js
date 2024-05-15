@@ -134,7 +134,7 @@ const superAdminClt = {
           return { scraped: scrapedResponse.data, review };
         })
       );
-      // console.log(scrapedResponses.data,"scrapedResponses")
+      // console.log(scrapedResponses,"scrapedResponses")
       const modifyResponse = scrapedResponses.map((review) => ({
         serviceName: review.scraped,
         isReviewApproved: review.review.isReviewApproved,
@@ -150,7 +150,7 @@ const superAdminClt = {
         updatedAt: review.review.updatedAt,
       }));
 
-      res.status(200).json(scrapedResponses);
+      res.status(200).json(modifyResponse);
     } catch (error) {
       console.log(error,"errrrrrrrrrrrr")
       next(error);
