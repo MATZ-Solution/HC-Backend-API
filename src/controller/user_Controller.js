@@ -533,6 +533,11 @@ const patApplyforcoroporate = async (req, res, next) => {
       registeredCorporateId,
     } = req.body;
 
+    const phoneNumbers = Array.isArray(servicePhoneNumber) 
+    ? servicePhoneNumber.join(', ') 
+    : servicePhoneNumber;
+
+    // console.log(phoneNumbers,"phoneNumber")
     // Create a new instance of the Mongoose model
 
     const notification=await notificationModel.create({
@@ -555,7 +560,7 @@ const patApplyforcoroporate = async (req, res, next) => {
       scrapeMongoDbID: seviceId,
       serviceCategory: serviceCategory,
       serviceCity: serviceCity,
-      servicePhoneNumber: servicePhoneNumber,
+      servicePhoneNumber: phoneNumbers,
       serviceFullAddress: serviceFullAddress,
       serviceZipCode: serviceZipCode,
       serviceState: serviceState,
@@ -568,8 +573,46 @@ const patApplyforcoroporate = async (req, res, next) => {
       registeredCorporateId,
     });
 
+
+
     // Save the new application to the database
     const savedApplication = await newApplication.save();
+    // console.log(savedApplication,"Application")
+    
+    const emailOptions = {
+      to: savedApplication.patEmail,
+      subject: 'Your Health Service Request is Submitted',
+      html: `
+        <p>Dear ${savedApplication.patFullName},</p>
+
+        <p>
+          We are pleased to inform you that your health service request has
+          been successfully send .
+        </p>
+        <p>
+          Facility Details 
+          Name: ${savedApplication.serviceName} </br>
+          City: ${savedApplication.serviceCity}
+        </p>
+
+        <p>
+          Thank you for choosing our health services. Your trust means the
+          world to us.
+        </p>
+
+        <p>
+          Warm regards,<br />
+          Best Health Service Team
+        </p>
+
+        <img
+          src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg"
+          alt="Company Logo" width="150" height="150"
+        />
+      `,
+    };
+
+    await EmailSender(emailOptions);
 
     //get All superAdmin
     const getAllSuperAdmin = await superAdmin.find();
