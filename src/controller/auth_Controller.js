@@ -602,16 +602,16 @@ var OAuth2 = google.auth.OAuth2;
 // const OAuth2 = require('google-auth-library').OAuth2;
 // const nodemailer = require('nodemailer');
 
-const oauth2Client = new OAuth2(
-  '314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com',
-  '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',
-  'https://developers.google.com/oauthplayground'
+const oauth2Client = new google.auth.OAuth2(
+  "314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com",
+  "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",
+  "https://developers.google.com/oauthplayground"
 );
-oauth2Client.setCredentials({
-  refresh_token:
-    '1//04AOWCmqvdobSCgYIARAAGAQSNwF-L9Ire2LiZhFn3OUK8x00E38RLeEbC37vCdhtQAwcpXq0Sc5B8lKDgqxn5-bdcYd6wSG_fv0',
-});
 
+
+oauth2Client.setCredentials({
+  refresh_token: "1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ",
+});
 const createTransporter = async () => {
   try {
     const accessToken = await new Promise((resolve, reject) => {
@@ -634,7 +634,7 @@ const createTransporter = async () => {
           '314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com',
         clientSecret: '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',
         refreshToken:
-          '1//04AOWCmqvdobSCgYIARAAGAQSNwF-L9Ire2LiZhFn3OUK8x00E38RLeEbC37vCdhtQAwcpXq0Sc5B8lKDgqxn5-bdcYd6wSG_fv0',
+          '1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ',
       },
       tls: {
         rejectUnauthorized: false, // Add this line to disable certificate verification

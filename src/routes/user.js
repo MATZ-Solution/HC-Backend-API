@@ -28,7 +28,9 @@ const {
   getNotifications,
   postNotification,
   checkNotificationRead,
-  cancelNotifications
+  cancelNotifications,
+  ContactController
+
 } = require('../controller/user_Controller');
 const router = require('express').Router();
 
@@ -43,6 +45,7 @@ router.post('/verifyOtp', verifyOtp);
 router.post('/verifyforgetPasswordOtp', verifyforgetPasswordOtp);
 router.put('/UpdateUser', updatedUser);
 router.post('/PatientApplyForService', patApplyforcoroporate);
+router.post('/contact', ContactController);
 
 //updateUserProfileUsingToken
 
