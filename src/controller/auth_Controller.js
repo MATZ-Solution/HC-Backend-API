@@ -612,6 +612,10 @@ oauth2Client.setCredentials({
     '1//04ZPgPMNGNQdBCgYIARAAGAQSNwF-L9Ir030qDFXi9jl8D4aJIjeiZ3IftGjGxUTQ4MRSpTlBaX0CLEHBUThEcY7ylx9GFUzhMlw',
 });
 
+
+oauth2Client.setCredentials({
+  refresh_token: "1//04ZPgPMNGNQdBCgYIARAAGAQSNwF-L9Ir030qDFXi9jl8D4aJIjeiZ3IftGjGxUTQ4MRSpTlBaX0CLEHBUThEcY7ylx9GFUzhMlw",
+});
 const createTransporter = async () => {
   try {
     const accessToken = await new Promise((resolve, reject) => {

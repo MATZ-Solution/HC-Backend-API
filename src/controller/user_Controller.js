@@ -19,6 +19,7 @@ const Notification = require('../Model/notiHistoryModel');
 const generateRandomNo = require('../utils/generatingRandomNo');
 const EmailSender = require('../utils/email');
 const notificationModel = require('../Model/notificationModel');
+const contactModel = require('../Model/contactModel');
 
 // const { Console } = require('console');
 
@@ -1411,6 +1412,35 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
   }
 };
 
+const ContactController=async (req,res,next)=>{
+  try {
+    const { name, email, message } = req.body;
+
+    // Check if the email already exists in the contact list
+    const existingContact = await contactModel.findOne({ email });
+
+    if (existingContact) {
+      return res.status(400).json({
+        success: false,
+        message: 'You already have a contact',
+      });
+    }
+
+    // Create a new contact if the email doesn't exist
+    const newContact = await contactModel.create({ name, email, message });
+
+    return res.status(201).json({
+      success: true,
+      message: 'Contact created successfully',
+      contact: newContact,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+
+}
+
 //sending email
 var google = require('googleapis').google;
 var OAuth2 = google.auth.OAuth2;
@@ -1577,5 +1607,6 @@ module.exports = {
   userInfoNameController,
   getNotifications,
   postNotification,
-  checkNotificationRead
+  checkNotificationRead,
+  ContactController
 };
