@@ -123,7 +123,7 @@ const favoriteClt = {
             // };
           })
         );
-          console.log(getFavourateWithResponse,"sd")
+          // console.log(getFavourateWithResponse,"sd")
         res.status(200).json(getFavourateWithResponse);
       } else if (isAdmin === 'super-admin') {
         let getFavourates = await Favourate.find({

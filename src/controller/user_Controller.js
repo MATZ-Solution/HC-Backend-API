@@ -1518,16 +1518,40 @@ const mailer = async (to, otp) => {
   });
 };
 
-const getNotifications=async(req,res,next)=>{
-  try{
-    
+const getNotifications = async (req, res, next) => {
+  try {
+    const { web } = req.query;
     const { _id, isAdmin } = req.user;
-    const {email}=await User.findById({_id:_id})
-      const notifications = await notificationModel.find({email:email}).sort({createdAt:-1});
-      res.status(200).json(notifications);
-  }catch(err){
+    const user = await User.findById({ _id: _id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { email } = user;
+    
+
+    let filter = { email: email };
+    if (web) {
+      filter.message = {
+        $nin: [
+          "Login Successfull",
+          "New version of the app is available. Please update the app to the latest version."
+        ]
+      };
+    }
+
+    
+
+    const notifications = await notificationModel.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(notifications);
+  } catch (err) {
+    console.error(err);
     next(err);
-  }}
+  }
+};
+
+
 const postNotification=async(req,res,next)=>{
   try {
     // Fetch all users' emails
