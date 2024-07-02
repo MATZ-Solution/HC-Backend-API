@@ -8,40 +8,54 @@ const favoriteClt = {
   createFavourate: async (req, res, next) => {
     try {
       const { _id, isAdmin } = req.user;
-      // console.log(_id,"id")
       const { category, scrapeObjectId } = req.body;
-      // console.log(req.body)
-      if (isAdmin === 'patient') {
-        const newFavorite = new Favourate({
+      // console.log(category, scrapeObjectId);
+      // console.log(_id, isAdmin)
+      
+      if (isAdmin === 'patient' || isAdmin === 'super-admin' || isAdmin === 'corporate') {
+        let filter = {};
+        if (isAdmin === 'patient') {
+          filter = { patId: _id };
+        } else if (isAdmin === 'super-admin') {
+          filter = { superAdminId: _id };
+        } else if (isAdmin === 'corporate') {
+          filter = { corporateId: _id };
+        }
+  
+        const existingFavorite = await Favourate.findOne({
+          ...filter,
           category,
-          scrapeObjectId,
-          patId: _id,
+          scrapeObjectId
         });
-       
-
-        await newFavorite.save();
-
-        res.status(201).json({ message: 'Favorite created successfully' });
-      } else if (isAdmin === 'super-admin') {
-        const newFavorite = new Favourate({
-          category,
-          scrapeObjectId,
-          superAdminId: _id,
-        });
-
-        await newFavorite.save();
-
-        res.status(201).json({ message: 'Favorite created successfully' });
-      } else if (isAdmin === 'corporate') {
-        const newFavorite = new Favourate({
-          category,
-          scrapeObjectId,
-          corporateId: _id,
+        const apiUrl = process.env.apiUrl;
+        // console.log(apiUrl)
+        const scrapedResponse = await axios.post(apiUrl, {
+          mongoDbID: scrapeObjectId, //mongoDbID
+          category:category,
         });
 
-        await newFavorite.save();
-
-        res.status(201).json({ message: 'Favorite created successfully' });
+        // console.log(scrapedResponse.data.name,"resoponse")
+  
+        if (!existingFavorite) {
+          const newFavorite = new Favourate({
+            category,
+            scrapeObjectId,
+            ...filter
+          });
+          const {email}=await User.findById({_id:_id})
+          const notification=await notificationModel.create({
+            email:email,
+            message:`favourate added for ${scrapedResponse.data.name}`,
+            mongoDbID:scrapeObjectId
+          })
+          await newFavorite.save();
+          res.status(201).json({ message: 'Favorite created successfully' });
+        } else {
+          await Favourate.findOneAndDelete(existingFavorite._id);
+          res.status(200).json({ message: 'Favorite deleted successfully' });
+        }
+      } else {
+        res.status(400).json({ error: 'Invalid isAdmin value' });
       }
     } catch (err) {
       next(err);
@@ -70,13 +84,13 @@ const favoriteClt = {
           scrapeObjectId
         });
         const apiUrl = process.env.apiUrl;
-        console.log(apiUrl)
+        // console.log(apiUrl)
         const scrapedResponse = await axios.post(apiUrl, {
           mongoDbID: scrapeObjectId, //mongoDbID
           category:category,
         });
 
-        console.log(scrapedResponse.data.name,"resoponse")
+        // console.log(scrapedResponse.data.name,"resoponse")
   
         if (!existingFavorite) {
           const newFavorite = new Favourate({
@@ -87,7 +101,7 @@ const favoriteClt = {
           const {email}=await User.findById({_id:_id})
           const notification=await notificationModel.create({
             email:email,
-            message:`favourate added ${scrapedResponse.data.name}`,
+            message:`favourate added for ${scrapedResponse.data.name}`,
             mongoDbID:scrapeObjectId
           })
           await newFavorite.save();
