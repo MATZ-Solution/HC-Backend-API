@@ -91,7 +91,7 @@ const favoriteClt = {
             mongoDbID:scrapeObjectId
           })
           await newFavorite.save();
-          res.status(201).json({ message: 'Favorite created successfully' });
+          res.status(201).json({ message: 'Favorite created successfull' });
         } else {
           await Favourate.findOneAndDelete(existingFavorite._id);
           res.status(200).json({ message: 'Favorite deleted successfully' });
