@@ -15,6 +15,11 @@ const notificationSchema = new Schema({
         type: String,
         require:false
     },
+    platform: {
+        type: String,
+        require:false,
+        default:"app",
+    },  
     // facilityName:{
     //     type:String,
     //     require:false
