@@ -51,6 +51,8 @@ const favoriteClt = {
     try {
       const { _id, isAdmin } = req.user;
       const { category, scrapeObjectId } = req.body;
+      // console.log(category, scrapeObjectId);
+      // console.log(_id, isAdmin)
       
       if (isAdmin === 'patient' || isAdmin === 'super-admin' || isAdmin === 'corporate') {
         let filter = {};
@@ -67,6 +69,14 @@ const favoriteClt = {
           category,
           scrapeObjectId
         });
+        const apiUrl = process.env.apiUrl;
+        console.log(apiUrl)
+        const scrapedResponse = await axios.post(apiUrl, {
+          mongoDbID: scrapeObjectId, //mongoDbID
+          category:category,
+        });
+
+        console.log(scrapedResponse.data.name,"resoponse")
   
         if (!existingFavorite) {
           const newFavorite = new Favourate({
@@ -77,7 +87,7 @@ const favoriteClt = {
           const {email}=await User.findById({_id:_id})
           const notification=await notificationModel.create({
             email:email,
-            message:`favourate added`,
+            message:`favourate added ${scrapedResponse.data.name}`,
             mongoDbID:scrapeObjectId
           })
           await newFavorite.save();

@@ -9,9 +9,9 @@ const createTransporter = async () => {
     "https://developers.google.com/oauthplayground"
   );
 
-
   oauth2Client.setCredentials({
-    refresh_token: "1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ",
+    refresh_token:
+      "1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ",
   });
 
   const accessToken = await new Promise((resolve, reject) => {
@@ -27,14 +27,14 @@ const createTransporter = async () => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      type: 'OAuth2',
-      user: 'maazurrehman42@gmail.com',
+      type: "OAuth2",
+      user: "maazurrehman42@gmail.com",
       accessToken,
       clientId:
-        '314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com',
-      clientSecret: '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',
+        "314005293340-9eh88g6318enm271d5ti60538lfsr43k.apps.googleusercontent.com",
+      clientSecret: "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",
       refreshToken:
-        '1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ',
+        "1//04Wxi4FWoX8gkCgYIARAAGAQSNwF-L9Irbklu1UNsgBybAnRz5UAtNKLe-p_tRWHBn7kIHow8eRBKhAIv5x9sdhuoaW_rvl1VZRQ",
     },
   });
 
@@ -49,7 +49,7 @@ const sendEmail = async ({ to, subject, text, html, res }) => {
       to,
       subject,
       text,
-      html
+      html,
     };
 
     return new Promise((resolve, reject) => {
