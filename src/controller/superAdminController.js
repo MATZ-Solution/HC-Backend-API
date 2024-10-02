@@ -10,6 +10,9 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const EmailSender = require('../utils/email');
 const webReviewModel = require('../Model/webReviewModel');
 const notificationModel = require('../Model/notificationModel');
+const FacilityRequest = require('../Model/facilityRequestModel');
+const UpdateFacilityRequest = require('../Model/updateFacilityRequest');
+const sendEmail = require('../utils/email');
 
 const superAdminClt = {
   //Reject Patient Services By SuperAdmin
@@ -330,6 +333,71 @@ getallWebReviews:async(req,res,next)=>{
   catch(error){
     next(error)
   }
-}};
+},
+submitFacility:async(req,res,next)=>{
+  try{
+    const {name,email,facility_name,category,city,state,zip,address}=req.body
+    console.log(req.body,'dssf')
+    const facilityRequest = new FacilityRequest({
+      name: name,
+      email: email,
+      facility_name: facility_name,
+      category: category,
+      city: city,
+      state: state,
+      zip: zip,
+      address: address,
+    });
+    const savedFacilityRequest = await facilityRequest.save();
+    await sendEmail({
+      to: email,
+      subject: 'Facility Request Submitted',
+      text: 'Your facility request has been submitted successfully.',
+      html: `
+        <p>Dear ${name},</p>
+        <p>Your facility request has been submitted successfully. Our team will review your request and get back to you soon.</p>
+        <p>Thank you for choosing our platform.</p>
+        <p>Best Regards,</p>
+        <p>Healthcare Team</p>
+      `,
+    })
+    res.status(201).json(savedFacilityRequest);
+  }
+  catch(error){
+    console.log(error)
+    next(error)
+  }
+},
+submitFacilityUpdate:async(req,res,next)=>{
+  try{
+    const {name,email,update,category,mongoDbID}=req.body
+    const facilityRequest = new UpdateFacilityRequest({
+      name: name,
+      email: email,
+      update: update,
+      category: category,
+      mongoDbID: mongoDbID,
+    });
+    const savedFacilityRequest = await facilityRequest.save();
+    await sendEmail({
+      to: email,
+      subject: 'Facility Update Request Submitted',
+      text: 'Your facility update request has been submitted successfully.',
+      html: `
+        <p>Dear ${name},</p>
+        <p>Your facility update request has been submitted successfully. Our team will review your request and get back to you soon.</p>
+        <p>Thank you for choosing our platform.</p>
+        <p>Best Regards,</p>
+        <p>Healthcare Team</p>
+      `,
+    });
+    res.status(201).json(savedFacilityRequest);
+  }
+  catch(error){
+    console.log(error)
+    next(error)
+  }
+}
+};
 
 module.exports = superAdminClt;
