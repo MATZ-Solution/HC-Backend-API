@@ -411,7 +411,7 @@ getUpdateFacility: async (req, res, next) => {
     const scrapedResponses = [];
 
     for (const facility of UpdateFacRequest) {
-      const { mongoDbID, category,_id ,name} = facility;
+      const { mongoDbID, category,_id ,name,email,update} = facility;
       console.log(mongoDbID, category,_id)
 
       
@@ -425,7 +425,9 @@ getUpdateFacility: async (req, res, next) => {
         _id,
         name:name,
         facility_name: scrapedResponse.data.name,
-        category:category
+        category:category,
+        email:email,
+        update:update
       });
     }
 
