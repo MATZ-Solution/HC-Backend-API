@@ -44,5 +44,7 @@ router.put('/approvecommentdisplay/:id',verifyTokenAndAdmin,superAdminClt.approv
 router.get('/getAllcomment',verifyTokenAndAdmin,superAdminClt.getallWebReviews)
 router.post('/submitFacility',superAdminClt.submitFacility)
 router.post('/submitFacilityUpdate',superAdminClt.submitFacilityUpdate)
+router.get('/getUpdateFacility',superAdminClt.getUpdateFacility)
+router.get('/getFacility',superAdminClt.getFacility)
 // router.post('/')
 module.exports = router;

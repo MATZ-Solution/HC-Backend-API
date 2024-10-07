@@ -397,7 +397,53 @@ submitFacilityUpdate:async(req,res,next)=>{
     console.log(error)
     next(error)
   }
+},
+getUpdateFacility: async (req, res, next) => {
+  try {
+    const UpdateFacRequest = await UpdateFacilityRequest.find();
+    
+  
+
+    const apiUrl = process.env.apiUrl;
+
+    const scrapedResponses = [];
+
+    for (const facility of UpdateFacRequest) {
+      const { mongoDbID, category,_id } = facility;
+
+      
+      const scrapedResponse = await axios.post(apiUrl, {
+        mongoDbID,
+        category,
+      });
+      
+
+      scrapedResponses.push({
+        _id,
+        facility_name: scrapedResponse.data.name,
+      });
+    }
+
+    
+    res.status(200).json({
+      scrapedResponses,
+    });
+  } catch (error) {
+    
+    next(error);
+  }
+},
+getFacility: async (req, res, next) => {
+  try {
+    const facilityRequest = await FacilityRequest.find({}, { _id: 1, 
+      facility_name: 1 });
+    res.status(200).json(facilityRequest);
+  } catch (error) {
+    next(error);
+  }
 }
+
+
 };
 
 module.exports = superAdminClt;
