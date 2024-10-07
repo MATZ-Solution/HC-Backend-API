@@ -411,7 +411,8 @@ getUpdateFacility: async (req, res, next) => {
     const scrapedResponses = [];
 
     for (const facility of UpdateFacRequest) {
-      const { mongoDbID, category,_id } = facility;
+      const { mongoDbID, category,_id ,name} = facility;
+      console.log(mongoDbID, category,_id)
 
       
       const scrapedResponse = await axios.post(apiUrl, {
@@ -422,7 +423,9 @@ getUpdateFacility: async (req, res, next) => {
 
       scrapedResponses.push({
         _id,
+        name:name,
         facility_name: scrapedResponse.data.name,
+        category:category
       });
     }
 
@@ -437,8 +440,7 @@ getUpdateFacility: async (req, res, next) => {
 },
 getFacility: async (req, res, next) => {
   try {
-    const facilityRequest = await FacilityRequest.find({}, { _id: 1, 
-      facility_name: 1 });
+    const facilityRequest = await FacilityRequest.find();
     res.status(200).json(facilityRequest);
   } catch (error) {
     next(error);
