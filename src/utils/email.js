@@ -68,4 +68,33 @@ const sendEmail = async ({ to, subject, text, html, res }) => {
   }
 };
 
+
+const sendEmailForFacility = async ({ to, subject, text, html, res }) => {
+  try {
+    const emailTransporter = await createTransporter();
+    const emailOptions = {
+      from: "partnerships@infosenior.care",
+      to,
+      subject,
+      text,
+      html,
+    };
+
+    return new Promise((resolve, reject) => {
+      emailTransporter.sendMail(emailOptions, (err, info) => {
+        if (err) {
+          console.log(err);
+          reject(err); // Notify caller about the failure
+        } else {
+          console.log("Email sent:", info.response);
+          resolve(true); // Notify caller about successful email sending
+        }
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    return false; // Return false to indicate failure
+  }
+};
+
 module.exports = sendEmail;
