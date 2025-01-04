@@ -20,6 +20,7 @@ const generateRandomNo = require('../utils/generatingRandomNo');
 const EmailSender = require('../utils/email');
 const notificationModel = require('../Model/notificationModel');
 const contactModel = require('../Model/contactModel');
+const getInTouchModel = require('../Model/getInTouchModel');
 
 // const { Console } = require('console');
 
@@ -1440,6 +1441,59 @@ const ContactController=async (req,res,next)=>{
   }
 
 }
+const GetInTouchController=async (req,res,next)=>{
+  try {
+    const { name, email, message } = req.body;
+
+    // Check if the email already exists in the contact list
+
+   
+
+    // Create a new contact if the email doesn't exist
+    const newGetTouch = await getInTouchModel.create({ name, email, message });
+    const emailOptions = {
+      to: newGetTouch.email,
+      subject: 'Thank You for Reaching Out to Us!',
+      html: `
+      <p>Dear ${newGetTouch.name},</p>
+      
+      <p>Thank you for getting in touch with us. We have received your message:</p>
+      <blockquote style="font-style: italic; color: #555;">"${message}"</blockquote>
+      
+      <p>Our team will review your inquiry and get back to you as soon as possible. In the meantime, if you have any additional questions or need further assistance, feel free to reply to this email.</p>
+      
+      <p>We value your trust in our services and look forward to assisting you.</p>
+      
+      <p>Warm regards,</p>
+      <p><strong>The Best Health Service Team</strong></p>
+      
+      <p style="color: #888; font-size: 0.9em;">
+        Please do not reply to this automated message. If you have urgent concerns, contact us at <a href="mailto:support@healthservice.com">support@healthservice.com</a>.
+      </p>
+      
+      <img 
+        src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg" 
+        alt="Company Logo" 
+        width="150" 
+        height="150" 
+        style="margin-top: 20px; display: block;"
+      />
+    `,
+    };
+
+    await EmailSender(emailOptions);
+
+    return res.status(201).json({
+      success: true,
+      message: 'You have to send  successfully',
+      contact: newGetTouch,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+
+}
 
 //sending email
 var google = require('googleapis').google;
@@ -1632,5 +1686,6 @@ module.exports = {
   getNotifications,
   postNotification,
   checkNotificationRead,
-  ContactController
+  ContactController,
+  GetInTouchController
 };
