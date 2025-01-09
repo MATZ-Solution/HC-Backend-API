@@ -58,19 +58,19 @@ const getPendingBlogs = async (req, res, next) => {
 //=========Get Accepted Blogs===========================
 const acceptedBlogs = async (req, res, next) => {
   try {
-    const { pages, limit } = req.body;
+    const { pages, limit ,category} = req.body;
 
     let countBlogs;
     let blogs;
 
     if (typeof pages === 'number' && typeof limit === 'number') {
-      (countBlogs = await Blog.countDocuments({ status: 'Accepted' })),
-        (blogs = await Blog.find({ status: 'Accepted' })
+      (countBlogs = await Blog.countDocuments({ status: 'Accepted' ,category:category})),
+        (blogs = await Blog.find({ status: 'Accepted' ,category:category })
           .skip(pages * limit)
           .limit(limit));
     } else {
-      countBlogs = await Blog.countDocuments({ status: 'Accepted' });
-      blogs = await Blog.find({ status: 'Accepted' });
+      countBlogs = await Blog.countDocuments({ status: 'Accepted',category:category  });
+      blogs = await Blog.find({ status: 'Accepted' ,category:category  });
     }
 
     res.status(200).json({
@@ -110,20 +110,20 @@ const getacceptedBlogbyId=async(req,res,next)=>{
   }
 }
 
-const getBlogsByCategory = async (req, res, next) => {
-  try {
-    const { category } = req.params; 
+// const getBlogsByCategory = async (req, res, next) => {
+//   try {
+//     const { category } = req.params; 
 
-    if (!category) {
-      return res.status(400).json({ error: "Category query parameter is required" });
-    }
+//     if (!category) {
+//       return res.status(400).json({ error: "Category query parameter is required" });
+//     }
 
-    const blogs = await Blog.find({ category });
-    res.status(200).json(blogs);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+//     const blogs = await Blog.find({ category });
+//     res.status(200).json(blogs);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 module.exports = {
   blogCreate,
   getAllBlog,
@@ -133,5 +133,5 @@ module.exports = {
   acceptedBlogs,
   getLatestBlog,
   getacceptedBlogbyId,
-  getBlogsByCategory
+  // getBlogsByCategory
 };
