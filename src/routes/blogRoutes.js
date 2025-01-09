@@ -8,10 +8,10 @@ const {
   acceptedBlogs,
   getLatestBlog,
   getacceptedBlogbyId,
+  getBlogsByCategory
 } = require('../controller/blogController');
 const { verifyTokenAndAdmin } = require('../middleware/verifytokens');
 const router = express.Router();
-
 router.route('/createblog').post(blogCreate);
 router.route('/getallblogs').get(getAllBlog);
 router.route('/updateblog/:id').put(blogUpdate);
@@ -20,6 +20,8 @@ router.route('/pendingblog').get(getPendingBlogs);
 router.route('/acceptedblog').post(acceptedBlogs);
 router.route('/getLatestBlog').get(getLatestBlog);
 router.route('/getSingleBlog/:id').get(getacceptedBlogbyId)
+router.route('/getBlogsbyCat/:category').get(getBlogsByCategory)
+
 // router.put('/:id', blogUpdate);
 // router.delete('/:id', deleteBlog);
 // router.get('/pending', getPendingBlogs);

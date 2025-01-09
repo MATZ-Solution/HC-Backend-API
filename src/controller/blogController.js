@@ -2,6 +2,9 @@ const express = require('express');
 const Blog = require('../Model/blogmodel');
 const bodyParser = require('body-parser');
 
+
+
+
 //============Create Blog========================
 const blogCreate = async (req, res, next) => {
   try {
@@ -89,7 +92,8 @@ const getAllBlog = async (req, res, next) => {
 
 const getLatestBlog = async (req, res, next) => {
   try {
-    const blogs = await Blog.find({status:"Accepted"}).sort({ createdAt: -1 })
+    const blogs = await Blog.find({status:"Accepted"}).sort({ createdAt: -1 }).limit(3);
+
     res.status(200).json(blogs);
   } catch (err) {
     next(err);
@@ -105,6 +109,21 @@ const getacceptedBlogbyId=async(req,res,next)=>{
     next(err)
   }
 }
+
+const getBlogsByCategory = async (req, res, next) => {
+  try {
+    const { category } = req.params; 
+
+    if (!category) {
+      return res.status(400).json({ error: "Category query parameter is required" });
+    }
+
+    const blogs = await Blog.find({ category });
+    res.status(200).json(blogs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 module.exports = {
   blogCreate,
   getAllBlog,
@@ -113,5 +132,6 @@ module.exports = {
   getPendingBlogs,
   acceptedBlogs,
   getLatestBlog,
-  getacceptedBlogbyId
+  getacceptedBlogbyId,
+  getBlogsByCategory
 };
