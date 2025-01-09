@@ -100,9 +100,10 @@ const getLatestBlog = async (req, res, next) => {
   }
 };
 const getacceptedBlogbyId=async(req,res,next)=>{
-  const {id}=req.params
+  // const {id}=req.params
+  const {name}=req.params
   try{
-    const blogs=await Blog.findOne({_id:id,status:"Accepted"})
+    const blogs=await Blog.findOne({name:name,status:"Accepted"})
     res.status(200).json(blogs)
   }
   catch(err){

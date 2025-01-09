@@ -19,7 +19,7 @@ router.route('/deleteblog/:id').delete(deleteBlog);
 router.route('/pendingblog').get(getPendingBlogs);
 router.route('/acceptedblog').post(acceptedBlogs);
 router.route('/getLatestBlog').get(getLatestBlog);
-router.route('/getSingleBlog/:id').get(getacceptedBlogbyId)
+router.route('/getSingleBlog/:name').get(getacceptedBlogbyId)
 // router.route('/getBlogsbyCat/:category').get(getBlogsByCategory)
 
 // router.put('/:id', blogUpdate);
