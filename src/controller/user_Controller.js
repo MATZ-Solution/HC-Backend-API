@@ -1416,6 +1416,7 @@ const getMedicalPracticeForIndividualUser = async (req, res, next) => {
 const ContactController=async (req,res,next)=>{
   try {
     const { name, email, message } = req.body;
+    // console.log(req.body)
 
     // Check if the email already exists in the contact list
     const existingContact = await contactModel.findOne({ email });
@@ -1430,6 +1431,38 @@ const ContactController=async (req,res,next)=>{
     // Create a new contact if the email doesn't exist
     const newContact = await contactModel.create({ name, email, message });
 
+    const emailOptions = {
+      to: newContact.email,
+      subject: 'Thank You for Contact to Us!',
+      html: `
+      <p>Dear ${newContact.name},</p>
+      
+      <p>Thank you for getting in touch with us. We have received your message:</p>
+      <blockquote style="font-style: italic; color: #555;">"${newContact.message}"</blockquote>
+      
+      <p>Our team will review your inquiry and get back to you as soon as possible. In the meantime, if you have any additional questions or need further assistance, feel free to reply to this email.</p>
+      
+      <p>We value your trust in our services and look forward to assisting you.</p>
+      
+      <p>Warm regards,</p>
+      <p><strong>The Best Health Service Team</strong></p>
+      
+      <p style="color: #888; font-size: 0.9em;">
+        Please do not reply to this automated message. If you have urgent concerns, contact us at <a href="mailto:support@healthservice.com">support@healthservice.com</a>.
+      </p>
+      
+      <img 
+        src="https://healthcare-assets.s3.amazonaws.com/final+logo.jpg" 
+        alt="Company Logo" 
+        width="150" 
+        height="150" 
+        style="margin-top: 20px; display: block;"
+      />
+    `,
+    };
+
+    await EmailSender(emailOptions);
+
     return res.status(201).json({
       success: true,
       message: 'Contact created successfully',
@@ -1443,26 +1476,21 @@ const ContactController=async (req,res,next)=>{
 }
 const GetInTouchController=async (req,res,next)=>{
   try {
-    const { name, email, message } = req.body;
+    const {  email} = req.body;
 
     // Check if the email already exists in the contact list
 
    
 
     // Create a new contact if the email doesn't exist
-    const newGetTouch = await getInTouchModel.create({ name, email, message });
+    const newGetTouch = await getInTouchModel.create({email});
     const emailOptions = {
       to: newGetTouch.email,
       subject: 'Thank You for Reaching Out to Us!',
       html: `
-      <p>Dear ${newGetTouch.name},</p>
+      <p>Dear, </p>
       
       <p>Thank you for getting in touch with us. We have received your message:</p>
-      <blockquote style="font-style: italic; color: #555;">"${message}"</blockquote>
-      
-      <p>Our team will review your inquiry and get back to you as soon as possible. In the meantime, if you have any additional questions or need further assistance, feel free to reply to this email.</p>
-      
-      <p>We value your trust in our services and look forward to assisting you.</p>
       
       <p>Warm regards,</p>
       <p><strong>The Best Health Service Team</strong></p>
