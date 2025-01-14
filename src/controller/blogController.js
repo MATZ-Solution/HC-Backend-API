@@ -58,19 +58,31 @@ const getPendingBlogs = async (req, res, next) => {
 //=========Get Accepted Blogs===========================
 const acceptedBlogs = async (req, res, next) => {
   try {
-    const { pages, limit ,category} = req.body;
+    const { pages, limit, category, search } = req.body;
+    console.log(pages, limit, category, search);
 
     let countBlogs;
     let blogs;
 
+    // Build the query dynamically
+    const query = { status: 'Accepted' };
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (search) {
+      query.name = { $regex: search, $options: 'i' }; // Case-insensitive search
+    }
+
     if (typeof pages === 'number' && typeof limit === 'number') {
-      (countBlogs = await Blog.countDocuments({ status: 'Accepted' ,category:category})),
-        (blogs = await Blog.find({ status: 'Accepted' ,category:category })
-          .skip(pages * limit)
-          .limit(limit));
+      countBlogs = await Blog.countDocuments(query);
+      blogs = await Blog.find(query)
+        .skip(pages * limit)
+        .limit(limit);
     } else {
-      countBlogs = await Blog.countDocuments({ status: 'Accepted',category:category  });
-      blogs = await Blog.find({ status: 'Accepted' ,category:category  });
+      countBlogs = await Blog.countDocuments(query);
+      blogs = await Blog.find(query);
     }
 
     res.status(200).json({
@@ -81,6 +93,7 @@ const acceptedBlogs = async (req, res, next) => {
     res.status(400).json({ message: err.message });
   }
 };
+
 const getAllBlog = async (req, res, next) => {
   try {
     const blogs = await Blog.find();
@@ -111,20 +124,18 @@ const getacceptedBlogbyId=async(req,res,next)=>{
   }
 }
 
-// const getBlogsByCategory = async (req, res, next) => {
-//   try {
-//     const { category } = req.params; 
-
-//     if (!category) {
-//       return res.status(400).json({ error: "Category query parameter is required" });
-//     }
-
-//     const blogs = await Blog.find({ category });
-//     res.status(200).json(blogs);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
+const getBlogsByCategory = async (req, res, next) => {
+  try {
+    const result = await Blog.updateMany(
+      { shortText: { $exists: false } },
+      { $set: { shortText: "" } }
+    );
+    console.log(`${result.modifiedCount} documents updated.`);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+  }
+};
 module.exports = {
   blogCreate,
   getAllBlog,
@@ -134,5 +145,5 @@ module.exports = {
   acceptedBlogs,
   getLatestBlog,
   getacceptedBlogbyId,
-  // getBlogsByCategory
+  getBlogsByCategory
 };

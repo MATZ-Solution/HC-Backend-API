@@ -20,6 +20,7 @@ router.route('/pendingblog').get(getPendingBlogs);
 router.route('/acceptedblog').post(acceptedBlogs);
 router.route('/getLatestBlog').get(getLatestBlog);
 router.route('/getSingleBlog/:name').get(getacceptedBlogbyId)
+router.get('/getBlogsbyCat', getBlogsByCategory);
 // router.route('/getBlogsbyCat/:category').get(getBlogsByCategory)
 
 // router.put('/:id', blogUpdate);

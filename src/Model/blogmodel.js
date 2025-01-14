@@ -9,6 +9,9 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  shortText: {
+    type: String,
+  },
   category: {
     type: String,
   },
