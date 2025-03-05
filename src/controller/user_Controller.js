@@ -1419,14 +1419,14 @@ const ContactController=async (req,res,next)=>{
     // console.log(req.body)
 
     // Check if the email already exists in the contact list
-    const existingContact = await contactModel.findOne({ email });
+    // const existingContact = await contactModel.findOne({ email });
 
-    if (existingContact) {
-      return res.status(400).json({
-        success: false,
-        message: 'You already have a contact',
-      });
-    }
+    // if (existingContact) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'You already have a contact',
+    //   });
+    // }
 
     // Create a new contact if the email doesn't exist
     const newContact = await contactModel.create({ name, email, message });
