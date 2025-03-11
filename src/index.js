@@ -36,6 +36,8 @@ const getInvoice = require('./routes/invoiceRoute');
 //=========webReviews route====================================
 const webReviewsRoutes = require('./routes/webReviews');
 
+const notificationRoutes = require('./routes/notificationRoutes');
+
 
 // ============google route =============
 // const googleRoutes = require('./routes/googleRoutes')
@@ -112,6 +114,8 @@ app.use('/api/blogs', blogRoutes);
 //=======================================
 //==========Invoice Routes================
 app.use('/api/invoice', getInvoice);
+
+app.use('/api/notification', notificationRoutes);
 
 app.use(errorMiddleware);
 // app.use("/", googleRoutes);
