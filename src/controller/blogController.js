@@ -115,8 +115,10 @@ const getLatestBlog = async (req, res, next) => {
 const getacceptedBlogbyId=async(req,res,next)=>{
   // const {id}=req.params
   const {name}=req.params
+   const regex = new RegExp(name, 'i'); // 'i' for case-insensitive search
+
   try{
-    const blogs=await Blog.findOne({name:name,status:"Accepted"})
+    const blogs=await Blog.findOne({name:regex,status:"Accepted"})
     res.status(200).json(blogs)
   }
   catch(err){
