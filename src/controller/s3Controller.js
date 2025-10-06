@@ -1,15 +1,14 @@
+
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3-v2');
-
+const config = require('../config/s3');
 aws.config.update({
-  // accessKeyId: 'AKIAQPZG37TR3Q74X2LQ',
-  // secretAccessKey: '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',
-  // accessKeyId: "AKIAQPZG37TRU4ABDSXN",
-  // secretAccessKey: "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",
-   accessKeyId: 'AKIAQPZG37TR6DHUMMSD',
-  secretAccessKey:'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',
-  region: 'us-east-1',
+
+
+   accessKeyId:config.awsAccessKeyId, 
+   secretAccessKey: config.awsSecretAccessKey,
+   region:config.region,
 });
 
 const s3 = new aws.S3();
@@ -35,9 +34,9 @@ const upload = multer({
   fileFilter,
   limits: { fileSize: 25 * 1024 * 1024 },
   storage: multerS3({
-    acl: 'public-read-write',
+    // acl: 'public-read-write',
     s3: s3,
-    bucket: 'healthcare-assets',
+    bucket: config.bucketName,
     metadata: function (req, file, cb) {
       cb(null, { fieldName: 'TESTING_METADATA' });
     },
