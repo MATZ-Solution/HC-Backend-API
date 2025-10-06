@@ -1488,7 +1488,7 @@ const GetInTouchController=async (req,res,next)=>{
     const newGetTouch = await getInTouchModel.create({email});
     const emailOptions = {
       to: newGetTouch.email,
-      subject: 'Thank You for Reaching Out to Us!!!',
+      subject: 'Thank You for Reaching Out to Us!',
       html: `
       <p>Dear, </p>
       
