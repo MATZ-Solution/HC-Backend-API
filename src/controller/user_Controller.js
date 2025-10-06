@@ -1,3 +1,4 @@
+
 const User = require('../Model/User');
 const Corporate = require('../Model/corporateModel');
 const Otp = require('../Model/Otp');
@@ -545,7 +546,8 @@ const patApplyforcoroporate = async (req, res, next) => {
     const notification=await notificationModel.create({
       email:patEmail,
       message:`Request submitted for ${serviceName} successfully `,
-      mongoDbID:seviceId
+      mongoDbID:seviceId,
+      type:"request"
     })
 
     const newApplication = new patService({
