@@ -19,6 +19,11 @@ const notificationSchema = new Schema({
         type: String,
         require:false,
         default:"app",
+    },
+     type: {
+      type: String,
+      enum: ["auth", "request"], 
+      required: true,
     },  
     // facilityName:{
     //     type:String,

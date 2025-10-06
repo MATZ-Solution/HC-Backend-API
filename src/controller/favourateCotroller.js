@@ -102,7 +102,8 @@ const favoriteClt = {
           const notification=await notificationModel.create({
             email:email,
             message:`favourate added for ${scrapedResponse.data.name}`,
-            mongoDbID:scrapeObjectId
+            mongoDbID:scrapeObjectId,
+            type:"auth"
           })
           await newFavorite.save();
           res.status(201).json({ message: 'Favorite created successfull' });

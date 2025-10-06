@@ -28,6 +28,7 @@ const registerController = async (req, res, next) => {
         );
       }
       const existEmail = await User.find({ email: email });
+      console.log(existEmail.length=== 0,"exist email ")
       if (existEmail.length === 0) {
         // Create a new user with encrypted password
         const isApprovedbyAdmin = role === 'patient' ? true : false;
@@ -65,7 +66,8 @@ const registerController = async (req, res, next) => {
         let otpResponse = await otpData.save();
         res.status(200).json({ msg: 'Please Check Your Email' });
         mailer(req.body.email, otpResponse.code);
-      } else if (existEmail.length > 0) {
+      } 
+      else if (existEmail.length > 0) {
         if (existEmail[0].isOtpVerified === false) {
           await User.deleteOne({ email: email });
 
@@ -106,7 +108,8 @@ const registerController = async (req, res, next) => {
           let otpResponse = await otpData.save();
           res.status(200).json({ msg: 'Please Check Your Email' });
           mailer(req.body.email, otpResponse.code);
-        } else {
+        } 
+        else {
           throw new ErrorHandler('This e-mail is already in use!', 400);
         }
 
@@ -348,6 +351,7 @@ const registerWithSocialMedia = async (req, res, next) => {
       const notification=await notificationModel.create({
         email:email,
         message:"Login Successfull",
+        // type:"auth"
 
       })
 
@@ -477,7 +481,9 @@ const loginController = async (req, res, next) => {
       // console.log(req.body,"body")
       const user = await User.findOne({ email });
 
-      if (!user || !isPasswordValid(user.password, password)) {
+      // console.log(user,"user")
+
+      if (!user || !isPasswordValid(user.password, password) || user.isOtpVerified === false) {
         // User not found or wrong password
         throw new ErrorHandler('Wrong Credentials', 401);
         // res.status(401).json("Wrong Credentials");
@@ -486,6 +492,7 @@ const loginController = async (req, res, next) => {
       const notification=await notificationModel.create({
         email:email,
         message:"Login Successfull",
+        type:"auth"
 
       })
       // console.log(notification)
