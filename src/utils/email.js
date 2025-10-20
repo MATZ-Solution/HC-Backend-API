@@ -57,7 +57,7 @@ const sendEmail = async ({ to, subject, text, html, res }) => {
           console.log(err);
           reject(err); // Notify caller about the failure
         } else {
-          console.log("Email sent:", info.response);
+          // console.log("Email sent:", info.response);
           resolve(true); // Notify caller about successful email sending
         }
       });

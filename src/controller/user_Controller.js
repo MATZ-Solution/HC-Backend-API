@@ -507,7 +507,7 @@ const allUsers = async (req, res, next) => {
 
 //patient apply for service
 
-const patApplyforcoroporate = async (req, res, next) => {
+const   patApplyforcoroporate = async (req, res, next) => {
   try {
     const {
       patName,
@@ -1597,7 +1597,7 @@ const mailer = async (to, otp) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email sent: ' + info.response);
+      // console.log('Email sent: ' + info.response);
     }
   });
 };

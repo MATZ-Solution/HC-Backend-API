@@ -28,7 +28,7 @@ const registerController = async (req, res, next) => {
         );
       }
       const existEmail = await User.find({ email: email });
-      console.log(existEmail.length=== 0,"exist email ")
+      // console.log(existEmail.length=== 0,"exist email ")
       if (existEmail.length === 0) {
         // Create a new user with encrypted password
         const isApprovedbyAdmin = role === 'patient' ? true : false;
@@ -343,7 +343,7 @@ const registerController = async (req, res, next) => {
 
 const registerWithSocialMedia = async (req, res, next) => {
   try {
-    const { email, profilePic, profileId, firstName, lastName}=req.body;
+    const { email, profilePic, profileId, firstName, lastName,type}=req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -351,7 +351,7 @@ const registerWithSocialMedia = async (req, res, next) => {
       const notification=await notificationModel.create({
         email:email,
         message:"Login Successfull",
-        // type:"auth"
+        type:type
 
       })
 
@@ -369,11 +369,12 @@ const registerWithSocialMedia = async (req, res, next) => {
             isSocialMediaAuth: true,
         });
 
-        // const notification=await notificationModel.create({
-        //   email:email,
-        //   message:"Login Successfull",
+        const notification=await notificationModel.create({
+          email:email,
+          message:"Login Successfull",
+          type:type
   
-        // })
+        })
         const accessToken = generateAccessToken(newUser);
 
         const { password: _, email: newEmail, ...userWithoutPassword } = newUser._doc;
@@ -679,7 +680,7 @@ const mailer = async (to, otp) => {
     if (error) {
       console.log(error);
     } else {
-      console.log('Email sent: ' + info.response);
+      // console.log('Email sent: ' + info.response);
     }
   });
 };
