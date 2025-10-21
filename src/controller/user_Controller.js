@@ -371,6 +371,9 @@ const verifyOtp = async (req, res, next) => {
 const deleteUserController = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.user._id);
+    // console.log(user.email, "user email")
+    // delete notification related to user
+    await notificationModel.deleteMany({ email: user.email });
     if (!user) {
       throw new ErrorHandler('USER NOT FOUND', 400);
     }
