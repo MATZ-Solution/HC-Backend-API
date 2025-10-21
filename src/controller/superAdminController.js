@@ -103,7 +103,8 @@ const superAdminClt = {
       const notification=await notificationModel.create({
         email:email,
         message:`Review submitted for  ${req.body?.serviceName} successfully `,
-        mongoDbID:mongoDbID
+        mongoDbID:mongoDbID,
+         type:"request"
       })
 
       const savedRecord = await createReview.save();
@@ -338,7 +339,7 @@ getallWebReviews:async(req,res,next)=>{
 submitFacility:async(req,res,next)=>{
   try{
     const {name,email,facility_name,category,city,state,zip,address}=req.body
-    console.log(req.body,'dssf')
+    // console.log(req.body,'dssf')
     const facilityRequest = new FacilityRequest({
       name: name,
       email: email,
@@ -350,6 +351,14 @@ submitFacility:async(req,res,next)=>{
       address: address,
     });
     const savedFacilityRequest = await facilityRequest.save();
+
+     const notification=await notificationModel.create({
+        email:email,
+        message:`Facility submitted for ${facility_name} successfully `,
+
+       
+         type:"request"
+      })
     await sendEmail({
       to: email,
       subject: 'Facility Request Submitted',
@@ -371,8 +380,8 @@ submitFacility:async(req,res,next)=>{
 },
 submitFacilityUpdate:async(req,res,next)=>{
   try{
-    const {name,email,update,category,mongoDbID}=req.body
-    console.log(req.body,'dssf')
+    const {name,email,serviceName,update,category,mongoDbID}=req.body
+    // console.log(req.body,'dssf')
     const facilityRequest = new UpdateFacilityRequest({
       name: name,
       email: email,
@@ -380,6 +389,14 @@ submitFacilityUpdate:async(req,res,next)=>{
       category: category,
       mongoDbID: mongoDbID,
     });
+
+     const notification=await notificationModel.create({
+        email:email,
+        message:`Facility update ${serviceName} request submitted successfully `,
+          mongoDbID:mongoDbID,
+       
+         type:"request"
+      })
     const savedFacilityRequest = await facilityRequest.save();
     await sendEmail({
       to: email,
