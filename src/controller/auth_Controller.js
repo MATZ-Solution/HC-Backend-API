@@ -343,51 +343,64 @@ const registerController = async (req, res, next) => {
 
 const registerWithSocialMedia = async (req, res, next) => {
   try {
-    const { email, profilePic, profileId, firstName, lastName,type}=req.body;
+    const { email, profilePic, profileId, firstName, lastName, type } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (existingUser) {
-      const notification=await notificationModel.create({
-        email:email,
-        message:"Login Successfull",
-        type:type
-
-      })
-
-        const accessToken = generateAccessToken(existingUser);
-        res.status(200).json({ email: existingUser.email, accessToken });
-    } else {
-        const newUser = await User.create({
-            email,
-            role: "patient",
+    if (user) {
+      // User already exists — update profile info if needed
+      user = await User.findOneAndUpdate(
+        { email },
+        {
+          $set: {
+            profilePic,
             profileId,
             firstName,
             lastName,
-            profilePic,
             isOtpVerified: true,
             isSocialMediaAuth: true,
-        });
+          },
+        },
+        { new: true }
+      );
 
-        const notification=await notificationModel.create({
-          email:email,
-          message:"Login Successfull",
-          type:type
-  
-        })
-        const accessToken = generateAccessToken(newUser);
+      // console.log("User exists and updated:", user);
 
-        const { password: _, email: newEmail, ...userWithoutPassword } = newUser._doc;
+      await notificationModel.create({
+        email,
+        message: "Login Successful",
+        type,
+      });
 
-        res.status(201).json({ email: newEmail, accessToken });
+      const accessToken = generateAccessToken(user);
+      return res.status(200).json({ email: user.email, accessToken });
+    } else {
+      // Create new user
+      const newUser = await User.create({
+        email,
+        role: "patient",
+        profileId,
+        firstName,
+        lastName,
+        profilePic,
+        isOtpVerified: true,
+        isSocialMediaAuth: true,
+      });
+
+      await notificationModel.create({
+        email,
+        message: "Login Successful",
+        type,
+      });
+
+      const accessToken = generateAccessToken(newUser);
+      return res.status(201).json({ email: newUser.email, accessToken });
     }
-} catch (error) {
-    // Log or handle the error appropriately
+  } catch (error) {
     next(error);
-}
-
-
+  }
 };
+
 
 
 // const registerWithSocialMedia = async (req, res, next) => {
